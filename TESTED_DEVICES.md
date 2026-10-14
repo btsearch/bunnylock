@@ -28,6 +28,7 @@ Without root, bunnylock runs through Shizuku. Some MediaTek phones allow AT comm
 | Realme 8 Pro                  |   13    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
 | Redmi Note 10                 |   14    | Root    | MediaTek AT       |  ✅  |  ✅   | ✅  | ✅  | Custom ROM                                                                                                |
 | Samsung Galaxy A33            |   15    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
+| Samsung Galaxy A36            |   16    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
 | Samsung Galaxy A37            |   16    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
 | Samsung Galaxy A50            |   11    | Shizuku | Android radio HAL |  ❌  |  ❌   | ✅  | ❌  |                                                                                                           |
 | Samsung Galaxy A52            |   14    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
@@ -51,6 +52,8 @@ Without root, bunnylock runs through Shizuku. Some MediaTek phones allow AT comm
 | Ulefone Note 6T               |   12    | Shizuku | MediaTek AT       |  ✅  |  ✅   | ✅  | ✅  |                                                                                                           |
 | Xiaomi 14T                    |   16    | Shizuku | MediaTek AT       |  ✅  |  ❌   | ✅  | ❌  | Modem throws "GENERAL_FAILURE" on Channel Lock cmd. Radio HAL ignores every setting                       |
 | Xiaomi Redmi Note 10 5G       |   13    | Shizuku | MediaTek AT       |  ✅  |  ✅   | ✅  | ✅  |                                                                                                           |
+| Xiaomi POCO X3 PRO            |   16    | Root    | Qualcomm QMI      |  ✅  |  ✅   | ✅  | ✅  | Custom ROM                                                                                                          |
+| Xiaomi POCO F5 5G             |   17    | Root    | Qualcomm QMI      |  ✅  |  ✅   | ✅  | ✅  | Custom ROM                                                                                                          |
 | Xiaomi POCO X6 5G             |   16    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
 | Xiaomi POCO X7 PRO            |   16    | Shizuku | MediaTek AT       |  ✅  |  ✅   | ✅  | ❌  | Modem throws "GENERAL_FAILURE" on Channel Lock cmd. Radio HAL has working ARFCN and it's used as fallback |
 
