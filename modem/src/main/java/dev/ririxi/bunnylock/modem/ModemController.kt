@@ -510,22 +510,35 @@ class ModemController(
         // Newer phones take long entries, older ones 8 entries of 8 bands. One unknown band fails the whole request.
         for (bandsPerEntry in listOf(Int.MAX_VALUE, MAX_HAL_BANDS_PER_SPEC)) {
             for ((lteBands, nrBands) in bandLists) {
+                val lteEntries = lteBands.chunked(bandsPerEntry)
                 val specs = named.flatMap { splitLteEntry(it, bandsPerEntry) }.toMutableList()
-                specs += lteBands.chunked(bandsPerEntry).map { channelSpec(Ran.EUTRAN, it, emptyList()) }
+                specs += lteEntries.map { channelSpec(Ran.EUTRAN, it, emptyList()) }
                 if (nrBands.isNotEmpty()) specs += channelSpec(Ran.NGRAN, nrBands, emptyList())
                 if (Ran.GERAN in fill) specs += channelSpec(Ran.GERAN, GERAN_RESTORE_BANDS, emptyList())
                 if (Ran.UTRAN in fill) specs += channelSpec(Ran.UTRAN, UTRAN_RESTORE_BANDS, emptyList())
                 try {
                     // Splitting would make several 5G entries, and only the last one counts.
                     sendChannels(JSONArray(specs), splitRefused = false)
-                    return nrBands
                 } catch (e: RootException) {
                     refusal = e
                     log("A request with ${specs.size} entries, ${lteBands.size} added LTE and ${nrBands.size} added 5G bands didn't work (${reason(e).asClause()}).")
+                    continue
                 }
+                if (named.isEmpty() && lteEntries.size > 1 && keptOnlyLastEntry(lteEntries)) {
+                    // Such a phone can't have every LTE band named, so a full unlock falls back to the plain one.
+                    log("SIM ${current.sim} kept only the last of ${lteEntries.size} LTE entries, so bunnylock sent a plain unlock instead.")
+                    sendChannels(JSONArray())
+                    return emptyList()
+                }
+                return nrBands
             }
         }
         throw checkNotNull(refusal)
+    }
+
+    private suspend fun keptOnlyLastEntry(lteEntries: List<List<Int>>): Boolean {
+        val lte = bandsOn(reportedChannels() ?: return false, Ran.EUTRAN)
+        return lte.isNotEmpty() && lteEntries.last().containsAll(lte)
     }
 
     private fun splitLteEntry(

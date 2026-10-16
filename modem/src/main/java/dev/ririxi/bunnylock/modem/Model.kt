@@ -96,7 +96,11 @@ object Masks {
     /** Network type n is bit n - 1 of an allowed-network-types bitmask. */
     private fun maskOf(vararg networkTypes: Int) = networkTypes.fold(0L) { mask, type -> mask or (1L shl (type - 1)) }
 
-    val G2 = maskOf(TelephonyManager.NETWORK_TYPE_GSM, TelephonyManager.NETWORK_TYPE_GPRS, TelephonyManager.NETWORK_TYPE_EDGE)
+    val G2 = maskOf(
+        TelephonyManager.NETWORK_TYPE_GSM,
+        TelephonyManager.NETWORK_TYPE_GPRS,
+        TelephonyManager.NETWORK_TYPE_EDGE
+    )
 
     // The framework deprecated the CDMA types, but the Auto and No 5G masks still carry them for phones that have CDMA.
     @Suppress("DEPRECATION")
@@ -164,7 +168,8 @@ enum class LockRat(
 }
 
 /** "26201" -> "262 01", "310260" -> "310 260". */
-fun formatPlmn(numeric: String): String = if (numeric.length >= 5) numeric.substring(0, 3) + " " + numeric.substring(3) else numeric
+fun formatPlmn(numeric: String): String =
+    if (numeric.length >= 5) numeric.substring(0, 3) + " " + numeric.substring(3) else numeric
 
 fun andList(items: List<String>): String = joinNatural(items, "and")
 
@@ -173,7 +178,8 @@ fun orList(items: List<String>): String = joinNatural(items, "or")
 private fun joinNatural(
     items: List<String>,
     word: String,
-): String = if (items.size <= 1) items.joinToString("") else items.dropLast(1).joinToString(", ") + " $word " + items.last()
+): String =
+    if (items.size <= 1) items.joinToString("") else items.dropLast(1).joinToString(", ") + " $word " + items.last()
 
 data class SimInfo(
     val slot: Int,
@@ -320,7 +326,14 @@ data class ModemState(
     val anyBandLock get() = groups.any { it.locked }
 
     /** e.g. "B1": the band the phone is camped on although a band lock excludes it. */
-    val strayBand get() = groups.firstNotNullOfOrNull { groupState -> groupState.stray?.let { groupState.group.bandLabel(it) } }
+    val strayBand
+        get() = groups.firstNotNullOfOrNull { groupState ->
+            groupState.stray?.let {
+                groupState.group.bandLabel(
+                    it
+                )
+            }
+        }
     val anyCellLock get() = lteLock !== null || nrLock !== null || legacyCellLock !== null
     val anyPlmnLock get() = plmnLock !== null
 
@@ -353,13 +366,14 @@ data class ModemState(
     val netMode: NetMode?
         get() = NetMode.of(allowedMask).let { if (it == NetMode.NO_NR && !supports5g) NetMode.AUTO else it }
 
-    val supportsNrMode get() =
-        supports5g &&
-            when (backend) {
-                Backend.QUALCOMM, Backend.PIXEL -> true
-                Backend.ANDROID -> device?.samsungNrMode == true
-                else -> false
-            }
+    val supportsNrMode
+        get() =
+            supports5g &&
+                    when (backend) {
+                        Backend.QUALCOMM, Backend.PIXEL -> true
+                        Backend.ANDROID -> device?.samsungNrMode == true
+                        else -> false
+                    }
     val supportsNrDc get() = supports5g && device?.aospNrDc == true
     val mtkAtCellLock get() = backend == Backend.MEDIATEK && !mtkCellLockRefused
 
