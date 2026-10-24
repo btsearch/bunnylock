@@ -91,7 +91,6 @@ private const val QMI_NET_SEL_MANUAL = 1
 private const val QMI_NR_LOCK_PCI = 0
 private const val QMI_NR_LOCK_FREQUENCY = 1
 private const val QMI_NR_LOCK_SEVERAL_PCIS = 3
-private const val QMI_NR_LOCK_GNB_LIST = 4
 
 // Long enough for the helper to go through airplane mode when the modem only changes the lock with LTE off.
 private val QC_LTE_LOCK_TIMEOUT = 60.seconds
@@ -916,7 +915,7 @@ class ModemController(
             prefs.edit().remove(qcLteLockKey(sim)).apply()
             return null
         }
-        val setEarfcn = saved?.optJSONArray("cells")?.optJSONObject(0)?.optLong("earfcn")
+        val setEarfcn = if (reported.optBoolean("earfcnTruncated")) saved?.optJSONArray("cells")?.optJSONObject(0)?.optLong("earfcn") else null
         return qcLteLockLabel(reported, setEarfcn)
     }
 
@@ -950,11 +949,12 @@ class ModemController(
             }
 
             QMI_NR_LOCK_SEVERAL_PCIS -> {
-                if (lock.has("arfcn")) "ARFCN ${lock.optLong("arfcn")}, several PCIs" else "Several PCIs"
-            }
-
-            QMI_NR_LOCK_GNB_LIST -> {
-                "Only allowed gNodeBs (${lock.optJSONArray("gnbs")?.length() ?: 0})"
+                val pcis = lock.intList("pcis").orEmpty()
+                when {
+                    pcis.isNotEmpty() -> "ARFCN ${lock.optLong("arfcn")}, PCI ${orList(pcis.map { it.toString() })}"
+                    lock.has("arfcn") -> "ARFCN ${lock.optLong("arfcn")}, several PCIs"
+                    else -> "Several PCIs"
+                }
             }
 
             else -> "Lock type $type"
