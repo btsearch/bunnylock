@@ -8,6 +8,7 @@ object PhysicalChannels {
     private const val PHONE_PREFIX = "Phone Id="
 
     // PhysicalChannelConfig's unknown values. Band and bandwidth use 0.
+    // Some Samsung radios also leave the channel at 0. Channel 0 is a band edge and never a carrier's center.
     private const val CHANNEL_UNKNOWN = Int.MAX_VALUE.toLong()
     private const val PCI_UNKNOWN = -1
 
@@ -39,7 +40,7 @@ object PhysicalChannels {
             JSONObject()
                 .put("rat", rat)
                 .put("primary", field(config, "mConnectionStatus") == "PrimaryServing")
-        field(config, "mDownlinkChannelNumber")?.toLongOrNull()?.takeIf { it in 0 until CHANNEL_UNKNOWN }?.let { carrier.put("channel", it) }
+        field(config, "mDownlinkChannelNumber")?.toLongOrNull()?.takeIf { it in 1 until CHANNEL_UNKNOWN }?.let { carrier.put("channel", it) }
         field(config, "mPhysicalCellId")?.toIntOrNull()?.takeIf { it != PCI_UNKNOWN }?.let { carrier.put("pci", it) }
         field(config, "mBand")?.toIntOrNull()?.takeIf { it > 0 }?.let { carrier.put("band", it) }
         field(config, "mCellBandwidthDownlinkKhz")?.toIntOrNull()?.takeIf { it > 0 }?.let { carrier.put("bandwidth", it) }

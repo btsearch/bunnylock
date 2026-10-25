@@ -113,10 +113,12 @@ object Carriers {
             val leadsItsNetwork = ordered.indexOfFirst { it.rat == carrier.rat } == index
             val cell = cellOf(carrier, cells, leadsItsNetwork)
             val networkRsrp = if (leadsItsNetwork) signals.firstOrNull { it.rat == carrier.rat }?.rsrp else null
+            // Without a channel, the band is only the radio's word. The cell's band comes from its channel, so it wins.
+            val band = if (carrier.arfcn === null) cell?.band ?: carrier.band else carrier.band ?: cell?.band
             carrier.copy(
                 arfcn = carrier.arfcn ?: cell?.arfcn,
                 pci = carrier.pci ?: cell?.pci?.takeIf { it >= 0 },
-                band = carrier.band ?: cell?.band,
+                band = band,
                 bandwidthKhz = carrier.bandwidthKhz ?: cell?.bandwidthKhz,
                 rsrp = carrier.rsrp ?: cell?.rsrp ?: networkRsrp,
             )
@@ -140,9 +142,16 @@ object Carriers {
                     (carrier.band === null || cell.band === null || cell.band == carrier.band)
             }
         val serving = if (leadsItsNetwork) agreeing.firstOrNull { it.registered } ?: agreeing.singleOrNull() else null
+        // Samsung's radio can report a wrong band without a channel, so the registered cell with the same PCI still counts.
+        val registeredByPci =
+            if (leadsItsNetwork && carrier.arfcn === null && carrier.pci !== null) {
+                cells.firstOrNull { it.rat == carrier.rat && it.registered && it.pci == carrier.pci }
+            } else {
+                null
+            }
         return when {
             carrier.arfcn !== null && carrier.pci !== null -> agreeing.firstOrNull()
-            carrier.arfcn !== null || carrier.pci !== null -> serving ?: agreeing.singleOrNull { !it.registered }
+            carrier.arfcn !== null || carrier.pci !== null -> serving ?: registeredByPci ?: agreeing.singleOrNull { !it.registered }
             else -> serving
         }
     }
