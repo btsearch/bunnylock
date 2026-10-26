@@ -1,0 +1,16 @@
+<resources>
+    <string name="common_lock">Zablokuj</string>
+    <string name="common_unlock">Odblokuj</string>
+    <string name="common_unlock_all">Odblokuj wszystko</string>
+    <string name="common_unknown">Nieznane</string>
+    <string name="common_unknown_band">Nieznane pasmo</string>
+    <string name="common_copy_diagnostics">Kopiuj dane diagnostyczne</string>
+    <string name="common_send">Wyślij</string>
+    <string name="common_bands">Pasma</string>
+    <string name="common_cell">Komórka</string>
+    <string name="common_network">Sieć</string>
+    <string name="common_modem">Modem</string>
+    <string name="common_device">Urządzenie</string>
+    <string name="common_platform">Platforma</string>
+    <string name="common_baseband">Wersja pasma podstawowego</string>
+</resources>

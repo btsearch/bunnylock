@@ -4,9 +4,9 @@ import android.system.ErrnoException
 import android.system.Os
 import android.system.OsConstants
 import android.system.StructPollfd
+import dev.ririxi.bunnylock.modem.R
 import java.io.File
 import java.io.FileDescriptor
-import java.io.IOException
 
 object At {
     fun exists(node: String) = if (node.startsWith(OemHook.PREFIX)) OemHook.available() else File(node).exists()
@@ -29,7 +29,7 @@ object At {
             try {
                 Os.open(node, OsConstants.O_RDWR or OsConstants.O_NOCTTY or OsConstants.O_NONBLOCK, 0)
             } catch (e: ErrnoException) {
-                throw IOException("Couldn't open $node (${e.message}).")
+                fail(R.string.at_open_failed, node, e.toText())
             }
         try {
             discardPendingInput(fd)
@@ -47,7 +47,7 @@ object At {
     ): String {
         val reply = send(node, command, timeoutMs)
         val lines = reply.lines()
-        if (lines.none { it == "OK" }) throw IOException("The modem didn't accept $command. It replied: ${lines.joinToString(" ")}")
+        if (lines.none { it == "OK" }) fail(R.string.at_not_accepted, command, lines.joinToString(" "))
         return reply
     }
 
@@ -97,7 +97,7 @@ object At {
                     Os.read(fd, buffer, 0, buffer.size)
                 } catch (e: ErrnoException) {
                     if (e.errno == OsConstants.EAGAIN || e.errno == OsConstants.EINTR) continue
-                    throw IOException("Couldn't read from $node (${e.message}).")
+                    fail(R.string.at_read_failed, node, e.toText())
                 }
             if (count <= 0) continue
             reply.append(String(buffer, 0, count, Charsets.ISO_8859_1))
@@ -119,7 +119,7 @@ object At {
         node: String,
     ): String {
         val lines = raw.split('\r', '\n').map { it.trim() }.filter { it.isNotEmpty() && it != command }
-        if (lines.isEmpty()) throw IOException("The command $command got no reply from $node.")
+        if (lines.isEmpty()) fail(R.string.at_no_reply, command, node)
         return lines.joinToString("\n")
     }
 }

@@ -1,0 +1,22 @@
+<resources>
+    <string name="shell_tab_home">首页</string>
+    <string name="shell_tab_bands">频段</string>
+    <string name="shell_tab_cell">锁小区</string>
+    <string name="shell_tab_tools">工具</string>
+    <string name="shell_refresh">刷新</string>
+    <string name="shell_denied_title">需要 Root 或 Shizuku</string>
+    <string name="shell_try_again">重试</string>
+    <string name="shell_subtitle_default">锁频段、锁小区</string>
+    <string name="shell_subtitle_shizuku">%1$s（Shizuku）</string>
+    <string name="shell_sim_chip_description">SIM %1$d，%2$s。切换 SIM 卡</string>
+    <string name="shell_sim_menu_item">SIM %1$d：%2$s</string>
+    <string name="shell_sim_selected">已选择</string>
+    <string name="shell_update_title">发现新版本</string>
+    <string name="shell_update_message">新版本 %1$s 已发布。</string>
+    <string name="shell_update_download">下载</string>
+    <string name="shell_update_skip">跳过此版本</string>
+    <string name="shell_update_later">稍后</string>
+    <string name="shell_lock_badge_ignored">锁定未生效</string>
+    <string name="shell_lock_badge_locked">已锁定</string>
+    <string name="shell_lock_badge_unlocked">未锁定</string>
+</resources>

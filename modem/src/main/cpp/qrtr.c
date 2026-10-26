@@ -21,9 +21,10 @@
 #define QMI_RESPONSE 2
 #define LOOKUP_TIMEOUT_MS 1500
 
-static void throw_io(JNIEnv *env, const char *what, int err) {
+// "qrtr:<step>:<errno>:<strerror>", parsed by Qrtr.reword in Qmi.kt.
+static void throw_io(JNIEnv *env, const char *step, int err) {
     char msg[160];
-    snprintf(msg, sizeof msg, "%s (%s, errno %d)", what, strerror(err), err);
+    snprintf(msg, sizeof msg, "qrtr:%s:%d:%s", step, err, strerror(err));
     jclass cls = (*env)->FindClass(env, "java/io/IOException");
     if (cls) (*env)->ThrowNew(env, cls, msg);
 }
@@ -101,7 +102,7 @@ static ssize_t exchange(int fd, uint8_t *buf, size_t len, int timeout_ms, const 
 
     ssize_t sent = send(fd, buf, len, 0);
     if (sent != (ssize_t)len) {
-        *failed = "Couldn't send the QMI request";
+        *failed = "send";
         return sent < 0 ? -errno : -EIO;
     }
 
@@ -109,17 +110,17 @@ static ssize_t exchange(int fd, uint8_t *buf, size_t len, int timeout_ms, const 
     for (;;) {
         int ready = wait_readable(fd, deadline);
         if (ready == 0) {
-            *failed = "The modem didn't answer the QMI request in time";
+            *failed = "timeout";
             return -ETIMEDOUT;
         }
         if (ready < 0) {
-            *failed = "Couldn't wait for the QMI reply";
+            *failed = "wait";
             return ready;
         }
         ssize_t n = recv(fd, buf, QMI_MAX, 0);
         if (n < 0) {
             if (errno == EINTR || errno == EAGAIN) continue;
-            *failed = "Couldn't read the QMI reply";
+            *failed = "recv";
             return -errno;
         }
         // Indications and late responses to earlier requests arrive on the same socket.
@@ -134,13 +135,13 @@ Java_dev_ririxi_bunnylock_root_Qrtr_open(JNIEnv *env, jclass clazz, jint service
     int rc = lookup((uint32_t)service, 1, &server);
     if (rc != 0) rc = lookup((uint32_t)service, 0, &server);
     if (rc != 0) {
-        throw_io(env, "Couldn't find the modem's QMI service", -rc);
+        throw_io(env, "lookup", -rc);
         return -1;
     }
 
     int fd = socket(AF_QIPCRTR, SOCK_DGRAM | SOCK_CLOEXEC, 0);
     if (fd < 0) {
-        throw_io(env, "Couldn't open a QRTR socket", errno);
+        throw_io(env, "socket", errno);
         return -1;
     }
     struct timeval tv = {.tv_sec = timeoutMs / 1000, .tv_usec = (timeoutMs % 1000) * 1000L};
@@ -149,7 +150,7 @@ Java_dev_ririxi_bunnylock_root_Qrtr_open(JNIEnv *env, jclass clazz, jint service
     if (connect(fd, (struct sockaddr *)&server, sizeof server) < 0) {
         int err = errno;
         close(fd);
-        throw_io(env, "Couldn't connect to the modem's QMI service", err);
+        throw_io(env, "connect", err);
         return -1;
     }
     return fd;
@@ -160,7 +161,7 @@ Java_dev_ririxi_bunnylock_root_Qrtr_transact(JNIEnv *env, jclass clazz, jint fd,
     (void)clazz;
     jsize len = (*env)->GetArrayLength(env, request);
     if (len < QMI_HEADER || len >= QMI_MAX) {
-        throw_io(env, "The QMI request has an invalid length", EINVAL);
+        throw_io(env, "length", EINVAL);
         return NULL;
     }
     uint8_t buf[QMI_MAX];

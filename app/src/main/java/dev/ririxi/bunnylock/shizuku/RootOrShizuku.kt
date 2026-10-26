@@ -1,12 +1,15 @@
 package dev.ririxi.bunnylock.shizuku
 
 import android.content.Context
+import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.data.RootClient
 import dev.ririxi.bunnylock.data.RootException
+import dev.ririxi.bunnylock.data.reasonText
 import dev.ririxi.bunnylock.modem.Access
 import dev.ririxi.bunnylock.modem.HelperStarter
+import dev.ririxi.bunnylock.modem.R as ModemR
 import dev.ririxi.bunnylock.modem.StartedHelper
-import dev.ririxi.bunnylock.modem.asClause
+import dev.ririxi.bunnylock.modem.Text
 import kotlinx.coroutines.CancellationException
 
 class RootOrShizuku(
@@ -14,27 +17,23 @@ class RootOrShizuku(
     private val onShizukuLost: () -> Unit,
 ) : HelperStarter {
     override suspend fun start(showStep: (String) -> Unit): StartedHelper {
-        showStep("Asking for root access...")
+        showStep(context.getString(R.string.system_shizuku_step_root))
         val rootClient = RootClient(context)
-        val rootError =
+        val rootProblem =
             try {
                 return StartedHelper(rootClient, rootClient.start(), Access.ROOT)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                e.message?.asClause() ?: "root access was denied"
+                e.reasonText()?.let { Text(R.string.system_shizuku_root_failed, it) } ?: Text(R.string.system_shizuku_root_denied)
             }
-        showStep("Looking for Shizuku...")
+        showStep(context.getString(R.string.system_shizuku_step_looking))
         if (!ShizukuClient.awaitBinder()) {
-            val shizukuProblem =
-                if (ShizukuClient.installedVersion(context) === null) {
-                    "Shizuku isn't installed. Grant root, or install and start Shizuku, then try again."
-                } else {
-                    "Shizuku is installed but hasn't connected to bunnylock, so it probably isn't running. Open Shizuku to check, then try again."
-                }
-            throw RootException("No root access ($rootError), and $shizukuProblem")
+            val installed = ShizukuClient.installedVersion(context) !== null
+            val shizukuProblem = Text(if (installed) R.string.system_shizuku_not_running else R.string.system_shizuku_not_installed)
+            throw RootException(context, Text(ModemR.string.modem_sentences, rootProblem, shizukuProblem))
         }
-        showStep("Connecting to Shizuku. Allow bunnylock if it asks...")
+        showStep(context.getString(R.string.system_shizuku_step_connecting))
         val shizukuClient = ShizukuClient(context, onShizukuLost)
         val hello =
             try {
@@ -44,9 +43,9 @@ class RootOrShizuku(
                 throw e
             } catch (e: Exception) {
                 shizukuClient.stop()
-                throw RootException(
-                    "No root access ($rootError), and Shizuku didn't work either (${e.message?.asClause() ?: "no reason given"}).",
-                )
+                val shizukuProblem =
+                    e.reasonText()?.let { Text(R.string.system_shizuku_failed, it) } ?: Text(R.string.system_shizuku_failed_no_reason)
+                throw RootException(context, Text(ModemR.string.modem_sentences, rootProblem, shizukuProblem))
             }
         val access = if (hello.optInt("uid", -1) == 0) Access.SHIZUKU_ROOT else Access.SHIZUKU_ADB
         val note = if (shizukuClient.inShell) "Shizuku's service for bunnylock doesn't start on this phone, so the helper runs in a Shizuku shell." else null

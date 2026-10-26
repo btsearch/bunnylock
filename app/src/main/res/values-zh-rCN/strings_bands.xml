@@ -1,0 +1,29 @@
+<resources>
+    <string name="bands_network_mode">网络模式</string>
+    <string name="bands_5g_mode">5G 模式</string>
+    <string name="bands_nsa_on">开启 NSA</string>
+    <string name="bands_nsa_off">关闭 NSA</string>
+    <string name="bands_samsung_menu">打开三星频段菜单</string>
+    <string name="bands_samsung_menu_hint">三星系统自带的锁频段功能。</string>
+    <string name="bands_hint_qualcomm_persist">通过 QMI 修改，立即生效。重启后锁定仍会保留（可在“工具”中更改）。</string>
+    <string name="bands_hint_qualcomm_volatile">通过 QMI 修改，立即生效。重启后锁定会被清除。</string>
+    <string name="bands_hint_mediatek">通过 %1$s 发送 AT+EPBSE 和 AT+EPBSEH 指令。</string>
+    <string name="bands_hint_mediatek_auto">通过自动检测到的 AT 端口发送 AT+EPBSE 和 AT+EPBSEH 指令。</string>
+    <string name="bands_hint_pixel">修改会写入基带 NV，随后射频自动重启以生效。</string>
+    <string name="bands_hint_android">通过射频 HAL 的系统选择通道锁定。基带是否遵守，取决于手机厂商。</string>
+    <string name="bands_summary">已选 %1$d/%2$d</string>
+    <string name="bands_summary_pending">已选 %1$d/%2$d，尚未生效</string>
+    <string name="bands_summary_locked">已选 %1$d/%2$d，已锁定</string>
+    <string name="bands_summary_locked_pending">已选 %1$d/%2$d，已锁定，新选择尚未生效</string>
+    <string name="bands_summary_stray">已选 %1$d/%2$d，已锁定，但手机仍驻留在 %3$s</string>
+    <string name="bands_summary_stray_pending">已选 %1$d/%2$d，已锁定，但手机仍驻留在 %3$s，新选择尚未生效</string>
+    <string name="bands_pick_favorites">选择常用频段</string>
+    <string name="bands_pick_favorites_hint">点选常用频段，平时只显示它们。</string>
+    <string name="bands_show_favorites">仅显示常用</string>
+    <plurals name="bands_show_all">
+        <item quantity="other">显示全部 %d 个频段</item>
+    </plurals>
+    <string name="bands_done">完成</string>
+    <string name="bands_all">全选</string>
+    <string name="bands_none">全不选</string>
+</resources>

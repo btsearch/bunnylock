@@ -7,7 +7,9 @@ import android.os.Process
 import android.telephony.AccessNetworkConstants.AccessNetworkType
 import android.telephony.RadioAccessSpecifier
 import dev.ririxi.bunnylock.core.toIntList
-import dev.ririxi.bunnylock.modem.andList
+import dev.ririxi.bunnylock.modem.R
+import dev.ririxi.bunnylock.modem.Text
+import dev.ririxi.bunnylock.modem.toJson
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.reflect.InvocationTargetException
@@ -159,7 +161,7 @@ object Aosp {
         name: String,
         vararg args: Any?,
     ): Any? {
-        val method = findMethod(name, args.size) ?: throw NoSuchMethodException("This Android version doesn't offer ITelephony.$name.")
+        val method = findMethod(name, args.size) ?: fail(R.string.aosp_no_method, name)
         val parameterTypes = method.parameterTypes
         val invokeArgs =
             Array(parameterTypes.size) { index ->
@@ -220,7 +222,7 @@ object Aosp {
     private fun heldBackCause(
         mask: Long,
         otherReasons: Map<Int, Long>,
-    ): String? {
+    ): Text? {
         val requested = generations(mask)
         val removedByReason =
             otherReasons
@@ -232,13 +234,13 @@ object Aosp {
         val causes =
             removedByReason.map { (reason, removed) ->
                 when (reason) {
-                    REASON_POWER -> "power saving (Battery Saver or Adaptive connectivity) is on"
-                    REASON_CARRIER -> "the carrier settings leave out ${andList(removed)}"
-                    else -> "the \"Allow 2G\" setting is off"
+                    REASON_POWER -> Text(R.string.aosp_held_back_power)
+                    REASON_CARRIER -> Text(R.string.aosp_held_back_carrier, removed)
+                    else -> Text(R.string.aosp_held_back_2g)
                 }
             }
         val keptOff = GENERATION_NAMES.filter { name -> removedByReason.values.any { name in it } }
-        return "Android keeps ${andList(keptOff)} off for now: ${andList(causes)}."
+        return Text(R.string.aosp_held_back, keptOff, causes)
     }
 
     private fun reasonMasksText(subId: Int): String {
@@ -285,7 +287,7 @@ object Aosp {
                 generations(modemAllowed) == generations(sentToModem(userAllowed, otherReasons))
         val shownAllowed = if (heldBack) userAllowed else modemAllowed ?: userAllowed
         shownAllowed?.let { json.put("allowed", it) }
-        if (heldBack) heldBackCause(userAllowed, otherReasons)?.let { json.put("modeHeldBack", it) }
+        if (heldBack) heldBackCause(userAllowed, otherReasons)?.let { json.put("modeHeldBack", it.toJson()) }
         json.put("modeMasks", reasonMasksText(subId))
         userAllowed?.let { json.put("userAllowed", it) }
         modemAllowed?.let { json.put("modemAllowed", it) }
@@ -320,9 +322,7 @@ object Aosp {
                     .newInstance(numeric, numeric, numeric)
             }
         val registered = call("setNetworkSelectionModeManual", subId, operatorInfo, persist) as Boolean
-        check(registered) {
-            "Couldn't register on ${numeric.take(3)} ${numeric.drop(3)}. The network may be out of range, or it may not allow this SIM."
-        }
+        if (!registered) fail(R.string.aosp_plmn_not_registered, numeric.take(3), numeric.drop(3))
         return JSONObject().put("plmn", numeric)
     }
 
@@ -391,12 +391,10 @@ object Aosp {
             failures += "mask 0x%X not taken with the radio off either".format(attempt)
         }
         val restored = previous !== null && runCatching { setAllowedOnce(subId, previous) }.getOrDefault(false)
-        val restoredText = if (restored) " The previous network mode was put back." else ""
-        val causeText = heldBackCause(mask, otherReasons)?.let { " $it" }.orEmpty()
+        val refused = Text(if (restored) R.string.aosp_mode_refused_restored else R.string.aosp_mode_refused)
+        val message = heldBackCause(mask, otherReasons)?.let { Text(R.string.aosp_sentences, refused, it) } ?: refused
         val after = networkModeDiagnostic(subId, slot)
-        throw IllegalStateException(
-            "The radio refused this network mode (${failures.joinToString("; ")}).$restoredText$causeText Before: $before. After: $after.",
-        )
+        fail(R.string.aosp_with_details, message, "${failures.joinToString("; ")}. Before: $before. After: $after")
     }
 
     /**
@@ -410,7 +408,7 @@ object Aosp {
         val other = unsetReasonMask()?.takeIf { it != mask } ?: GENERATION_BITS.reduce(Long::or)
         inAirplaneMode {
             runCatching { setAllowedOnce(subId, other) }
-            check(setAllowedOnce(subId, mask)) { "The radio refused the network mode with the radio off." }
+            if (!setAllowedOnce(subId, mask)) fail(R.string.aosp_mode_refused_radio_off)
         }
         return JSONObject().put("airplaneMode", true)
     }
@@ -423,7 +421,7 @@ object Aosp {
     ): JSONObject {
         val json = JSONObject().put("allowed", attempt).put("requested", requested)
         val readback = readMask("getAllowedNetworkTypesBitmask", subId)
-        if (readback !== null && generations(readback) != generations(attempt)) heldBackCause(attempt, otherReasons)?.let { json.put("heldBack", it) }
+        if (readback !== null && generations(readback) != generations(attempt)) heldBackCause(attempt, otherReasons)?.let { json.put("heldBack", it.toJson()) }
         return json
     }
 
@@ -449,14 +447,12 @@ object Aosp {
         val resultCode = call("setNrDualConnectivityState", subId, state) as Int
         if (resultCode != NR_DC_SUCCESS) {
             // The other TelephonyManager.ENABLE_NR_DUAL_CONNECTIVITY_* results.
-            val reason =
-                when (resultCode) {
-                    1 -> "The radio isn't available right now."
-                    2 -> "The radio returned an error. It may not support switching EN-DC."
-                    3 -> "The radio didn't accept that EN-DC state."
-                    else -> "The radio returned error $resultCode."
-                }
-            throw IllegalStateException(reason)
+            when (resultCode) {
+                1 -> fail(R.string.aosp_nr_dc_unavailable)
+                2 -> fail(R.string.aosp_nr_dc_error)
+                3 -> fail(R.string.aosp_nr_dc_refused)
+                else -> fail(R.string.aosp_nr_dc_code, resultCode)
+            }
         }
         return JSONObject().put("nrDc", state == NR_DC_ENABLE)
     }
@@ -467,10 +463,7 @@ object Aosp {
         specs: JSONArray,
         splitRefused: Boolean = true,
     ): JSONObject {
-        check(subId >= 0) {
-            "Android has no active subscription for this SIM, so there is nothing to send the lock to. " +
-                "Check that the SIM is inserted and switched on, and that bunnylock has the Phone permission."
-        }
+        if (subId < 0) fail(R.string.aosp_no_subscription)
         val whole = List(specs.length()) { specs.getJSONObject(it) }.map(::toSpecifier)
         // Samsung's Snapdragon RIL refuses a specifier with more than MAX_RIL_BANDS bands, so a refused long list is sent again in pieces.
         val split = if (splitRefused) whole.flatMap(::splitToRilBands) else whole
@@ -494,15 +487,13 @@ object Aosp {
                     .put("diagnostic", "$requestDiagnostic; ${outcomes.joinToString("; ")}")
             }
         }
-        val rejected = "Android's radio service rejected the channel lock"
-        val fewer = "Selecting $MAX_RIL_BANDS or fewer bands may work on this phone."
         val failure =
             when {
-                split.size > whole.size -> "$rejected, also with the bands split into groups of $MAX_RIL_BANDS. $fewer"
-                whole.any { it.bands.size > MAX_RIL_BANDS } -> "$rejected. $fewer"
-                else -> "$rejected."
+                split.size > whole.size -> Text(R.string.aosp_channels_rejected_split, MAX_RIL_BANDS)
+                whole.any { it.bands.size > MAX_RIL_BANDS } -> Text(R.string.aosp_channels_rejected_fewer, MAX_RIL_BANDS)
+                else -> Text(R.string.aosp_channels_rejected)
             }
-        throw IllegalStateException("$failure $requestDiagnostic; ${outcomes.joinToString("; ")}; after=${channelState(subId)}")
+        fail(R.string.aosp_with_details, failure, "$requestDiagnostic; ${outcomes.joinToString("; ")}; after=${channelState(subId)}")
     }
 
     private fun toSpecifier(spec: JSONObject): RadioAccessSpecifier =
@@ -593,10 +584,8 @@ object Aosp {
         val started = System.nanoTime()
         val callError = runCatching { call("setSystemSelectionChannels", specifiers, subId, callback) }.exceptionOrNull()
         if (callError !== null) {
-            throw IllegalStateException(
-                "Android's radio service couldn't start the channel lock. $requestDiagnostic; error=${errorText(callError)}",
-                callError,
-            )
+            val diagnostic = "$requestDiagnostic; error=${errorText(callError)}"
+            throw HelperFailure(Text(R.string.aosp_with_details, Text(R.string.aosp_channels_not_started), diagnostic)).apply { initCause(callError) }
         }
         val callbackReceived = latch.await(CHANNELS_CALLBACK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
         val elapsedMs = (System.nanoTime() - started) / 1_000_000
@@ -633,8 +622,8 @@ object Aosp {
         val failure = reboot.exceptionOrNull()
         if (failure !== null && failure !is UnsupportedOperationException) throw failure
         if (reboot.getOrNull() == true) return JSONObject().put("ok", true).put("method", "modem")
-        val error = failure?.let(::errorText) ?: "The radio HAL refused the modem reboot"
-        return cycleSubscriberRadio(subId).put("rebootError", error)
+        val error = failure?.toText() ?: Text(R.string.aosp_reboot_refused)
+        return cycleSubscriberRadio(subId).put("rebootError", error.toJson())
     }
 
     /** Stock Qualcomm reports a reduced feature set, so the framework never forwards EN-DC changes there. */
@@ -650,7 +639,7 @@ object Aosp {
     fun cycleSubscriberRadio(subId: Int): JSONObject {
         if (subId < 0) return cycleDefaultRadio()
         val stateQuery = SIM_RADIO_STATE_QUERIES.firstOrNull { hasMethod(it, 2) }
-        check(stateQuery !== null && hasMethod("setRadioForSubscriber", 2)) { "This Android version can't restart one SIM's radio." }
+        if (stateQuery === null || !hasMethod("setRadioForSubscriber", 2)) fail(R.string.aosp_no_sim_radio_restart)
 
         fun radioOn(): Boolean = call(stateQuery, subId, callingPackage) == true
 
@@ -663,7 +652,7 @@ object Aosp {
             return false
         }
 
-        check(radioOn()) { "This SIM's radio is off." }
+        if (!radioOn()) fail(R.string.aosp_sim_radio_off)
         val restarted =
             runCatching {
                 call("setRadioForSubscriber", subId, false)
@@ -685,10 +674,12 @@ object Aosp {
         val off = runCatching { call("setRadioPower", false) == true }
         Thread.sleep(RADIO_OFF_PAUSE_MS)
         val on = runCatching { call("setRadioPower", true) == true }
-        check(on.getOrDefault(false)) { "The radio refused to turn back on: ${on.exceptionOrNull()?.message ?: "unknown error"}." }
-        check(off.getOrDefault(false)) { "The radio refused to turn off: ${off.exceptionOrNull()?.message ?: "unknown error"}." }
+        if (!on.getOrDefault(false)) fail(R.string.aosp_radio_not_on, on.failureText())
+        if (!off.getOrDefault(false)) fail(R.string.aosp_radio_not_off, off.failureText())
         return JSONObject().put("method", "radio").put("api", "setRadioPower")
     }
+
+    private fun Result<*>.failureText(): Text = exceptionOrNull()?.toText() ?: Text(R.string.aosp_unknown_error)
 
     fun radioCycle(): JSONObject {
         inAirplaneMode {}

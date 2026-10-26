@@ -1,0 +1,22 @@
+<resources>
+    <string name="shell_tab_home">Home</string>
+    <string name="shell_tab_bands">Bands</string>
+    <string name="shell_tab_cell">Cell lock</string>
+    <string name="shell_tab_tools">Tools</string>
+    <string name="shell_refresh">Refresh</string>
+    <string name="shell_denied_title">Root or Shizuku needed</string>
+    <string name="shell_try_again">Try again</string>
+    <string name="shell_subtitle_default">Band and cell locking</string>
+    <string name="shell_subtitle_shizuku">%1$s (Shizuku)</string>
+    <string name="shell_sim_chip_description">SIM %1$d, %2$s. Switch SIM</string>
+    <string name="shell_sim_menu_item">SIM %1$d: %2$s</string>
+    <string name="shell_sim_selected">Selected</string>
+    <string name="shell_update_title">Update available</string>
+    <string name="shell_update_message">Version %1$s is out.</string>
+    <string name="shell_update_download">Download</string>
+    <string name="shell_update_skip">Skip this version</string>
+    <string name="shell_update_later">Later</string>
+    <string name="shell_lock_badge_ignored">Lock ignored</string>
+    <string name="shell_lock_badge_locked">Locked</string>
+    <string name="shell_lock_badge_unlocked">Unlocked</string>
+</resources>

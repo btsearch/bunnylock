@@ -21,8 +21,8 @@ object LockNotifier {
 
     private fun ensureChannel(context: Context) {
         val channel =
-            NotificationChannel(CHANNEL_ID, "Active locks", NotificationManager.IMPORTANCE_LOW).apply {
-                description = "Shows which bands, cells or networks bunnylock has locked."
+            NotificationChannel(CHANNEL_ID, context.getString(R.string.system_notify_channel_name), NotificationManager.IMPORTANCE_LOW).apply {
+                description = context.getString(R.string.system_notify_channel_description)
                 setShowBadge(false)
             }
         manager(context).createNotificationChannel(channel)
@@ -56,8 +56,8 @@ object LockNotifier {
             Notification
                 .Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_lock)
-                .setContentTitle("bunnylock: locked")
-                .setContentText(lines.joinToString(", "))
+                .setContentTitle(context.getString(R.string.system_notify_title))
+                .setContentText(lines.joinToString(context.getString(R.string.system_notify_line_separator)))
                 .setStyle(Notification.BigTextStyle().bigText(lines.joinToString("\n")))
                 .setWhen(lockedSinceMillis)
                 .setShowWhen(true)
@@ -65,7 +65,7 @@ object LockNotifier {
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
                 .setContentIntent(openApp)
-                .addAction(Notification.Action.Builder(null, "Unlock all", unlockAll).build())
+                .addAction(Notification.Action.Builder(null, context.getString(R.string.common_unlock_all), unlockAll).build())
                 .build()
         manager(context).notify(NOTIFICATION_ID, notification)
     }

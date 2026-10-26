@@ -1,0 +1,81 @@
+<resources>
+    <string name="tools_backend">Backend</string>
+    <string name="tools_backend_needs_root">Needs root</string>
+    <string name="tools_backend_detected">Detected for this device</string>
+    <string name="tools_persist">Keep band locks after reboot</string>
+    <string name="tools_persist_hint">When this is off, locks are cleared on reboot.</string>
+
+    <string name="tools_appearance">Appearance</string>
+    <string name="tools_dynamic_color">Dynamic color</string>
+    <string name="tools_dynamic_color_hint">Use your wallpaper colors. Off uses the default blue theme.</string>
+
+    <string name="tools_language">Language</string>
+    <string name="tools_language_system">System default</string>
+    <string name="tools_language_system_hint">Follows your phone\'s language.</string>
+    <string name="tools_language_helper_english">A few messages from the root helper may still show up in English.</string>
+    <string name="tools_language_en" translatable="false">English</string>
+    <string name="tools_language_pl" translatable="false">Polski</string>
+    <string name="tools_language_zh_cn" translatable="false">简体中文</string>
+
+    <string name="tools_updates">Updates</string>
+    <string name="tools_check_updates">Check for updates</string>
+    <string name="tools_check_updates_hint">Looks for a new release on GitHub when the app starts.</string>
+
+    <string name="tools_radio">Radio</string>
+    <string name="tools_restart_radio">Restart radio</string>
+    <string name="tools_restart_radio_hint">Turns airplane mode on and off again.</string>
+    <string name="tools_reattach">Re-attach</string>
+    <string name="tools_reattach_hint">Drops the data connection and attaches again over QMI.</string>
+    <string name="tools_reboot_modem">Reboot modem</string>
+    <string name="tools_reboot_modem_hint">This restarts the SIM too.</string>
+    <string name="tools_samsung_menu">Samsung band menu</string>
+    <string name="tools_samsung_menu_hint">Opens Samsung\'s hidden band settings.</string>
+
+    <string name="tools_at_console">AT console</string>
+    <string name="tools_at_port">AT port</string>
+    <string name="tools_at_command">Command</string>
+    <string name="tools_at_ports_ril">ril:1 and ril:2 (through the RIL)</string>
+    <string name="tools_at_ports_none">No AT ports found.</string>
+    <string name="tools_at_ports_found">Found %1$s.</string>
+
+    <string name="tools_qmi_console">QMI console</string>
+    <string name="tools_qmi_service">Service</string>
+    <string name="tools_qmi_message">Message (hex)</string>
+    <string name="tools_qmi_payload">TLV payload (hex)</string>
+    <string name="tools_qmi_nas_hint">NAS (service 3) talks to the selected SIM.</string>
+
+    <string name="tools_output">Output</string>
+    <string name="tools_clear">Clear</string>
+
+    <string name="tools_copy_diagnostics_hint">Device details, the passthrough check and the log</string>
+    <string name="tools_access">Access</string>
+    <string name="tools_passthrough">Modem command passthrough</string>
+    <string name="tools_services_checked">Services checked (%1$d)</string>
+    <string name="tools_collapse">Collapse</string>
+    <string name="tools_expand">Expand</string>
+    <string name="tools_qmi_over_qrtr">QMI over QRTR</string>
+    <string name="tools_yes">Yes</string>
+    <string name="tools_no">No</string>
+    <string name="tools_hal_channel_lock">HAL channel-lock API</string>
+    <string name="tools_present">Present</string>
+    <string name="tools_absent">Absent</string>
+
+    <string name="tools_log">Log</string>
+
+    <string name="tools_about">About</string>
+    <string name="tools_author">by @ririxi (BTSearch.pl developer)</string>
+    <string name="tools_version">Version %1$s</string>
+    <string name="tools_bunny_fact">Bunny fact: %1$s</string>
+    <string-array name="bunny_facts">
+        <item>A rabbit\'s teeth never stop growing, so they have to keep chewing to wear them down.</item>
+        <item>A happy rabbit does a \"binky\": a jump with a twist in mid-air.</item>
+        <item>Rabbits can see almost all the way around themselves, except for a small blind spot right in front of the nose.</item>
+        <item>Rabbits can\'t vomit, so eating something bad is extra dangerous for them.</item>
+        <item>A content rabbit \"purrs\" by gently grinding its teeth.</item>
+        <item>Baby rabbits are called kits.</item>
+        <item>Rabbits are most active at dawn and dusk.</item>
+        <item>Those big ears also work as radiators and help a rabbit cool down.</item>
+        <item>A group of rabbits is sometimes called a fluffle.</item>
+        <item>A thumping rabbit is warning everyone nearby that something seems off.</item>
+    </string-array>
+</resources>

@@ -1,5 +1,8 @@
 package dev.ririxi.bunnylock.root
 
+import androidx.annotation.StringRes
+import dev.ririxi.bunnylock.modem.R
+import dev.ririxi.bunnylock.modem.Text
 import java.io.ByteArrayOutputStream
 import java.io.Closeable
 import java.io.IOException
@@ -18,11 +21,33 @@ object Qrtr {
     ): ByteArray
 
     @JvmStatic external fun close(fd: Int)
-}
 
-class QmiException(
-    message: String,
-) : IOException(message)
+    private val STEPS =
+        mapOf(
+            "lookup" to R.string.qrtr_lookup,
+            "socket" to R.string.qrtr_socket,
+            "connect" to R.string.qrtr_connect,
+            "length" to R.string.qrtr_length,
+            "send" to R.string.qrtr_send,
+            "timeout" to R.string.qrtr_timeout,
+            "wait" to R.string.qrtr_wait,
+            "recv" to R.string.qrtr_recv,
+        )
+
+    fun <T> worded(block: () -> T): T =
+        try {
+            block()
+        } catch (e: IOException) {
+            throw reword(e)
+        }
+
+    private fun reword(e: IOException): Exception {
+        val parts = e.message.orEmpty().split(':', limit = 4)
+        val step = parts.getOrNull(1)?.let(STEPS::get)
+        if (parts.size < 4 || parts[0] != "qrtr" || step === null) return e
+        return HelperFailure(Text(R.string.qrtr_failed, Text(step), "${parts[3]}, errno ${parts[2]}"))
+    }
+}
 
 // A QMI message on QRTR: type (u8), transaction id (u16), message id (u16), body length (u16), then the body.
 private const val QMI_HEADER_SIZE = 7
@@ -79,7 +104,7 @@ class Reader(
     val remaining get() = data.size - offset
 
     private fun need(byteCount: Int) {
-        if (offset + byteCount > data.size) throw QmiException("The modem's reply was shorter than expected.")
+        if (offset + byteCount > data.size) fail(R.string.qmi_reply_too_short)
     }
 
     private fun unsigned(byteCount: Int): Long {
@@ -159,38 +184,38 @@ class QmiResponse(
 
     fun tlv(id: Int): ByteArray? = tlvs[id]
 
-    fun check(what: String): QmiResponse {
-        if (!ok) throw QmiException("The modem refused $what: ${errorName(error)}.")
+    fun check(@StringRes what: Int): QmiResponse {
+        if (!ok) fail(R.string.qmi_refused, Text(what), errorName(error))
         return this
     }
 
     companion object {
-        fun errorName(code: Int): String =
+        fun errorName(code: Int): Text =
             when (code) {
-                -1 -> "no result from the modem"
-                0x00 -> "no error (0x00)"
-                0x01 -> "a malformed request (0x01)"
-                0x02 -> "out of memory (0x02)"
-                0x03 -> "an internal error (0x03)"
-                0x05 -> "no free slot for another app, which restarting the phone fixes (0x05)"
-                0x0E -> "call failed (0x0E)"
-                0x10 -> "not provisioned (0x10)"
-                0x11 -> "a missing value (0x11)"
-                0x13 -> "a value that's too long (0x13)"
-                0x19 -> "not supported by this modem (0x19)"
-                0x1A -> "no change needed (0x1A)"
-                0x1E -> "an invalid profile type (0x1E)"
-                0x1F -> "an invalid service type (0x1F)"
-                0x29 -> "an invalid QoS ID (0x29)"
-                0x2F -> "an unknown error (0x2F)"
-                0x30 -> "an invalid value (0x30)"
-                0x34 -> "not ready yet (0x34)"
-                0x3C -> "an invalid state change (0x3C)"
-                0x4A -> "info not available (0x4A)"
-                0x52 -> "access denied (0x52)"
-                0x5A -> "not possible in the modem's current state (0x5A)"
-                0x5E -> "not supported (0x5E)"
-                else -> "error 0x%04X".format(code)
+                -1 -> Text(R.string.qmi_error_no_result)
+                0x00 -> Text(R.string.qmi_error_none)
+                0x01 -> Text(R.string.qmi_error_malformed)
+                0x02 -> Text(R.string.qmi_error_no_memory)
+                0x03 -> Text(R.string.qmi_error_internal)
+                0x05 -> Text(R.string.qmi_error_no_free_client)
+                0x0E -> Text(R.string.qmi_error_call_failed)
+                0x10 -> Text(R.string.qmi_error_not_provisioned)
+                0x11 -> Text(R.string.qmi_error_missing_arg)
+                0x13 -> Text(R.string.qmi_error_arg_too_long)
+                0x19 -> Text(R.string.qmi_error_not_supported_modem)
+                0x1A -> Text(R.string.qmi_error_no_effect)
+                0x1E -> Text(R.string.qmi_error_invalid_profile_type)
+                0x1F -> Text(R.string.qmi_error_invalid_service_type)
+                0x29 -> Text(R.string.qmi_error_invalid_qos_id)
+                0x2F -> Text(R.string.qmi_error_unknown)
+                0x30 -> Text(R.string.qmi_error_invalid_arg)
+                0x34 -> Text(R.string.qmi_error_not_ready)
+                0x3C -> Text(R.string.qmi_error_invalid_transition)
+                0x4A -> Text(R.string.qmi_error_info_unavailable)
+                0x52 -> Text(R.string.qmi_error_access_denied)
+                0x5A -> Text(R.string.qmi_error_incompatible_state)
+                0x5E -> Text(R.string.qmi_error_not_supported)
+                else -> Text(R.string.qmi_error_other, "0x%04X".format(code))
             }
     }
 }
@@ -199,7 +224,7 @@ class QmiClient(
     service: Int,
     private val timeoutMs: Int = 3000,
 ) : Closeable {
-    private val fd = Qrtr.open(service, timeoutMs)
+    private val fd = Qrtr.worded { Qrtr.open(service, timeoutMs) }
     private var transactionId = (System.nanoTime() and 0x7FFF).toInt()
 
     fun send(
@@ -214,7 +239,7 @@ class QmiClient(
                 LittleEndian.u16(transactionId) +
                 LittleEndian.u16(msgId) +
                 LittleEndian.u16(payload.size)
-        return QmiResponse(Qrtr.transact(fd, header + payload, timeoutMs))
+        return QmiResponse(Qrtr.worded { Qrtr.transact(fd, header + payload, timeoutMs) })
     }
 
     fun send(
@@ -229,6 +254,6 @@ fun ByteArray.hex(): String = joinToString("") { "%02X".format(it) }
 
 fun String.unhex(): ByteArray {
     val digits = filter { !it.isWhitespace() && it != ':' && it != ',' }
-    require(digits.length % 2 == 0) { "The hex payload has an odd number of digits." }
+    if (digits.length % 2 != 0) fail(R.string.qmi_hex_odd_digits)
     return ByteArray(digits.length / 2) { digits.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
 }

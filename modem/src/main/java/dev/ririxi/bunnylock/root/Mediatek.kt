@@ -1,10 +1,12 @@
 package dev.ririxi.bunnylock.root
 
+import androidx.annotation.StringRes
 import dev.ririxi.bunnylock.core.Bands
 import dev.ririxi.bunnylock.modem.Masks
+import dev.ririxi.bunnylock.modem.R
+import dev.ririxi.bunnylock.modem.Text
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.IOException
 
 /**
  * Same AT commands as MediaTek's EngineerMode:
@@ -195,9 +197,9 @@ object Mediatek {
         mask: Long,
     ): JSONObject {
         val wanted = mask and GENERATIONS
-        val current = ratMask(node) ?: throw IOException("The modem didn't report its network mode.")
+        val current = ratMask(node) ?: fail(R.string.mtk_no_network_mode)
         if (current and GENERATIONS != wanted) {
-            val rat = ERAT_MASKS.entries.firstOrNull { it.value == wanted }?.key ?: throw IOException("AT+ERAT has no mode for that combination.")
+            val rat = ERAT_MASKS.entries.firstOrNull { it.value == wanted }?.key ?: fail(R.string.mtk_erat_no_mode)
             At.ok(node, "AT+ERAT=$rat,${preferenceFor(wanted)}")
         }
         val out = JSONObject()
@@ -222,13 +224,13 @@ object Mediatek {
     private fun readEpbse(
         node: String,
         command: String,
-        problem: String,
+        @StringRes problem: Int,
         epbseh: List<LongArray>?,
     ): Epbse {
         val reply = At.send(node, command)
         return parseEpbse(reply)
             ?: epbseh?.let(::epbseOf)
-            ?: throw IOException("$problem ($command replied: ${reply.lines().joinToString(" ")}).")
+            ?: fail(R.string.mtk_epbse_unreadable, Text(problem, node), command, reply.lines().joinToString(" "))
     }
 
     /** Any argument left null keeps the modem's current value. An empty list means "all supported". */
@@ -241,8 +243,8 @@ object Mediatek {
     ): JSONObject {
         val supportedHex = queryEpbseh(node, "AT+EPBSEH=?")
         val currentHex = queryEpbseh(node, "AT+EPBSEH?")
-        val supported = readEpbse(node, "AT+EPBSE=?", "The AT port $node doesn't support band locking", supportedHex)
-        val current = readEpbse(node, "AT+EPBSE?", "Couldn't read the current bands from $node", currentHex)
+        val supported = readEpbse(node, "AT+EPBSE=?", R.string.mtk_no_band_lock, supportedHex)
+        val current = readEpbse(node, "AT+EPBSE?", R.string.mtk_current_bands_unreadable, currentHex)
         val words = current.words.copyOf()
         if (gsm !== null) words[GSM_WORD] = if (gsm.isEmpty()) supported.words[GSM_WORD] else gsmWord(gsm)
         if (wcdma !== null) words[UMTS_WORD] = if (wcdma.isEmpty()) supported.words[UMTS_WORD] else umtsWord(wcdma)
@@ -259,7 +261,7 @@ object Mediatek {
         val epbsehOnly = supported.fromEpbseh || current.fromEpbseh
         if (!epbsehOnly && (gsm !== null || wcdma !== null || lte !== null)) At.ok(node, epbseCommand(words, supported.hasExtendedLte))
         if (nr !== null || epbsehOnly) {
-            val supportedNr = nrWordsOf(supportedHex) ?: throw IOException("This modem doesn't support AT+EPBSEH, so it may not have 5G.")
+            val supportedNr = nrWordsOf(supportedHex) ?: fail(R.string.mtk_no_epbseh)
             val nrWords =
                 when {
                     // The modem leaves trailing zero words out of its reply, so they are put back.

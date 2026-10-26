@@ -1,0 +1,22 @@
+<resources>
+    <string name="shell_tab_home">Start</string>
+    <string name="shell_tab_bands">Pasma</string>
+    <string name="shell_tab_cell">Komórka</string>
+    <string name="shell_tab_tools">Narzędzia</string>
+    <string name="shell_refresh">Odśwież</string>
+    <string name="shell_denied_title">Potrzebny root lub Shizuku</string>
+    <string name="shell_try_again">Spróbuj ponownie</string>
+    <string name="shell_subtitle_default">Blokada pasm i komórek</string>
+    <string name="shell_subtitle_shizuku">%1$s (Shizuku)</string>
+    <string name="shell_sim_chip_description">SIM %1$d, %2$s. Zmień kartę SIM</string>
+    <string name="shell_sim_menu_item">SIM %1$d: %2$s</string>
+    <string name="shell_sim_selected">Wybrana</string>
+    <string name="shell_update_title">Dostępna aktualizacja</string>
+    <string name="shell_update_message">Wyszła wersja %1$s.</string>
+    <string name="shell_update_download">Pobierz</string>
+    <string name="shell_update_skip">Pomiń tę wersję</string>
+    <string name="shell_update_later">Później</string>
+    <string name="shell_lock_badge_ignored">Blokada ignorowana</string>
+    <string name="shell_lock_badge_locked">Zablokowane</string>
+    <string name="shell_lock_badge_unlocked">Bez blokady</string>
+</resources>

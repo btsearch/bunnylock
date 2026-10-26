@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.core.Bands
 import dev.ririxi.bunnylock.data.Cell
 import dev.ririxi.bunnylock.data.LockNotifier
@@ -21,7 +22,11 @@ import dev.ririxi.bunnylock.modem.ModemState
 import dev.ririxi.bunnylock.modem.NetMode
 import dev.ririxi.bunnylock.modem.NrMode
 import dev.ririxi.bunnylock.modem.RootState
+import dev.ririxi.bunnylock.modem.Text
+import dev.ririxi.bunnylock.modem.asSentence
+import dev.ririxi.bunnylock.modem.optText
 import dev.ririxi.bunnylock.modem.reason
+import dev.ririxi.bunnylock.modem.string
 import dev.ririxi.bunnylock.shizuku.RootOrShizuku
 import dev.ririxi.bunnylock.shizuku.ShizukuClient
 import kotlinx.coroutines.CancellationException
@@ -37,7 +42,7 @@ import kotlinx.coroutines.launch
 private const val MAX_TOOL_OUTPUT_CHARS = 8000
 
 class MainViewModel(
-    app: Application,
+    private val app: Application,
 ) : AndroidViewModel(app) {
     private val prefs = app.getSharedPreferences("bunnylock", Context.MODE_PRIVATE)
 
@@ -75,10 +80,7 @@ class MainViewModel(
         checkForUpdate()
     }
 
-    private fun appVersion(): String? {
-        val app = getApplication<Application>()
-        return runCatching { app.packageManager.getPackageInfo(app.packageName, 0).versionName }.getOrNull()
-    }
+    private fun appVersion(): String? = runCatching { app.packageManager.getPackageInfo(app.packageName, 0).versionName }.getOrNull()
 
     private fun checkForUpdate() =
         viewModelScope.launch {
@@ -90,7 +92,7 @@ class MainViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                modem.log("Couldn't check for updates. ${reason(e)}")
+                modem.log("Couldn't check for updates. ${e.message?.takeIf { it.isNotBlank() }?.asSentence() ?: "Something went wrong."}")
             }
         }
 
@@ -114,13 +116,19 @@ class MainViewModel(
 
     fun connect() = modem.connect()
 
+    private var shownLocales = app.resources.configuration.locales
+
     /** Coming back from the Shizuku app after allowing bunnylock there shouldn't need a tap on "Try again". */
     fun resumed() {
         if (modem.state.value.root is RootState.Denied && ShizukuClient.granted()) modem.connect()
+        val locales = app.resources.configuration.locales
+        if (locales == shownLocales) return
+        shownLocales = locales
+        if (modem.state.value.root == RootState.Granted) refresh()
     }
 
     private fun shizukuLost() {
-        modem.helperLost("The Shizuku service stopped. Try again to restart it.")
+        modem.helperLost(Text(R.string.system_shizuku_lost))
     }
 
     fun refresh() = modem.refresh()
@@ -146,7 +154,6 @@ class MainViewModel(
 
     /** Lists the locks that hold. One the phone has strayed from is left out. */
     private fun updateNotification(modemState: ModemState) {
-        val context = getApplication<Application>()
         val lines =
             buildList {
                 modemState.groups.filter { it.locked && it.stray === null }.forEach { groupState ->
@@ -155,24 +162,24 @@ class MainViewModel(
                             .orEmpty()
                             .sorted()
                             .joinToString(" ") { groupState.group.bandLabel(it) }
-                    add("${groupState.group.label}: $bands")
+                    add(app.getString(R.string.system_notify_line_bands, groupState.group.label, bands))
                 }
-                modemState.plmnLock?.let { add("Network: $it") }
+                modemState.plmnLock?.let { add(app.getString(R.string.system_notify_line_network, it)) }
                 if (modemState.strayChannel === null) {
-                    modemState.lteLock?.let { add("LTE cell: $it") }
-                    modemState.nrLock?.let { add("NR cell: $it") }
-                    modemState.legacyCellLock?.let { add("2G/3G cell: $it") }
+                    modemState.lteLock?.let { add(app.getString(R.string.system_notify_line_lte_cell, it)) }
+                    modemState.nrLock?.let { add(app.getString(R.string.system_notify_line_nr_cell, it)) }
+                    modemState.legacyCellLock?.let { add(app.getString(R.string.system_notify_line_legacy_cell, it)) }
                 }
             }
         if (lines.isEmpty()) {
             prefs.edit().remove("lockedSince").apply()
-            LockNotifier.cancel(context)
+            LockNotifier.cancel(app)
             return
         }
         val lockedSince =
             prefs.getLong("lockedSince", 0L).takeIf { it > 0 }
                 ?: System.currentTimeMillis().also { prefs.edit().putLong("lockedSince", it).apply() }
-        LockNotifier.show(context, lines, lockedSince)
+        LockNotifier.show(app, lines, lockedSince)
     }
 
     fun loadSims() = modem.loadSims()
@@ -196,7 +203,7 @@ class MainViewModel(
         block: suspend () -> String,
     ) = viewModelScope.launch {
         if (!modem.helperRunning) {
-            _events.emit("The helper isn't running, so nothing was changed. Reconnecting.")
+            _events.emit(app.getString(R.string.system_helper_not_running))
             modem.reconnect()
             return@launch
         }
@@ -207,7 +214,7 @@ class MainViewModel(
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            _events.emit(reason(e))
+            _events.emit(app.reason(e))
         } finally {
             updateState { copy(busy = false) }
         }
@@ -348,7 +355,8 @@ class MainViewModel(
         launchAction(refreshAfter = false) {
             val reply = modem.sendAt(command)
             updateState { copy(toolOutput = "> $command\n$reply\n\n$toolOutput".take(MAX_TOOL_OUTPUT_CHARS)) }
-            "The modem replied. See the output below.".also(modem::log)
+            modem.log("The modem replied. See the output below.")
+            app.getString(R.string.system_at_replied)
         }
 
     fun sendQmi(
@@ -357,20 +365,24 @@ class MainViewModel(
         payload: String,
     ) = launchAction(refreshAfter = false) {
         val response = modem.sendQmi(service, msg, payload)
+        val error = response.optText("error")
+        val englishError = error?.let(modem::inEnglish).orEmpty()
+        if (error !== null) response.put("error", englishError)
         val entry = "> svc $service msg 0x%04X %s\n%s".format(msg, payload, response.toString(2))
         updateState { copy(toolOutput = "$entry\n\n$toolOutput".take(MAX_TOOL_OUTPUT_CHARS)) }
-        "Sent message 0x%04X. The modem replied: %s.".format(msg, response.optString("error")).also(modem::log)
+        modem.log("Sent message 0x%04X. The modem replied: %s.".format(msg, englishError))
+        app.getString(R.string.system_qmi_replied, msg, error?.let { app.string(it) }.orEmpty())
     }
 
     fun clearOutput() = updateState { copy(toolOutput = "") }
 
     fun copyDiagnostics() {
         val title = listOfNotNull("bunnylock", appVersion(), "diagnostics").joinToString(" ")
-        val text = modem.diagnostics(title, listOf("Shizuku: ${ShizukuClient.describe(getApplication())}"))
-        val clipboard = getApplication<Application>().getSystemService(ClipboardManager::class.java)
+        val text = modem.diagnostics(title, listOf("Shizuku: ${ShizukuClient.describe(app)}"))
+        val clipboard = app.getSystemService(ClipboardManager::class.java)
         // Kotlin sees primaryClip as read-only because its getter is nullable and its setter isn't.
         @Suppress("UsePropertyAccessSyntax")
-        clipboard.setPrimaryClip(ClipData.newPlainText("bunnylock diagnostics", text))
-        _events.tryEmit("Diagnostics copied to the clipboard.")
+        clipboard.setPrimaryClip(ClipData.newPlainText(app.getString(R.string.system_clip_label_diagnostics), text))
+        _events.tryEmit(app.getString(R.string.system_diagnostics_copied))
     }
 }

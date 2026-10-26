@@ -1,0 +1,32 @@
+<resources>
+    <string name="cell_network_header">网络（PLMN）</string>
+    <string name="cell_current_lock">当前锁小区</string>
+    <string name="cell_clear_lock">解除锁小区</string>
+    <string name="cell_lock_to">锁定到</string>
+    <string name="cell_visible">可见小区（点击即可填入）</string>
+    <string name="cell_none_found">未找到小区</string>
+    <string name="cell_none_found_hint">扫描小区需要位置权限。</string>
+    <string name="cell_plmn_automatic">自动</string>
+    <string name="cell_plmn_locked_to">已锁定到 %1$s</string>
+    <string name="cell_not_registered">未注册到网络。</string>
+    <string name="cell_connected">已连接到 %1$s。</string>
+    <string name="cell_connected_named">已连接到 %1$s（%2$s）。</string>
+    <string name="cell_lock_ignored">未生效</string>
+    <string name="cell_lock_locked">已锁定</string>
+    <string name="cell_lock_none">未锁定</string>
+    <string name="cell_lock_stray">Android 已接受锁定，但手机仍驻留在 %1$s。</string>
+    <string name="cell_lock_pinned">基带已锁定在指定小区。</string>
+    <string name="cell_lock_free">基带自动选择小区。</string>
+    <string name="cell_plmn_hint_qualcomm">优先通过 QMI 设置，基带拒绝时改用 Android 手动选网。</string>
+    <string name="cell_plmn_hint_android">使用 Android 手动选网，重启后仍会保留。</string>
+    <string name="cell_hint_qualcomm">将 LTE 和 NR 锁定到 PCI（SA 的 PCell 或 NSA 的 SCG）。NR PCI 留空则只锁频点，多个 PCI 用逗号分隔。</string>
+    <string name="cell_hint_mtk_at">使用 AT+EMMCHLCK，同一时间只能保留一个锁定。PCI 可不填，射频会重启以应用锁定。</string>
+    <string name="cell_hint_mtk_hal">此基带不支持 AT+EMMCHLCK，改为通过射频 HAL 锁定频点（ARFCN）。这种方式无法锁 PCI，部分基带会直接忽略。</string>
+    <string name="cell_hint_hal">通过射频 HAL 锁定频点（ARFCN）。此方式无法锁 PCI，部分基带（例如原厂固件的高通基带）只应用频段而忽略频点。</string>
+    <string name="cell_lte_channel">B%1$d，%2$.1f MHz</string>
+    <string name="cell_lte_anchor">LTE 锚点</string>
+    <string name="cell_nr_scg">NR 辅小区（SCG）</string>
+    <string name="cell_pcis">PCI</string>
+    <string name="cell_band">频段</string>
+    <string name="cell_scs">子载波间隔（kHz）</string>
+</resources>

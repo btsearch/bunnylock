@@ -1,0 +1,78 @@
+<resources>
+    <string name="tools_backend">Backend</string>
+    <string name="tools_backend_needs_root">Wymaga roota</string>
+    <string name="tools_backend_detected">Wykryty dla tego urządzenia</string>
+    <string name="tools_persist">Zachowaj blokady pasm po restarcie</string>
+    <string name="tools_persist_hint">Po wyłączeniu blokady znikają przy restarcie.</string>
+
+    <string name="tools_appearance">Wygląd</string>
+    <string name="tools_dynamic_color">Dynamiczne kolory</string>
+    <string name="tools_dynamic_color_hint">Kolory z tapety. Po wyłączeniu aplikacja używa domyślnego niebieskiego motywu.</string>
+
+    <string name="tools_language">Język</string>
+    <string name="tools_language_system">Język systemu</string>
+    <string name="tools_language_system_hint">Tak jak w ustawieniach telefonu.</string>
+    <string name="tools_language_helper_english">Niektóre komunikaty procesu pomocniczego mogą nadal pojawiać się po angielsku.</string>
+
+    <string name="tools_updates">Aktualizacje</string>
+    <string name="tools_check_updates">Sprawdzaj aktualizacje</string>
+    <string name="tools_check_updates_hint">Przy starcie aplikacji szuka nowej wersji na GitHubie.</string>
+
+    <string name="tools_radio">Radio</string>
+    <string name="tools_restart_radio">Restart radia</string>
+    <string name="tools_restart_radio_hint">Włącza i wyłącza tryb samolotowy.</string>
+    <string name="tools_reattach">Ponowna rejestracja</string>
+    <string name="tools_reattach_hint">Zrywa połączenie danych i ponownie rejestruje się w sieci przez QMI.</string>
+    <string name="tools_reboot_modem">Restart modemu</string>
+    <string name="tools_reboot_modem_hint">Karta SIM też się zrestartuje.</string>
+    <string name="tools_samsung_menu">Menu pasm Samsunga</string>
+    <string name="tools_samsung_menu_hint">Otwiera ukryte ustawienia pasm Samsunga.</string>
+
+    <string name="tools_at_console">Konsola AT</string>
+    <string name="tools_at_port">Port AT</string>
+    <string name="tools_at_command">Komenda</string>
+    <string name="tools_at_ports_ril">ril:1 i ril:2 (przez RIL)</string>
+    <string name="tools_at_ports_none">Nie znaleziono portów AT.</string>
+    <string name="tools_at_ports_found">Znaleziono: %1$s.</string>
+
+    <string name="tools_qmi_console">Konsola QMI</string>
+    <string name="tools_qmi_service">Usługa</string>
+    <string name="tools_qmi_message">Komunikat (hex)</string>
+    <string name="tools_qmi_payload">Dane TLV (hex)</string>
+    <string name="tools_qmi_nas_hint">NAS (usługa 3) działa na wybranej karcie SIM.</string>
+
+    <string name="tools_output">Wynik</string>
+    <string name="tools_clear">Wyczyść</string>
+
+    <string name="tools_copy_diagnostics_hint">Informacje o urządzeniu, test przekazywania komend i log</string>
+    <string name="tools_access">Dostęp</string>
+    <string name="tools_passthrough">Przekazywanie komend do modemu</string>
+    <string name="tools_services_checked">Sprawdzone usługi (%1$d)</string>
+    <string name="tools_collapse">Zwiń</string>
+    <string name="tools_expand">Rozwiń</string>
+    <string name="tools_qmi_over_qrtr">QMI przez QRTR</string>
+    <string name="tools_yes">Tak</string>
+    <string name="tools_no">Nie</string>
+    <string name="tools_hal_channel_lock">API blokady kanałów w HAL</string>
+    <string name="tools_present">Jest</string>
+    <string name="tools_absent">Brak</string>
+
+    <string name="tools_log">Log</string>
+
+    <string name="tools_about">O aplikacji</string>
+    <string name="tools_author">od @ririxi, twórcy BTSearch.pl</string>
+    <string name="tools_version">Wersja %1$s</string>
+    <string name="tools_bunny_fact">Królicza ciekawostka: %1$s</string>
+    <string-array name="bunny_facts">
+        <item>W wielu polskich domach drobne prezenty na Wielkanoc przynosi zajączek.</item>
+        <item>Wielkanocny zajączek to zając, a nie królik. Młode zająca rodzą się z futrem i otwartymi oczami, a króliczęta są nagie i ślepe.</item>
+        <item>Zęby królika rosną przez całe życie, więc musi ciągle coś gryźć, żeby je ścierać.</item>
+        <item>Szczęśliwy królik robi „binky”: podskok z obrotem w powietrzu.</item>
+        <item>Króliki nie potrafią wymiotować, więc zjedzenie czegoś szkodliwego jest dla nich szczególnie groźne.</item>
+        <item>Zadowolony królik „mruczy”, delikatnie zgrzytając zębami.</item>
+        <item>Króliki są najbardziej aktywne o świcie i o zmierzchu.</item>
+        <item>Duże uszy działają też jak chłodnica i pomagają królikowi pozbyć się nadmiaru ciepła.</item>
+        <item>Królik tupiący tylną łapą ostrzega wszystkich wokół, że coś jest nie tak.</item>
+        <item>Króliki widzą prawie dookoła siebie. Martwy punkt mają tuż przed nosem.</item>
+    </string-array>
+</resources>

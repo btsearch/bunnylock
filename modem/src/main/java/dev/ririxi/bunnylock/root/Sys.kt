@@ -2,6 +2,9 @@ package dev.ririxi.bunnylock.root
 
 import android.os.Build
 import android.system.Os
+import dev.ririxi.bunnylock.modem.R
+import dev.ririxi.bunnylock.modem.Text
+import dev.ririxi.bunnylock.modem.toJson
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -75,8 +78,8 @@ object Sys {
             .put("aospNrDc", runCatching { Aosp.nrDcConfigurable() }.getOrDefault(false))
             .put("mtkOemHook", runCatching { OemHook.available() }.getOrDefault(false))
             .put("samsungNrMode", runCatching { Samsung.nrModeAvailable() }.getOrDefault(false))
-            .put("mtkOemHookStatus", runCatching { OemHook.status() }.getOrElse { it.message.orEmpty() })
-            .put("mtkOemHookChecked", JSONArray(runCatching { OemHook.diagnostics() }.getOrDefault(emptyList())))
+            .put("mtkOemHookStatus", runCatching { OemHook.status() }.getOrElse { it.toText() }.toJson())
+            .put("mtkOemHookChecked", JSONArray(runCatching { OemHook.diagnostics() }.getOrDefault(emptyList()).map { it.toJson() }))
     }
 
     /** [qrtr] settles it: a modem that answers QMI over QRTR is Qualcomm's, whatever the properties say. [hints] is lowercase. */
@@ -112,8 +115,10 @@ object Sys {
             failures += failureLine(output)
         }
         val denied = failures.firstOrNull { "Permission Denial" in it }
-        check(denied === null) { "This phone only lets Samsung's own apps open its band menu, so it needs root ($denied)." }
-        throw IllegalStateException(failures.joinToString(" / ").ifEmpty { "Couldn't find the Samsung band menu on this phone." })
+        if (denied !== null) fail(R.string.aosp_with_details, Text(R.string.sys_samsung_menu_denied), denied)
+        val details = failures.filter { it.isNotEmpty() }.joinToString(" / ")
+        if (details.isEmpty()) fail(R.string.sys_samsung_menu_missing)
+        fail(R.string.aosp_with_details, Text(R.string.sys_samsung_menu_missing), details)
     }
 
     private fun failureLine(amStartOutput: String): String {

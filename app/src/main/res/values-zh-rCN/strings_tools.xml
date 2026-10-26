@@ -1,0 +1,78 @@
+<resources>
+    <string name="tools_backend">后端</string>
+    <string name="tools_backend_needs_root">需要 Root</string>
+    <string name="tools_backend_detected">本机自动识别</string>
+    <string name="tools_persist">重启后保留锁频段</string>
+    <string name="tools_persist_hint">关闭后，重启会清除锁定。</string>
+
+    <string name="tools_appearance">外观</string>
+    <string name="tools_dynamic_color">动态取色</string>
+    <string name="tools_dynamic_color_hint">跟随壁纸配色。关闭则使用默认蓝色主题。</string>
+
+    <string name="tools_language">语言</string>
+    <string name="tools_language_system">跟随系统</string>
+    <string name="tools_language_system_hint">使用手机的系统语言。</string>
+    <string name="tools_language_helper_english">部分来自 Root 辅助进程的消息仍可能显示为英文。</string>
+
+    <string name="tools_updates">更新</string>
+    <string name="tools_check_updates">自动检查更新</string>
+    <string name="tools_check_updates_hint">启动时在 GitHub 上检查新版本。</string>
+
+    <string name="tools_radio">射频</string>
+    <string name="tools_restart_radio">重启移动网络</string>
+    <string name="tools_restart_radio_hint">开关一次飞行模式。</string>
+    <string name="tools_reattach">重新附着</string>
+    <string name="tools_reattach_hint">断开数据连接，并通过 QMI 重新附着网络。</string>
+    <string name="tools_reboot_modem">重启基带</string>
+    <string name="tools_reboot_modem_hint">SIM 卡也会一起重启。</string>
+    <string name="tools_samsung_menu">三星频段菜单</string>
+    <string name="tools_samsung_menu_hint">打开三星隐藏的频段设置。</string>
+
+    <string name="tools_at_console">AT 控制台</string>
+    <string name="tools_at_port">AT 端口</string>
+    <string name="tools_at_command">指令</string>
+    <string name="tools_at_ports_ril">ril:1 和 ril:2（通过 RIL）</string>
+    <string name="tools_at_ports_none">未找到 AT 端口。</string>
+    <string name="tools_at_ports_found">已找到 %1$s。</string>
+
+    <string name="tools_qmi_console">QMI 控制台</string>
+    <string name="tools_qmi_service">服务</string>
+    <string name="tools_qmi_message">消息（hex）</string>
+    <string name="tools_qmi_payload">TLV 数据（hex）</string>
+    <string name="tools_qmi_nas_hint">NAS（服务 3）作用于当前选中的 SIM 卡。</string>
+
+    <string name="tools_output">输出</string>
+    <string name="tools_clear">清空</string>
+
+    <string name="tools_copy_diagnostics_hint">设备信息、透传检测结果和日志</string>
+    <string name="tools_access">访问方式</string>
+    <string name="tools_passthrough">基带指令透传</string>
+    <string name="tools_services_checked">已检查的服务（%1$d）</string>
+    <string name="tools_collapse">收起</string>
+    <string name="tools_expand">展开</string>
+    <string name="tools_qmi_over_qrtr">QMI（通过 QRTR）</string>
+    <string name="tools_yes">是</string>
+    <string name="tools_no">否</string>
+    <string name="tools_hal_channel_lock">HAL 锁频点 API</string>
+    <string name="tools_present">有</string>
+    <string name="tools_absent">无</string>
+
+    <string name="tools_log">日志</string>
+
+    <string name="tools_about">关于</string>
+    <string name="tools_author">作者 @ririxi（BTSearch.pl 开发者）</string>
+    <string name="tools_version">版本 %1$s</string>
+    <string name="tools_bunny_fact">兔兔冷知识：%1$s</string>
+    <string-array name="bunny_facts">
+        <item>传说月亮上住着一只玉兔，陪着嫦娥在广寒宫里捣药。</item>
+        <item>2019 年，玉兔二号随嫦娥四号登陆月球背面，成为第一辆在月背行驶的月球车。</item>
+        <item>兔在十二生肖里排第四，2023 年就是兔年。</item>
+        <item>老北京过中秋要供“兔儿爷”，一种兔首人身的泥塑。</item>
+        <item>兔子的牙齿一辈子都在长，所以得不停地啃东西来磨牙。</item>
+        <item>兔子开心时会蹦起来在空中扭身，这个动作叫“binky”。</item>
+        <item>兔子不会呕吐，误食有害的东西对它们格外危险。</item>
+        <item>兔子的视野几乎能绕身体一圈，盲区就在鼻子正前方。</item>
+        <item>兔子的大耳朵也是“散热器”，能帮它降温。</item>
+        <item>兔子用后腿跺地，是在提醒周围的同伴：好像有危险。</item>
+    </string-array>
+</resources>

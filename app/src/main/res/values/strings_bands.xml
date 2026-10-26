@@ -1,0 +1,30 @@
+<resources>
+    <string name="bands_network_mode">Network mode</string>
+    <string name="bands_5g_mode">5G mode</string>
+    <string name="bands_nsa_on">NSA on</string>
+    <string name="bands_nsa_off">NSA off</string>
+    <string name="bands_samsung_menu">Open Samsung band menu</string>
+    <string name="bands_samsung_menu_hint">Samsung\'s own band lock, built into the phone.</string>
+    <string name="bands_hint_qualcomm_persist">Changes apply right away over QMI. Locks stay after a reboot (you can change that in Tools).</string>
+    <string name="bands_hint_qualcomm_volatile">Changes apply right away over QMI. Locks are cleared when you reboot.</string>
+    <string name="bands_hint_mediatek">Changes are sent with AT+EPBSE and AT+EPBSEH on %1$s.</string>
+    <string name="bands_hint_mediatek_auto">Changes are sent with AT+EPBSE and AT+EPBSEH on the AT port found automatically.</string>
+    <string name="bands_hint_pixel">Changes are saved to the modem\'s NV memory, and the radio restarts by itself to apply them.</string>
+    <string name="bands_hint_android">This uses the radio HAL\'s system selection channels. Whether the modem follows them depends on the phone maker.</string>
+    <string name="bands_summary">%1$d of %2$d selected</string>
+    <string name="bands_summary_pending">%1$d of %2$d selected, not applied yet</string>
+    <string name="bands_summary_locked">%1$d of %2$d selected, locked</string>
+    <string name="bands_summary_locked_pending">%1$d of %2$d selected, locked, not applied yet</string>
+    <string name="bands_summary_stray">%1$d of %2$d selected, locked but the phone is on %3$s</string>
+    <string name="bands_summary_stray_pending">%1$d of %2$d selected, locked but the phone is on %3$s, not applied yet</string>
+    <string name="bands_pick_favorites">Pick favorite bands</string>
+    <string name="bands_pick_favorites_hint">Tap the bands you want to keep in view.</string>
+    <string name="bands_show_favorites">Show favorites only</string>
+    <plurals name="bands_show_all">
+        <item quantity="one">Show %d band</item>
+        <item quantity="other">Show all %d bands</item>
+    </plurals>
+    <string name="bands_done">Done</string>
+    <string name="bands_all">All</string>
+    <string name="bands_none">None</string>
+</resources>

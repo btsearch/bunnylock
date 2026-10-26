@@ -1,0 +1,32 @@
+<resources>
+    <string name="bands_network_mode">Tryb sieci</string>
+    <string name="bands_5g_mode">Tryb 5G</string>
+    <string name="bands_nsa_on">NSA włączone</string>
+    <string name="bands_nsa_off">NSA wyłączone</string>
+    <string name="bands_samsung_menu">Otwórz menu pasm Samsunga</string>
+    <string name="bands_samsung_menu_hint">Wbudowana w telefon blokada pasm od Samsunga.</string>
+    <string name="bands_hint_qualcomm_persist">Zmiany przez QMI działają od razu. Blokady zostają po restarcie (możesz to zmienić w zakładce „Narzędzia”).</string>
+    <string name="bands_hint_qualcomm_volatile">Zmiany przez QMI działają od razu. Restart telefonu zdejmuje blokady.</string>
+    <string name="bands_hint_mediatek">Zmiany idą komendami AT+EPBSE i AT+EPBSEH przez port %1$s.</string>
+    <string name="bands_hint_mediatek_auto">Zmiany idą komendami AT+EPBSE i AT+EPBSEH przez automatycznie wykryty port AT.</string>
+    <string name="bands_hint_pixel">Zmiany trafiają do pamięci NV modemu, a radio samo się restartuje, żeby je zastosować.</string>
+    <string name="bands_hint_android">Blokada idzie przez kanały wyboru systemu w HAL radia. Czy modem jej posłucha, zależy od producenta telefonu.</string>
+    <string name="bands_summary">Wybrano %1$d z %2$d</string>
+    <string name="bands_summary_pending">Wybrano %1$d z %2$d, zmiany jeszcze niezastosowane</string>
+    <string name="bands_summary_locked">Wybrano %1$d z %2$d, blokada aktywna</string>
+    <string name="bands_summary_locked_pending">Wybrano %1$d z %2$d, blokada aktywna, zmiany jeszcze niezastosowane</string>
+    <string name="bands_summary_stray">Wybrano %1$d z %2$d, blokada aktywna, ale telefon siedzi na %3$s</string>
+    <string name="bands_summary_stray_pending">Wybrano %1$d z %2$d, blokada aktywna, ale telefon siedzi na %3$s, zmiany jeszcze niezastosowane</string>
+    <string name="bands_pick_favorites">Wybierz ulubione pasma</string>
+    <string name="bands_pick_favorites_hint">Stuknij pasma, które chcesz mieć pod ręką.</string>
+    <string name="bands_show_favorites">Pokaż tylko ulubione</string>
+    <plurals name="bands_show_all">
+        <item quantity="one">Pokaż %d pasmo</item>
+        <item quantity="few">Pokaż wszystkie %d pasma</item>
+        <item quantity="many">Pokaż wszystkie %d pasm</item>
+        <item quantity="other">Pokaż wszystkie %d pasma</item>
+    </plurals>
+    <string name="bands_done">Gotowe</string>
+    <string name="bands_all">Wszystkie</string>
+    <string name="bands_none">Żadne</string>
+</resources>

@@ -1,0 +1,39 @@
+<resources>
+    <string name="home_connection">Połączenie</string>
+    <string name="home_no_serving_cell">Brak komórki obsługującej</string>
+    <plurals name="home_carriers_header">
+        <item quantity="one">Nośna</item>
+        <item quantity="few">Nośne</item>
+        <item quantity="many">Nośne</item>
+        <item quantity="other">Nośne</item>
+    </plurals>
+    <string name="home_chipset">Chipset</string>
+    <string name="home_state_ignored">Ignorowane</string>
+    <string name="home_state_locked">Zablokowane</string>
+    <string name="home_state_free">Bez blokad</string>
+    <string name="home_stray_band">Telefon siedzi na %1$s, poza zablokowanymi pasmami.</string>
+    <string name="home_stray_channel">Telefon siedzi na %1$s, poza zablokowaną częstotliwością.</string>
+    <string name="home_pinned_nothing">Telefon sam wybiera pasma, komórkę i sieć.</string>
+    <string name="home_pinned_bands">Pasma są zablokowane.</string>
+    <string name="home_pinned_cell">Komórka jest zablokowana.</string>
+    <string name="home_pinned_network">Sieć jest zablokowana.</string>
+    <string name="home_pinned_bands_cell">Pasma i komórka są zablokowane.</string>
+    <string name="home_pinned_bands_network">Pasma i sieć są zablokowane.</string>
+    <string name="home_pinned_cell_network">Komórka i sieć są zablokowane.</string>
+    <string name="home_pinned_all">Pasma, komórka i sieć są zablokowane.</string>
+    <string name="home_row_lte_cell">Komórka LTE</string>
+    <string name="home_row_nr_cell">Komórka NR</string>
+    <string name="home_row_legacy_cell">Komórka 2G/3G</string>
+    <plurals name="home_carrier_count">
+        <item quantity="one">%d nośna</item>
+        <item quantity="few">%d nośne</item>
+        <item quantity="many">%d nośnych</item>
+        <item quantity="other">%d nośnej</item>
+    </plurals>
+    <string name="home_tech_summary">%1$s, %2$s</string>
+    <string name="home_unknown_network">Nieznana sieć</string>
+    <string name="home_total_bandwidth">łącznie</string>
+    <string name="home_tag_primary">Główna</string>
+    <string name="home_tag_secondary">Dodatkowa</string>
+    <string name="home_tag_serving">Obsługująca</string>
+</resources>

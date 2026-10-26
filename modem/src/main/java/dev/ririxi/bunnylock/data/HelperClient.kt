@@ -1,6 +1,12 @@
 package dev.ririxi.bunnylock.data
 
 import android.content.Context
+import dev.ririxi.bunnylock.modem.ModemException
+import dev.ririxi.bunnylock.modem.R
+import dev.ririxi.bunnylock.modem.Text
+import dev.ririxi.bunnylock.modem.asSentence
+import dev.ririxi.bunnylock.modem.toText
+import dev.ririxi.bunnylock.modem.verbatim
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +29,7 @@ import kotlin.time.Duration.Companion.seconds
  */
 abstract class HelperClient(
     private val context: Context,
-    private val name: String,
+    private val name: Text,
 ) : PrivilegedClient {
     private var process: Process? = null
     private var writer: BufferedWriter? = null
@@ -32,9 +38,9 @@ abstract class HelperClient(
 
     override val running get() = process?.isAlive == true
 
-    protected open val startFailed: String get() = "The $name couldn't start."
+    protected open val startFailed: Text get() = Text(R.string.modem_helper_start_failed, name)
 
-    protected open val startTimedOut: String get() = "The $name didn't start in time."
+    protected open val startTimedOut: Text get() = Text(R.string.modem_helper_start_timed_out, name)
 
     protected abstract fun openShell(): Process
 
@@ -66,13 +72,13 @@ abstract class HelperClient(
                     withTimeout(20.seconds) { ready.await() }
                 } catch (_: TimeoutCancellationException) {
                     shell.destroy()
-                    throw RootException(startTimedOut)
+                    throw RootException(context, startTimedOut)
                 } catch (e: CancellationException) {
                     shell.destroy()
                     throw e
                 } catch (e: Exception) {
                     shell.destroy()
-                    throw RootException(e.message ?: startFailed)
+                    throw RootException(context, e.reasonText() ?: startFailed)
                 }
             process = shell
             writer = helperStdin
@@ -102,8 +108,8 @@ abstract class HelperClient(
             } catch (_: IOException) {
                 // Destroying the process can break the pipe in the middle of a read, which ends the loop like the end of the stream does.
             }
-            val helperStopped = RootException("The $name stopped unexpectedly.")
-            ready.completeExceptionally(RootException(startFailed))
+            val helperStopped = RootException(context, Text(R.string.modem_helper_stopped, name))
+            ready.completeExceptionally(RootException(context, startFailed))
             pendingReplies.values.forEach { it.completeExceptionally(helperStopped) }
             pendingReplies.clear()
             exited()
@@ -115,7 +121,7 @@ abstract class HelperClient(
         timeout: Duration,
         build: JSONObject.() -> Unit,
     ): JSONObject {
-        val helperStdin = writer ?: throw RootException("The $name isn't running.")
+        val helperStdin = writer ?: throw RootException(context, Text(R.string.modem_helper_not_running, name))
         val id = lastRequestId.incrementAndGet()
         val request = JSONObject().put("id", id).put("cmd", cmd).apply(build)
         val reply = CompletableDeferred<JSONObject>()
@@ -132,14 +138,14 @@ abstract class HelperClient(
                 }
                 withTimeout(timeout) { reply.await() }
             } catch (_: TimeoutCancellationException) {
-                throw RootException("The $name didn't answer in time.")
+                throw RootException(context, Text(R.string.modem_helper_no_answer, name))
             } catch (_: IOException) {
                 // The pipe to a helper that has died breaks on the write.
-                throw RootException("The $name stopped unexpectedly.")
+                throw RootException(context, Text(R.string.modem_helper_stopped, name))
             } finally {
                 pendingReplies.remove(id)
             }
-        if (!response.optBoolean("ok")) throw RootException(response.optString("error", "Something went wrong."))
+        if (!response.optBoolean("ok")) throw context.errorOf(response)
         return response.optJSONObject("data") ?: JSONObject()
     }
 
@@ -155,4 +161,20 @@ abstract class HelperClient(
         process = null
         writer = null
     }
+}
+
+fun Context.errorOf(reply: JSONObject): RootException {
+    reply.optJSONObject("text")?.let { return RootException(this, it.toText()) }
+    val error = reply.optString("error")
+    return if (error.isBlank()) RootException(this, Text(R.string.something_went_wrong)) else RootException(error)
+}
+
+fun Throwable.reasonText(): Text? {
+    val ownText =
+        when (this) {
+            is RootException -> text
+            is ModemException -> text
+            else -> null
+        }
+    return ownText ?: message?.takeIf { it.isNotBlank() }?.let { verbatim(it.asSentence()) }
 }

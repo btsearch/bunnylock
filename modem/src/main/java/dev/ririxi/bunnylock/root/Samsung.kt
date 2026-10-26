@@ -2,6 +2,7 @@ package dev.ririxi.bunnylock.root
 
 import android.os.IBinder
 import android.os.Process
+import dev.ririxi.bunnylock.modem.R
 import org.json.JSONObject
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -64,7 +65,7 @@ object Samsung {
     fun nrModeAvailable(): Boolean = semTelephony !== null
 
     private fun requireSemTelephony(): SemTelephony =
-        semTelephony ?: throw IllegalStateException("This phone doesn't have Samsung's 5G mode control.")
+        semTelephony ?: fail(R.string.samsung_no_nr_mode)
 
     fun nrMode(slot: Int): JSONObject {
         val telephony = requireSemTelephony()
@@ -78,7 +79,7 @@ object Samsung {
         val telephony = requireSemTelephony()
         val callingPackage = if (Process.myUid() == 0) "root" else "com.android.shell"
         val accepted = telephony.call(telephony.setNrMode, slot, mode, false, callingPackage) as Boolean
-        if (!accepted) throw IllegalStateException("Samsung's telephony service didn't accept that 5G mode.")
+        if (!accepted) fail(R.string.samsung_nr_mode_refused)
         return JSONObject().put("mode", mode)
     }
 }

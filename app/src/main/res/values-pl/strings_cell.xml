@@ -1,0 +1,32 @@
+<resources>
+    <string name="cell_network_header">Sieć (PLMN)</string>
+    <string name="cell_current_lock">Bieżąca blokada komórki</string>
+    <string name="cell_clear_lock">Zdejmij blokadę komórki</string>
+    <string name="cell_lock_to">Zablokuj na</string>
+    <string name="cell_visible">Widoczne komórki (stuknij, by wpisać)</string>
+    <string name="cell_none_found">Brak komórek</string>
+    <string name="cell_none_found_hint">Skanowanie komórek wymaga dostępu do lokalizacji.</string>
+    <string name="cell_plmn_automatic">Automatycznie</string>
+    <string name="cell_plmn_locked_to">Zablokowano na %1$s</string>
+    <string name="cell_not_registered">Brak rejestracji w sieci.</string>
+    <string name="cell_connected">Połączono z %1$s.</string>
+    <string name="cell_connected_named">Połączono z %1$s (%2$s).</string>
+    <string name="cell_lock_ignored">Ignorowana</string>
+    <string name="cell_lock_locked">Zablokowana</string>
+    <string name="cell_lock_none">Bez blokady</string>
+    <string name="cell_lock_stray">Android przyjął blokadę, ale telefon siedzi na %1$s.</string>
+    <string name="cell_lock_pinned">Modem trzyma się wybranej komórki.</string>
+    <string name="cell_lock_free">Modem sam wybiera komórki.</string>
+    <string name="cell_plmn_hint_qualcomm">Najpierw próbuje przez QMI. Jeśli modem odmówi, używa ręcznego wyboru sieci z Androida.</string>
+    <string name="cell_plmn_hint_android">Używa ręcznego wyboru sieci z Androida, który zostaje po restarcie.</string>
+    <string name="cell_hint_qualcomm">Blokuje LTE i NR na PCI (PCell w SA albo SCG w NSA). Zostaw PCI dla NR puste, żeby zablokować samą częstotliwość. Kilka PCI oddziel przecinkami.</string>
+    <string name="cell_hint_mtk_at">Używa AT+EMMCHLCK, które trzyma tylko jedną blokadę naraz. PCI jest opcjonalne, a radio restartuje się, żeby zastosować blokadę.</string>
+    <string name="cell_hint_mtk_hal">Ten modem nie obsługuje AT+EMMCHLCK, więc częstotliwość (ARFCN) jest blokowana przez HAL radia. W ten sposób nie da się zablokować PCI, a niektóre modemy w ogóle to ignorują.</string>
+    <string name="cell_hint_hal">Blokuje częstotliwość (ARFCN) przez HAL radia. Ten sposób nie blokuje PCI, a niektóre modemy (np. Qualcomm na fabrycznym oprogramowaniu) stosują tylko pasmo i ignorują kanał.</string>
+    <string name="cell_lte_channel">B%1$d, %2$.1f MHz</string>
+    <string name="cell_lte_anchor">Kotwica LTE</string>
+    <string name="cell_nr_scg">Dodatkowa NR (SCG)</string>
+    <string name="cell_pcis">PCI</string>
+    <string name="cell_band">Pasmo</string>
+    <string name="cell_scs">Odstęp podnośnych (kHz)</string>
+</resources>

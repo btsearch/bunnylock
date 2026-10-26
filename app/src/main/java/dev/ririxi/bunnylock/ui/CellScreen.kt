@@ -24,8 +24,11 @@ import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.core.Bands
 import dev.ririxi.bunnylock.data.Cell
 import dev.ririxi.bunnylock.data.Rat
@@ -44,7 +47,7 @@ fun CellScreen(
 ) {
     LazyColumn(contentPadding = contentPadding.withScreenMargins(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
-            SectionHeader("Network (PLMN)")
+            SectionHeader(stringResource(R.string.cell_network_header))
             Segmented {
                 item {
                     LockStatusItem(
@@ -59,7 +62,7 @@ fun CellScreen(
         }
 
         item {
-            SectionHeader("Current cell lock")
+            SectionHeader(stringResource(R.string.cell_current_lock))
             Segmented {
                 item {
                     LockStatusItem(
@@ -83,14 +86,14 @@ fun CellScreen(
                             leadingContent = {
                                 Icon(BunnyIcons.LockOpen, contentDescription = null, tint = MaterialTheme.colorScheme.error)
                             },
-                        ) { Text("Clear cell lock", color = MaterialTheme.colorScheme.error) }
+                        ) { Text(stringResource(R.string.cell_clear_lock), color = MaterialTheme.colorScheme.error) }
                     }
                 }
             }
         }
 
         item {
-            SectionHeader("Lock to")
+            SectionHeader(stringResource(R.string.cell_lock_to))
             CellLockForm(state, vm)
         }
 
@@ -99,9 +102,9 @@ fun CellScreen(
                 state.modem.cells
                     .filter { it.rat == Rat.LTE || it.rat == Rat.NR }
                     .sortedWith(compareByDescending<Cell> { it.registered }.thenByDescending { it.rat.ordinal }.thenBy { it.arfcn }.thenBy { it.pci })
-            SectionHeader("Visible cells (tap one to fill in)")
+            SectionHeader(stringResource(R.string.cell_visible))
             if (lockableCells.isEmpty()) {
-                Panel { SleepyBunny("No cells found", "Cell scans need location access.") }
+                Panel { SleepyBunny(stringResource(R.string.cell_none_found), stringResource(R.string.cell_none_found_hint)) }
             } else {
                 Segmented { lockableCells.forEach { cell -> item { shapes -> CellItem(shapes, cell) { vm.fillFrom(cell) } } } }
             }
@@ -125,31 +128,37 @@ private fun LockStatusItem(
     ) { Text(title, style = MaterialTheme.typography.titleMediumEmphasized) }
 }
 
+@Composable
 private fun plmnLockTitle(state: UiState): String {
-    val lock = state.modem.plmnLock ?: return "Automatic"
+    val lock = state.modem.plmnLock ?: return stringResource(R.string.cell_plmn_automatic)
     // The lock is a PLMN such as "262 01", or a ready-made phrase when the locked network isn't known.
-    return if (lock.firstOrNull()?.isDigit() == true) "Locked to $lock" else lock
+    return if (lock.firstOrNull()?.isDigit() == true) stringResource(R.string.cell_plmn_locked_to, lock) else lock
 }
 
+@Composable
 private fun registrationText(state: UiState): String {
-    val plmn = state.modem.registeredPlmn ?: return "Not registered on a network."
-    val name = state.modem.registeredName?.let { " ($it)" }.orEmpty()
-    return "Connected to ${formatPlmn(plmn)}$name."
+    val plmn = state.modem.registeredPlmn ?: return stringResource(R.string.cell_not_registered)
+    val name = state.modem.registeredName ?: return stringResource(R.string.cell_connected, formatPlmn(plmn))
+    return stringResource(R.string.cell_connected_named, formatPlmn(plmn), name)
 }
 
+@Composable
 private fun cellLockTitle(state: UiState): String =
     when {
-        state.modem.strayChannel !== null -> "Ignored"
-        state.modem.anyCellLock -> "Locked"
-        else -> "Not locked"
+        state.modem.strayChannel !== null -> stringResource(R.string.cell_lock_ignored)
+        state.modem.anyCellLock -> stringResource(R.string.cell_lock_locked)
+        else -> stringResource(R.string.cell_lock_none)
     }
 
-private fun cellLockDescription(state: UiState): String =
-    when {
-        state.modem.strayChannel !== null -> "Android accepted the lock, but the phone is on ${state.modem.strayChannel}."
-        state.modem.anyCellLock -> "The modem is pinned to a specific cell."
-        else -> "The modem picks cells on its own."
+@Composable
+private fun cellLockDescription(state: UiState): String {
+    val stray = state.modem.strayChannel
+    return when {
+        stray !== null -> stringResource(R.string.cell_lock_stray, stray)
+        state.modem.anyCellLock -> stringResource(R.string.cell_lock_pinned)
+        else -> stringResource(R.string.cell_lock_free)
     }
+}
 
 @Composable
 private fun PlmnForm(
@@ -157,6 +166,7 @@ private fun PlmnForm(
     vm: MainViewModel,
 ) {
     val plmnComplete = state.plmnMcc.length == 3 && state.plmnMnc.length >= 2
+    val plmnPicks = state.modem.plmnPicks(LocalContext.current)
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         OutlinedTextField(
             state.plmnMcc,
@@ -175,9 +185,9 @@ private fun PlmnForm(
             modifier = Modifier.weight(1f),
         )
     }
-    if (state.modem.plmnPicks.isNotEmpty()) {
+    if (plmnPicks.isNotEmpty()) {
         ToggleGrid(
-            options = state.modem.plmnPicks,
+            options = plmnPicks,
             isChecked = { (plmn, _) -> plmn == state.plmnMcc + state.plmnMnc },
             label = { (plmn, name) -> "${formatPlmn(plmn)} $name" },
             onToggle = { (plmn, _) -> vm.pickPlmn(plmn) },
@@ -185,11 +195,7 @@ private fun PlmnForm(
         )
     }
     Text(
-        if (state.modem.backend == Backend.QUALCOMM) {
-            "Set over QMI first. If the modem refuses, Android network selection is used instead."
-        } else {
-            "Uses Android's manual network selection, which stays after a reboot."
-        },
+        stringResource(if (state.modem.backend == Backend.QUALCOMM) R.string.cell_plmn_hint_qualcomm else R.string.cell_plmn_hint_android),
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
@@ -199,7 +205,7 @@ private fun PlmnForm(
             enabled = !state.busy && state.modem.anyPlmnLock,
             shapes = ButtonDefaults.shapes(),
             modifier = Modifier.weight(1f),
-        ) { Text("Automatic") }
+        ) { Text(stringResource(R.string.cell_plmn_automatic)) }
         Button(
             onClick = vm::lockPlmn,
             enabled = !state.busy && plmnComplete,
@@ -208,22 +214,28 @@ private fun PlmnForm(
         ) {
             Icon(BunnyIcons.Lock, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(Modifier.width(6.dp))
-            Text("Lock")
+            Text(stringResource(R.string.common_lock))
         }
     }
 }
 
+@Composable
 private fun cellLockHint(state: UiState): String =
-    when {
-        state.modem.backend == Backend.QUALCOMM -> "Locks LTE and NR to a PCI (the SA PCell or the NSA SCG). Leave the NR PCI empty to lock only the frequency, and separate several PCIs with commas."
-        state.modem.mtkAtCellLock -> "Uses AT+EMMCHLCK, which holds one lock at a time. The PCI is optional, and the radio restarts to apply the lock."
-        state.modem.backend == Backend.MEDIATEK -> "This modem doesn't take AT+EMMCHLCK, so the frequency (ARFCN) is locked through the radio HAL instead. That can't lock to a PCI, and some modems ignore it."
-        else -> "Locks the frequency (ARFCN) through the radio HAL. This backend can't lock to a PCI, and some modems (stock Qualcomm, for example) only apply the band and ignore the channel."
-    }
+    stringResource(
+        when {
+            state.modem.backend == Backend.QUALCOMM -> R.string.cell_hint_qualcomm
+            state.modem.mtkAtCellLock -> R.string.cell_hint_mtk_at
+            state.modem.backend == Backend.MEDIATEK -> R.string.cell_hint_mtk_hal
+            else -> R.string.cell_hint_hal
+        },
+    )
 
+@Composable
 private fun lteChannelHint(earfcn: Int): String {
-    val band = Bands.lteBandOf(earfcn) ?: return "Unknown band"
-    return "B$band at %.1f MHz".format(Bands.lteFreqMhz(earfcn))
+    val band = Bands.lteBandOf(earfcn)
+    val megahertz = Bands.lteFreqMhz(earfcn)
+    if (band === null || megahertz === null) return stringResource(R.string.common_unknown_band)
+    return stringResource(R.string.cell_lte_channel, band, megahertz)
 }
 
 private fun pciInput(text: String): String = text.filter { it.isDigit() || it == ',' || it == ' ' }
@@ -253,7 +265,7 @@ private fun CellLockForm(
             ConnectedChoice(
                 options = LockRat.entries,
                 selected = form.rat,
-                label = { it.label },
+                label = { stringResource(it.label) },
                 onSelect = { selected -> vm.updateForm { copy(rat = selected) } },
             )
         }
@@ -273,7 +285,7 @@ private fun CellLockForm(
         ) {
             Icon(BunnyIcons.Lock, contentDescription = null, modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)))
             Spacer(Modifier.width(10.dp))
-            Text("Lock", style = ButtonDefaults.textStyleFor(buttonHeight))
+            Text(stringResource(R.string.common_lock), style = ButtonDefaults.textStyleFor(buttonHeight))
         }
     }
 }
@@ -284,7 +296,7 @@ private fun LteLockFields(
     vm: MainViewModel,
 ) {
     val form = state.form
-    Text(if (state.lockRat == LockRat.NSA) "LTE anchor" else "LTE", style = MaterialTheme.typography.titleSmallEmphasized)
+    Text(if (state.lockRat == LockRat.NSA) stringResource(R.string.cell_lte_anchor) else "LTE", style = MaterialTheme.typography.titleSmallEmphasized)
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         OutlinedTextField(
             form.lteEarfcn,
@@ -298,7 +310,7 @@ private fun LteLockFields(
         OutlinedTextField(
             form.ltePcis,
             { text -> vm.updateForm { copy(ltePcis = pciInput(text)) } },
-            label = { Text("PCIs") },
+            label = { Text(stringResource(R.string.cell_pcis)) },
             singleLine = true,
             modifier = Modifier.weight(1f),
             enabled = state.modem.supportsPciLock,
@@ -312,7 +324,7 @@ private fun NrLockFields(
     vm: MainViewModel,
 ) {
     val form = state.form
-    Text(if (state.lockRat == LockRat.NSA) "NR secondary (SCG)" else "5G NR", style = MaterialTheme.typography.titleSmallEmphasized)
+    Text(if (state.lockRat == LockRat.NSA) stringResource(R.string.cell_nr_scg) else "5G NR", style = MaterialTheme.typography.titleSmallEmphasized)
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         OutlinedTextField(
             form.nrArfcn,
@@ -326,14 +338,14 @@ private fun NrLockFields(
         OutlinedTextField(
             form.nrPcis,
             { text -> vm.updateForm { copy(nrPcis = pciInput(text)) } },
-            label = { Text("PCIs") },
+            label = { Text(stringResource(R.string.cell_pcis)) },
             singleLine = true,
             modifier = Modifier.weight(1f),
             enabled = state.modem.supportsPciLock,
         )
     }
     if (form.nrCandidates.size > 1) {
-        Text("Band", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(stringResource(R.string.cell_band), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
         ToggleGrid(
             options = form.nrCandidates,
             isChecked = { it == form.nrBand },
@@ -344,7 +356,7 @@ private fun NrLockFields(
         )
     }
     if (state.modem.backend == Backend.QUALCOMM) {
-        Text("Subcarrier spacing (kHz)", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(stringResource(R.string.cell_scs), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
         ConnectedChoice(
             options = listOf(15, 30, 60, 120),
             selected = form.nrScs,

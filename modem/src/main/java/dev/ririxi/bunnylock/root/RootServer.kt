@@ -3,6 +3,7 @@ package dev.ririxi.bunnylock.root
 import android.system.Os
 import android.telephony.SubscriptionManager
 import dev.ririxi.bunnylock.core.toIntList
+import dev.ririxi.bunnylock.modem.R
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.FileDescriptor
@@ -16,7 +17,7 @@ import kotlin.system.exitProcess
  *
  * One JSON object per line on stdin and stdout:
  *   request  {"id":1,"cmd":"qc.state","sim":1,...}
- *   response {"id":1,"ok":true,"data":...} | {"id":1,"ok":false,"error":"..."}
+ *   response {"id":1,"ok":true,"data":...} | {"id":1,"ok":false,"error":"...","text":{...}}
  */
 object RootServer {
     const val VERSION = 1
@@ -75,6 +76,7 @@ object RootServer {
             response.put("data", data ?: JSONObject.NULL).put("ok", true)
         } catch (error: Throwable) {
             response.put("ok", false).put("error", error.message ?: error.javaClass.simpleName)
+            if (error is HelperFailure) response.put("text", error.toTextJson())
         }
         return response.toString()
     }
@@ -122,7 +124,7 @@ object RootServer {
             "radio.cycle" -> Aosp.radioCycle()
 
             "radio.cycleSim" -> {
-                check(subId >= 0) { "This SIM's subscription isn't known." }
+                if (subId < 0) fail(R.string.server_unknown_subscription)
                 Aosp.cycleSubscriberRadio(subId)
             }
 
@@ -158,7 +160,7 @@ object RootServer {
                     Qualcomm.reattach(sim)
                 } catch (e: Exception) {
                     if (subId < 0) throw e
-                    Aosp.cycleSubscriberRadio(subId).put("qmiError", e.message)
+                    Aosp.cycleSubscriberRadio(subId).put("qmiError", e.toTextJson())
                 }
 
             "qc.raw" -> Qualcomm.raw(sim, request.getInt("service"), request.getInt("msg"), request.optString("payload").unhex())
@@ -208,7 +210,7 @@ object RootServer {
                 JSONObject().put("reply", At.send(request.getString("node"), request.getString("command"), timeoutMs))
             }
 
-            else -> throw IllegalArgumentException("Unknown command: $command.")
+            else -> fail(R.string.server_unknown_command, command)
         }
     }
 }

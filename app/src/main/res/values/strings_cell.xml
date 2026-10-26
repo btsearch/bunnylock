@@ -1,0 +1,32 @@
+<resources>
+    <string name="cell_network_header">Network (PLMN)</string>
+    <string name="cell_current_lock">Current cell lock</string>
+    <string name="cell_clear_lock">Clear cell lock</string>
+    <string name="cell_lock_to">Lock to</string>
+    <string name="cell_visible">Visible cells (tap one to fill in)</string>
+    <string name="cell_none_found">No cells found</string>
+    <string name="cell_none_found_hint">Cell scans need location access.</string>
+    <string name="cell_plmn_automatic">Automatic</string>
+    <string name="cell_plmn_locked_to">Locked to %1$s</string>
+    <string name="cell_not_registered">Not registered on a network.</string>
+    <string name="cell_connected">Connected to %1$s.</string>
+    <string name="cell_connected_named">Connected to %1$s (%2$s).</string>
+    <string name="cell_lock_ignored">Ignored</string>
+    <string name="cell_lock_locked">Locked</string>
+    <string name="cell_lock_none">Not locked</string>
+    <string name="cell_lock_stray">Android accepted the lock, but the phone is on %1$s.</string>
+    <string name="cell_lock_pinned">The modem is pinned to a specific cell.</string>
+    <string name="cell_lock_free">The modem picks cells on its own.</string>
+    <string name="cell_plmn_hint_qualcomm">Set over QMI first. If the modem refuses, Android network selection is used instead.</string>
+    <string name="cell_plmn_hint_android">Uses Android\'s manual network selection, which stays after a reboot.</string>
+    <string name="cell_hint_qualcomm">Locks LTE and NR to a PCI (the SA PCell or the NSA SCG). Leave the NR PCI empty to lock only the frequency, and separate several PCIs with commas.</string>
+    <string name="cell_hint_mtk_at">Uses AT+EMMCHLCK, which holds one lock at a time. The PCI is optional, and the radio restarts to apply the lock.</string>
+    <string name="cell_hint_mtk_hal">This modem doesn\'t take AT+EMMCHLCK, so the frequency (ARFCN) is locked through the radio HAL instead. That can\'t lock to a PCI, and some modems ignore it.</string>
+    <string name="cell_hint_hal">Locks the frequency (ARFCN) through the radio HAL. This backend can\'t lock to a PCI, and some modems (stock Qualcomm, for example) only apply the band and ignore the channel.</string>
+    <string name="cell_lte_channel">B%1$d at %2$.1f MHz</string>
+    <string name="cell_lte_anchor">LTE anchor</string>
+    <string name="cell_nr_scg">NR secondary (SCG)</string>
+    <string name="cell_pcis">PCIs</string>
+    <string name="cell_band">Band</string>
+    <string name="cell_scs">Subcarrier spacing (kHz)</string>
+</resources>

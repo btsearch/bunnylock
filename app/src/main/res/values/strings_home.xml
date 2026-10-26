@@ -1,0 +1,35 @@
+<resources>
+    <string name="home_connection">Connection</string>
+    <string name="home_no_serving_cell">No serving cell</string>
+    <plurals name="home_carriers_header">
+        <item quantity="one">Carrier</item>
+        <item quantity="other">Carriers</item>
+    </plurals>
+    <string name="home_chipset">Chipset</string>
+    <string name="home_state_ignored">Ignored</string>
+    <string name="home_state_locked">Locked</string>
+    <string name="home_state_free">Free</string>
+    <string name="home_stray_band">The phone is on %1$s, outside the locked bands.</string>
+    <string name="home_stray_channel">The phone is on %1$s, off the locked frequency.</string>
+    <string name="home_pinned_nothing">Nothing is pinned.</string>
+    <string name="home_pinned_bands">The bands are pinned.</string>
+    <string name="home_pinned_cell">The cell is pinned.</string>
+    <string name="home_pinned_network">The network is pinned.</string>
+    <string name="home_pinned_bands_cell">The bands and cell are pinned.</string>
+    <string name="home_pinned_bands_network">The bands and network are pinned.</string>
+    <string name="home_pinned_cell_network">The cell and network are pinned.</string>
+    <string name="home_pinned_all">The bands, cell and network are pinned.</string>
+    <string name="home_row_lte_cell">LTE cell</string>
+    <string name="home_row_nr_cell">NR cell</string>
+    <string name="home_row_legacy_cell">2G/3G cell</string>
+    <plurals name="home_carrier_count">
+        <item quantity="one">%d carrier</item>
+        <item quantity="other">%d carriers</item>
+    </plurals>
+    <string name="home_tech_summary">%1$s, %2$s</string>
+    <string name="home_unknown_network">Unknown network</string>
+    <string name="home_total_bandwidth">total bandwidth</string>
+    <string name="home_tag_primary">Primary</string>
+    <string name="home_tag_secondary">Secondary</string>
+    <string name="home_tag_serving">Serving</string>
+</resources>

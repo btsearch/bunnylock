@@ -1,0 +1,33 @@
+<resources>
+    <string name="home_connection">连接</string>
+    <string name="home_no_serving_cell">无服务小区</string>
+    <plurals name="home_carriers_header">
+        <item quantity="other">载波</item>
+    </plurals>
+    <string name="home_chipset">芯片</string>
+    <string name="home_state_ignored">未生效</string>
+    <string name="home_state_locked">已锁定</string>
+    <string name="home_state_free">未锁定</string>
+    <string name="home_stray_band">手机当前驻留在 %1$s，不在已锁定的频段内。</string>
+    <string name="home_stray_channel">手机当前驻留在 %1$s，不在已锁定的频点上。</string>
+    <string name="home_pinned_nothing">频段、小区和网络都由手机自动选择。</string>
+    <string name="home_pinned_bands">频段已锁定。</string>
+    <string name="home_pinned_cell">小区已锁定。</string>
+    <string name="home_pinned_network">网络已锁定。</string>
+    <string name="home_pinned_bands_cell">频段和小区已锁定。</string>
+    <string name="home_pinned_bands_network">频段和网络已锁定。</string>
+    <string name="home_pinned_cell_network">小区和网络已锁定。</string>
+    <string name="home_pinned_all">频段、小区和网络均已锁定。</string>
+    <string name="home_row_lte_cell">LTE 小区</string>
+    <string name="home_row_nr_cell">NR 小区</string>
+    <string name="home_row_legacy_cell">2G/3G 小区</string>
+    <plurals name="home_carrier_count">
+        <item quantity="other">%d 个载波</item>
+    </plurals>
+    <string name="home_tech_summary">%1$s，%2$s</string>
+    <string name="home_unknown_network">未知网络</string>
+    <string name="home_total_bandwidth">总带宽</string>
+    <string name="home_tag_primary">主载波</string>
+    <string name="home_tag_secondary">辅载波</string>
+    <string name="home_tag_serving">服务小区</string>
+</resources>

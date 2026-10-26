@@ -2,8 +2,11 @@ package dev.ririxi.bunnylock.root
 
 import android.os.IBinder
 import dalvik.system.PathClassLoader
+import dev.ririxi.bunnylock.modem.R
+import dev.ririxi.bunnylock.modem.Text
+import dev.ririxi.bunnylock.modem.toJson
+import dev.ririxi.bunnylock.modem.verbatim
 import java.io.File
-import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.util.concurrent.ExecutionException
@@ -68,7 +71,7 @@ object OemHook {
     }
 
     /** What the search looked at and what went wrong, for diagnostics. */
-    private val probeLog = ArrayList<String>()
+    private val probeLog = ArrayList<Text>()
 
     /** Candidates that didn't answer a plain "AT". They may still answer real commands. */
     private val passedOver = ArrayList<Target>()
@@ -151,7 +154,7 @@ object OemHook {
             } else {
                 method.invoke(service, slot, command, callback.proxy)
             }
-            if (!callback.await(CALLBACK_TIMEOUT_MS)) throw IOException("No callback reply for $command.")
+            if (!callback.await(CALLBACK_TIMEOUT_MS)) fail(R.string.oem_no_callback_reply, command)
             writeReply(callback.reply, response)
         }
     }
@@ -191,7 +194,7 @@ object OemHook {
         val descriptor = runCatching { binder.interfaceDescriptor }.getOrNull() ?: return emptyList()
         val stub = stubFor(descriptor)
         if (stub === null) {
-            probeLog += "$name ($descriptor, class not found)"
+            probeLog += verbatim("$name ($descriptor, class not found)")
             return emptyList()
         }
         val service = stub.getMethod("asInterface", IBinder::class.java).invoke(null, binder) ?: return emptyList()
@@ -203,7 +206,7 @@ object OemHook {
                 .distinct()
                 .sorted()
         val relevantList = if (relevant.isEmpty()) "" else ": ${relevant.joinToString(", ")}"
-        probeLog += "$name ($descriptor)$relevantList"
+        probeLog += verbatim("$name ($descriptor)$relevantList")
 
         val targets = ArrayList<Target>()
         methods
@@ -255,7 +258,7 @@ object OemHook {
             try {
                 sendTo(candidate, slot = 0, command = "AT", timeoutMs = timeoutMs)
             } catch (e: Exception) {
-                probeLog += "${candidate.label} failed: ${e.message}"
+                probeLog += Text(R.string.oem_probe_failed, candidate.label, e.toText())
                 return false
             }
         val lines = reply.lines().map { it.trim() }
@@ -264,7 +267,8 @@ object OemHook {
             candidate.omitsFinalResult = true
             return true
         }
-        probeLog += "${candidate.label} replied: ${lines.filter { it.isNotEmpty() }.joinToString(" ").ifEmpty { "nothing" }}"
+        val replyText = lines.filter { it.isNotEmpty() }.joinToString(" ")
+        probeLog += if (replyText.isEmpty()) Text(R.string.oem_probe_silent, candidate.label) else Text(R.string.oem_probe_replied, candidate.label, replyText)
         passedOver += candidate
         return false
     }
@@ -284,7 +288,7 @@ object OemHook {
             val found = phoneCandidates.filter { !it.isAtMethod }.firstOrNull(::tryTarget)
             if (found !== null) return found
         }
-        throw IOException("No OEM request passthrough answered on this phone.")
+        fail(R.string.oem_no_passthrough)
     }
 
     private fun isMediatek(): Boolean {
@@ -294,13 +298,10 @@ object OemHook {
 
     fun available(): Boolean = workingTarget !== null
 
-    fun status(): String {
-        val working = workingTarget
-        return if (working !== null) "Working through ${working.label}." else probe.exceptionOrNull()?.message.orEmpty()
-    }
+    fun status(): Text = probe.fold({ Text(R.string.oem_working_through, it.label) }, { it.toText() })
 
     /** Every service and method looked at while searching, and what failed. Reading [probe] first makes sure the search has run. */
-    fun diagnostics(): List<String> = probe.let { probeLog.distinct() }
+    fun diagnostics(): List<Text> = probe.let { probeLog.distinctBy { it.toJson().toString() } }
 
     /** The slot of a "ril:<sim>" node, where SIMs count from 1. Without a readable number it is the first SIM. */
     fun slotOf(node: String): Int = (node.substringAfter(':').toIntOrNull() ?: 1) - 1
@@ -313,7 +314,7 @@ object OemHook {
     ): String {
         val target =
             (listOfNotNull(workingTarget) + passedOver).firstOrNull { !it.isAtMethod }
-                ?: throw IOException("This phone has no OEM request route to try.")
+                ?: fail(R.string.oem_no_raw_route)
         return sendTo(target, slot, command, timeoutMs)
     }
 
@@ -322,7 +323,7 @@ object OemHook {
         command: String,
         timeoutMs: Int,
     ): String {
-        val target = workingTarget ?: throw IOException("No RIL passthrough is available on this phone.")
+        val target = workingTarget ?: fail(R.string.oem_no_ril_passthrough)
         val reply = sendTo(target, slot, command, timeoutMs)
         return if (reply.trimStart().startsWith(SERVICE_FAILURE)) "ERROR" else reply
     }
@@ -342,10 +343,11 @@ object OemHook {
                 task.get(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
             } catch (_: TimeoutException) {
                 task.cancel(true)
-                throw IOException("The modem didn't answer $command in time.")
+                fail(R.string.oem_timeout, command)
             } catch (e: ExecutionException) {
                 val cause = (e.cause as? InvocationTargetException)?.targetException ?: e.cause
-                throw IOException("The service refused $command (${cause?.javaClass?.simpleName}: ${cause?.message}).")
+                if (cause is HelperFailure) throw cause
+                fail(R.string.oem_service_refused, command, verbatim("${cause?.javaClass?.simpleName}: ${cause?.message}"))
             }
         // A negative length is minus a RIL error code. It is kept in the reply, because it says why the request failed.
         if (length < 0) return "${rilErrorText(-length)}\nERROR"

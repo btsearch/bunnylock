@@ -1,0 +1,16 @@
+<resources>
+    <string name="common_lock">Lock</string>
+    <string name="common_unlock">Unlock</string>
+    <string name="common_unlock_all">Unlock all</string>
+    <string name="common_unknown">Unknown</string>
+    <string name="common_unknown_band">Unknown band</string>
+    <string name="common_copy_diagnostics">Copy diagnostics</string>
+    <string name="common_send">Send</string>
+    <string name="common_bands">Bands</string>
+    <string name="common_cell">Cell</string>
+    <string name="common_network">Network</string>
+    <string name="common_modem">Modem</string>
+    <string name="common_device">Device</string>
+    <string name="common_platform">Platform</string>
+    <string name="common_baseband">Baseband</string>
+</resources>

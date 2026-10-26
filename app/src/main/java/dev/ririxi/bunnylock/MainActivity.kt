@@ -1,6 +1,7 @@
 package dev.ririxi.bunnylock
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.ririxi.bunnylock.data.AppLanguage
 import dev.ririxi.bunnylock.data.LockNotifier
 import dev.ririxi.bunnylock.ui.BunnyApp
 import dev.ririxi.bunnylock.ui.MainViewModel
@@ -24,6 +26,10 @@ class MainActivity : ComponentActivity() {
             vm.loadSims()
             vm.refresh()
         }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(AppLanguage.wrap(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()

@@ -2,6 +2,7 @@
 
 package dev.ririxi.bunnylock.ui
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
@@ -46,12 +47,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import dev.ririxi.bunnylock.R
+import dev.ririxi.bunnylock.data.AppLanguage
 import dev.ririxi.bunnylock.modem.Backend
 import dev.ririxi.bunnylock.modem.DeviceInfo
 import dev.ririxi.bunnylock.modem.andList
+import dev.ririxi.bunnylock.modem.string
 import dev.ririxi.bunnylock.ui.theme.dynamicColorAvailable
 
 private val AT_COMMAND_PRESETS = listOf("ATI", "AT+EPBSE?", "AT+EPBSEH?", "AT+EMMCHLCK?", "AT+GOOGGETNV=\"NR.CONFIG.MODE\"")
@@ -72,18 +79,18 @@ fun ToolsScreen(
 
     LazyColumn(contentPadding = contentPadding.withScreenMargins(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
-            SectionHeader("Backend")
+            SectionHeader(stringResource(R.string.tools_backend))
             Segmented {
                 Backend.entries.forEach { backend ->
                     val selected = state.modem.backend == backend
                     val needsRoot = !state.modem.allows(backend)
-                    val hint =
-                        when {
-                            needsRoot -> "Needs root"
-                            state.modem.autoBackend == backend -> "Detected for this device"
-                            else -> null
-                        }
                     item { shapes ->
+                        val hint =
+                            when {
+                                needsRoot -> stringResource(R.string.tools_backend_needs_root)
+                                state.modem.autoBackend == backend -> stringResource(R.string.tools_backend_detected)
+                                else -> null
+                            }
                         SegmentedListItem(
                             selected = selected,
                             onClick = { vm.setBackend(backend) },
@@ -92,15 +99,15 @@ fun ToolsScreen(
                             colors = segmentColors(),
                             supportingContent = if (hint !== null) ({ Text(hint) }) else null,
                             trailingContent = if (selected) ({ Icon(Icons.Rounded.Check, contentDescription = null) }) else null,
-                        ) { Text(backend.label) }
+                        ) { Text(stringResource(backend.label)) }
                     }
                 }
                 if (state.modem.backend == Backend.QUALCOMM) {
                     item {
                         SwitchItem(
                             it,
-                            "Keep band locks after reboot",
-                            "When this is off, locks are cleared on reboot.",
+                            stringResource(R.string.tools_persist),
+                            stringResource(R.string.tools_persist_hint),
                             checked = state.modem.persist,
                             onCheckedChange = vm::setPersist,
                         )
@@ -111,13 +118,13 @@ fun ToolsScreen(
 
         if (dynamicColorAvailable) {
             item {
-                SectionHeader("Appearance")
+                SectionHeader(stringResource(R.string.tools_appearance))
                 Segmented {
                     item {
                         SwitchItem(
                             it,
-                            "Dynamic color",
-                            "Use your wallpaper colors. Off uses the default blue theme.",
+                            stringResource(R.string.tools_dynamic_color),
+                            stringResource(R.string.tools_dynamic_color_hint),
                             checked = state.dynamicColor,
                             onCheckedChange = vm::setDynamicColor,
                         )
@@ -126,14 +133,16 @@ fun ToolsScreen(
             }
         }
 
+        item { LanguageSection() }
+
         item {
-            SectionHeader("Updates")
+            SectionHeader(stringResource(R.string.tools_updates))
             Segmented {
                 item {
                     SwitchItem(
                         it,
-                        "Check for updates",
-                        "Looks for a new release on GitHub when the app starts.",
+                        stringResource(R.string.tools_check_updates),
+                        stringResource(R.string.tools_check_updates_hint),
                         checked = state.checkUpdates,
                         onCheckedChange = vm::setCheckUpdates,
                     )
@@ -142,13 +151,13 @@ fun ToolsScreen(
         }
 
         item {
-            SectionHeader("Radio")
+            SectionHeader(stringResource(R.string.tools_radio))
             Segmented {
                 item {
                     ActionItem(
                         it,
-                        "Restart radio",
-                        "Turns airplane mode on and off again.",
+                        stringResource(R.string.tools_restart_radio),
+                        stringResource(R.string.tools_restart_radio_hint),
                         Icons.Rounded.Refresh,
                         enabled = !state.busy,
                         onClick = vm::radioCycle,
@@ -158,8 +167,8 @@ fun ToolsScreen(
                     item {
                         ActionItem(
                             it,
-                            "Re-attach",
-                            "Drops the data connection and attaches again over QMI.",
+                            stringResource(R.string.tools_reattach),
+                            stringResource(R.string.tools_reattach_hint),
                             Icons.Rounded.Refresh,
                             enabled = !state.busy,
                             onClick = vm::reattach,
@@ -169,8 +178,8 @@ fun ToolsScreen(
                 item {
                     ActionItem(
                         it,
-                        "Reboot modem",
-                        "This restarts the SIM too.",
+                        stringResource(R.string.tools_reboot_modem),
+                        stringResource(R.string.tools_reboot_modem_hint),
                         Icons.Rounded.Warning,
                         enabled = !state.busy,
                         onClick = vm::rebootModem,
@@ -180,8 +189,8 @@ fun ToolsScreen(
                     item {
                         ActionItem(
                             it,
-                            "Samsung band menu",
-                            "Opens Samsung's hidden band settings.",
+                            stringResource(R.string.tools_samsung_menu),
+                            stringResource(R.string.tools_samsung_menu_hint),
                             Icons.Rounded.Settings,
                             enabled = true,
                             onClick = vm::samsungMenu,
@@ -192,12 +201,12 @@ fun ToolsScreen(
         }
 
         item {
-            SectionHeader("AT console")
+            SectionHeader(stringResource(R.string.tools_at_console))
             Panel {
                 OutlinedTextField(
                     state.modem.atNode,
                     vm::setAtNode,
-                    label = { Text("AT port") },
+                    label = { Text(stringResource(R.string.tools_at_port)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     supportingText = { Text(atNodesHint(state.modem.device)) },
@@ -205,14 +214,14 @@ fun ToolsScreen(
                 OutlinedTextField(
                     atCommand,
                     { atCommand = it },
-                    label = { Text("Command") },
+                    label = { Text(stringResource(R.string.tools_at_command)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     trailingIcon = {
                         IconButton(
                             onClick = { if (atCommand.isNotBlank()) vm.sendAt(atCommand.trim()) },
                             enabled = !state.busy && state.modem.atNode.isNotBlank(),
-                        ) { Icon(Icons.AutoMirrored.Rounded.Send, contentDescription = "Send") }
+                        ) { Icon(Icons.AutoMirrored.Rounded.Send, contentDescription = stringResource(R.string.common_send)) }
                     },
                 )
                 Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -225,20 +234,20 @@ fun ToolsScreen(
 
         if (state.modem.backend == Backend.QUALCOMM) {
             item {
-                SectionHeader("QMI console")
+                SectionHeader(stringResource(R.string.tools_qmi_console))
                 Panel {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         OutlinedTextField(
                             qmiService,
                             { qmiService = it.filter(Char::isDigit) },
-                            label = { Text("Service") },
+                            label = { Text(stringResource(R.string.tools_qmi_service)) },
                             singleLine = true,
                             modifier = Modifier.weight(1f),
                         )
                         OutlinedTextField(
                             qmiMessage,
                             { qmiMessage = it.filter(Char::isLetterOrDigit) },
-                            label = { Text("Message (hex)") },
+                            label = { Text(stringResource(R.string.tools_qmi_message)) },
                             singleLine = true,
                             modifier = Modifier.weight(1f),
                         )
@@ -246,10 +255,10 @@ fun ToolsScreen(
                     OutlinedTextField(
                         qmiPayload,
                         { qmiPayload = it },
-                        label = { Text("TLV payload (hex)") },
+                        label = { Text(stringResource(R.string.tools_qmi_payload)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
-                        supportingText = { Text("NAS (service 3) talks to the selected SIM.") },
+                        supportingText = { Text(stringResource(R.string.tools_qmi_nas_hint)) },
                         trailingIcon = {
                             IconButton(
                                 onClick = {
@@ -258,7 +267,7 @@ fun ToolsScreen(
                                     if (service !== null && message !== null) vm.sendQmi(service, message, qmiPayload)
                                 },
                                 enabled = !state.busy,
-                            ) { Icon(Icons.AutoMirrored.Rounded.Send, contentDescription = "Send") }
+                            ) { Icon(Icons.AutoMirrored.Rounded.Send, contentDescription = stringResource(R.string.common_send)) }
                         },
                     )
                 }
@@ -268,8 +277,8 @@ fun ToolsScreen(
         if (state.toolOutput.isNotEmpty()) {
             item {
                 Row(Modifier.fillMaxWidth()) {
-                    SectionHeader("Output", Modifier.weight(1f))
-                    TextButton(onClick = vm::clearOutput) { Text("Clear") }
+                    SectionHeader(stringResource(R.string.tools_output), Modifier.weight(1f))
+                    TextButton(onClick = vm::clearOutput) { Text(stringResource(R.string.tools_clear)) }
                 }
                 MonospacePanel(state.toolOutput)
             }
@@ -277,25 +286,29 @@ fun ToolsScreen(
 
         item {
             val device = state.modem.device
-            SectionHeader("Device")
+            SectionHeader(stringResource(R.string.common_device))
             Segmented {
                 item {
                     ActionItem(
                         it,
-                        "Copy diagnostics",
-                        "Device details, the passthrough check and the log",
+                        stringResource(R.string.common_copy_diagnostics),
+                        stringResource(R.string.tools_copy_diagnostics_hint),
                         Icons.Rounded.Share,
                         enabled = true,
                         onClick = vm::copyDiagnostics,
                     )
                 }
-                item { InfoItem(it, "Access", state.modem.access?.label.orEmpty()) }
+                item { InfoItem(it, stringResource(R.string.tools_access), state.modem.access?.label.orEmpty()) }
                 if (device !== null) {
-                    item { InfoItem(it, "Modem command passthrough", device.mtkOemHookStatus) }
+                    item {
+                        val status = device.mtkOemHookStatus?.let { text -> LocalContext.current.string(text) }
+                        InfoItem(it, stringResource(R.string.tools_passthrough), status.orEmpty())
+                    }
                     if (device.mtkOemHookChecked.isNotEmpty()) {
                         item { shapes ->
                             val checkedServicesText: @Composable () -> Unit = {
-                                Text(device.mtkOemHookChecked.joinToString("\n"), style = MaterialTheme.typography.bodySmall)
+                                val context = LocalContext.current
+                                Text(device.mtkOemHookChecked.joinToString("\n") { context.string(it) }, style = MaterialTheme.typography.bodySmall)
                             }
                             SegmentedListItem(
                                 onClick = { checkedServicesOpen = !checkedServicesOpen },
@@ -305,57 +318,59 @@ fun ToolsScreen(
                                 trailingContent = {
                                     Icon(
                                         Icons.Rounded.KeyboardArrowDown,
-                                        contentDescription = if (checkedServicesOpen) "Collapse" else "Expand",
+                                        contentDescription =
+                                            stringResource(if (checkedServicesOpen) R.string.tools_collapse else R.string.tools_expand),
                                         modifier = Modifier.rotate(arrowAngle),
                                     )
                                 },
                             ) {
                                 Text(
-                                    "Services checked (${device.mtkOemHookChecked.size})",
+                                    stringResource(R.string.tools_services_checked, device.mtkOemHookChecked.size),
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             }
                         }
                     }
                 }
-                item { InfoItem(it, "Modem", device?.vendorLabel.orEmpty()) }
+                item {
+                    val vendor = device?.vendorLabel?.let { label -> stringResource(label) }
+                    InfoItem(it, stringResource(R.string.common_modem), vendor.orEmpty())
+                }
                 item { InfoItem(it, "SoC", device?.socModel.orEmpty()) }
-                item { InfoItem(it, "Platform", device?.platform.orEmpty()) }
+                item { InfoItem(it, stringResource(R.string.common_platform), device?.platform.orEmpty()) }
                 item { InfoItem(it, "RIL", device?.ril.orEmpty()) }
-                item { InfoItem(it, "Baseband", device?.baseband.orEmpty()) }
+                item { InfoItem(it, stringResource(R.string.common_baseband), device?.baseband.orEmpty()) }
                 item { InfoItem(it, "Android SDK", device?.sdk?.toString().orEmpty()) }
-                item { InfoItem(it, "QMI over QRTR", if (device?.qrtr == true) "Yes" else "No") }
-                item { InfoItem(it, "HAL channel-lock API", if (device?.aospChannels == true) "Present" else "Absent") }
+                item {
+                    InfoItem(
+                        it,
+                        stringResource(R.string.tools_qmi_over_qrtr),
+                        stringResource(if (device?.qrtr == true) R.string.tools_yes else R.string.tools_no),
+                    )
+                }
+                item {
+                    InfoItem(
+                        it,
+                        stringResource(R.string.tools_hal_channel_lock),
+                        stringResource(if (device?.aospChannels == true) R.string.tools_present else R.string.tools_absent),
+                    )
+                }
             }
         }
 
         if (state.modem.log.isNotEmpty()) {
             item {
-                SectionHeader("Log")
+                SectionHeader(stringResource(R.string.tools_log))
                 MonospacePanel(state.modem.log.joinToString("\n"))
             }
         }
 
         item {
-            SectionHeader("About")
+            SectionHeader(stringResource(R.string.tools_about))
             About()
         }
     }
 }
-
-private val BUNNY_FACTS =
-    listOf(
-        "A rabbit's teeth never stop growing, so they have to keep chewing to wear them down.",
-        "A happy rabbit does a \"binky\": a jump with a twist in mid-air.",
-        "Rabbits can see almost all the way around themselves. Their one blind spot is right in front of the nose.",
-        "Rabbits can't vomit, so they're very careful about what they eat.",
-        "A content rabbit \"purrs\" by gently grinding its teeth.",
-        "Baby rabbits are called kits.",
-        "Rabbits are most active at dawn and dusk.",
-        "Those big ears also work as radiators and help a rabbit cool down.",
-        "A group of rabbits is sometimes called a fluffle.",
-        "A thumping rabbit is warning everyone nearby that something seems off.",
-    )
 
 private const val TAPS_FOR_FACT = 5
 
@@ -366,8 +381,9 @@ private fun About() {
         remember {
             runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull().orEmpty()
         }
+    val facts = stringArrayResource(R.array.bunny_facts)
     var taps by rememberSaveable { mutableIntStateOf(0) }
-    val fact = if (taps >= TAPS_FOR_FACT) BUNNY_FACTS[(taps - TAPS_FOR_FACT) % BUNNY_FACTS.size] else null
+    val fact = if (taps >= TAPS_FOR_FACT) facts[(taps - TAPS_FOR_FACT) % facts.size] else null
     Panel {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             LockBadge(locked = fact !== null, size = 56.dp, spin = true)
@@ -380,10 +396,10 @@ private fun About() {
                             indication = null,
                         ) { taps++ },
                 )
-                Text("by @ririxi (BTSearch.pl developer)", style = MaterialTheme.typography.bodyMedium)
+                Text(stringResource(R.string.tools_author), style = MaterialTheme.typography.bodyMedium)
                 if (version.isNotEmpty()) {
                     Text(
-                        "Version $version",
+                        stringResource(R.string.tools_version, version),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -394,7 +410,7 @@ private fun About() {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Icon(BunnyIcons.Bunny, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
                 Text(
-                    "Bunny fact: ${fact.orEmpty()}",
+                    stringResource(R.string.tools_bunny_fact, fact.orEmpty()),
                     style = MaterialTheme.typography.bodyMediumEmphasized,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.weight(1f),
@@ -404,11 +420,61 @@ private fun About() {
     }
 }
 
+@Composable
 private fun atNodesHint(device: DeviceInfo?): String {
-    val rilPorts = if (device?.mtkOemHook == true) listOf("ril:1 and ril:2 (through the RIL)") else emptyList()
+    val rilPorts = if (device?.mtkOemHook == true) listOf(stringResource(R.string.tools_at_ports_ril)) else emptyList()
     val nodes = device?.atNodes.orEmpty() + rilPorts
-    return if (nodes.isEmpty()) "No AT ports found." else "Found ${andList(nodes)}."
+    return if (nodes.isEmpty()) {
+        stringResource(R.string.tools_at_ports_none)
+    } else {
+        stringResource(R.string.tools_at_ports_found, LocalContext.current.andList(nodes))
+    }
 }
+
+@Composable
+private fun LanguageSection() {
+    val activity = LocalActivity.current
+    val context = LocalContext.current
+    var language by remember { mutableStateOf(AppLanguage.current(context)) }
+    val shownInEnglish = LocalConfiguration.current.locales[0].language == "en"
+    SectionHeader(stringResource(R.string.tools_language))
+    Segmented {
+        (listOf("") + AppLanguage.tags).forEach { tag ->
+            item { shapes ->
+                val selected = language == tag
+                val hint =
+                    when {
+                        selected && !shownInEnglish -> stringResource(R.string.tools_language_helper_english)
+                        tag.isEmpty() -> stringResource(R.string.tools_language_system_hint)
+                        else -> null
+                    }
+                SegmentedListItem(
+                    selected = selected,
+                    onClick = {
+                        if (!selected) {
+                            language = tag
+                            activity?.let { AppLanguage.set(it, tag) }
+                        }
+                    },
+                    shapes = shapes,
+                    colors = segmentColors(),
+                    supportingContent = if (hint !== null) ({ Text(hint) }) else null,
+                    trailingContent = if (selected) ({ Icon(Icons.Rounded.Check, contentDescription = null) }) else null,
+                ) { Text(languageName(tag)) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun languageName(tag: String): String =
+    when (tag) {
+        "" -> stringResource(R.string.tools_language_system)
+        "en" -> stringResource(R.string.tools_language_en)
+        "pl" -> stringResource(R.string.tools_language_pl)
+        "zh-CN" -> stringResource(R.string.tools_language_zh_cn)
+        else -> tag
+    }
 
 @Composable
 private fun ActionItem(

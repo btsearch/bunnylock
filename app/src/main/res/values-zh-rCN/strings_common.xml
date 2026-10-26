@@ -1,0 +1,16 @@
+<resources>
+    <string name="common_lock">锁定</string>
+    <string name="common_unlock">解锁</string>
+    <string name="common_unlock_all">全部解锁</string>
+    <string name="common_unknown">未知</string>
+    <string name="common_unknown_band">未知频段</string>
+    <string name="common_copy_diagnostics">复制诊断信息</string>
+    <string name="common_send">发送</string>
+    <string name="common_bands">频段</string>
+    <string name="common_cell">小区</string>
+    <string name="common_network">网络</string>
+    <string name="common_modem">基带</string>
+    <string name="common_device">设备</string>
+    <string name="common_platform">平台</string>
+    <string name="common_baseband">基带版本</string>
+</resources>

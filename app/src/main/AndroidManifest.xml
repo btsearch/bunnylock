@@ -11,10 +11,12 @@
     </queries>
 
     <application
+        android:name=".BunnyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
         android:supportsRtl="true"
         android:theme="@style/Theme.Bunnylock">
         <activity

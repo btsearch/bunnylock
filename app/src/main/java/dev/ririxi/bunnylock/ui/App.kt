@@ -2,6 +2,7 @@
 
 package dev.ririxi.bunnylock.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -63,6 +64,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -72,6 +74,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.data.Release
 import dev.ririxi.bunnylock.modem.Access
 import dev.ririxi.bunnylock.modem.RootState
@@ -82,13 +85,13 @@ import kotlin.time.Duration.Companion.milliseconds
 private val LIVE_REFRESH_PAUSE = 500.milliseconds
 
 enum class Tab(
-    val label: String,
+    @StringRes val label: Int,
     val icon: ImageVector,
 ) {
-    HOME("Home", Icons.Rounded.Home),
-    BANDS("Bands", BunnyIcons.Bands),
-    CELL("Cell lock", BunnyIcons.Tower),
-    TOOLS("Tools", Icons.Rounded.Build),
+    HOME(R.string.shell_tab_home, Icons.Rounded.Home),
+    BANDS(R.string.shell_tab_bands, BunnyIcons.Bands),
+    CELL(R.string.shell_tab_cell, BunnyIcons.Tower),
+    TOOLS(R.string.shell_tab_tools, Icons.Rounded.Build),
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -124,7 +127,7 @@ fun BunnyApp(vm: MainViewModel) {
 
                             state.modem.root == RootState.Granted -> {
                                 IconButton(onClick = vm::refresh) {
-                                    Icon(Icons.Rounded.Refresh, contentDescription = "Refresh")
+                                    Icon(Icons.Rounded.Refresh, contentDescription = stringResource(R.string.shell_refresh))
                                 }
                             }
                         }
@@ -146,7 +149,7 @@ fun BunnyApp(vm: MainViewModel) {
                             selected = selectedTab == tab,
                             onClick = { selectedTab = tab },
                             icon = { Icon(tab.icon, contentDescription = null) },
-                            label = { Text(tab.label) },
+                            label = { Text(stringResource(tab.label)) },
                         )
                     }
                 }
@@ -165,15 +168,15 @@ fun BunnyApp(vm: MainViewModel) {
             is RootState.Denied -> {
                 Centered(innerPadding) {
                     DroopyBunny()
-                    Text("Root or Shizuku needed", style = MaterialTheme.typography.headlineMediumEmphasized)
+                    Text(stringResource(R.string.shell_denied_title), style = MaterialTheme.typography.headlineMediumEmphasized)
                     Text(
                         root.reason,
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    Button(onClick = vm::connect, shapes = ButtonDefaults.shapes()) { Text("Try again") }
-                    TextButton(onClick = vm::copyDiagnostics, shapes = ButtonDefaults.shapes()) { Text("Copy diagnostics") }
+                    Button(onClick = vm::connect, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.shell_try_again)) }
+                    TextButton(onClick = vm::copyDiagnostics, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.common_copy_diagnostics)) }
                 }
             }
 
@@ -225,10 +228,10 @@ private fun UpdateDialog(
     val uriHandler = LocalUriHandler.current
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Update available") },
+        title = { Text(stringResource(R.string.shell_update_title)) },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("Version ${release.version} is out.")
+                Text(stringResource(R.string.shell_update_message, release.version))
                 if (release.notes.isNotEmpty()) Text(release.notes, style = MaterialTheme.typography.bodyMedium)
             }
         },
@@ -241,10 +244,10 @@ private fun UpdateDialog(
                     },
                     shapes = ButtonDefaults.shapes(),
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text("Download") }
+                ) { Text(stringResource(R.string.shell_update_download)) }
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    TextButton(onClick = onSkip, shapes = ButtonDefaults.shapes()) { Text("Skip this version") }
-                    TextButton(onClick = onDismiss, shapes = ButtonDefaults.shapes()) { Text("Later") }
+                    TextButton(onClick = onSkip, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.shell_update_skip)) }
+                    TextButton(onClick = onDismiss, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.shell_update_later)) }
                 }
             }
         },
@@ -264,10 +267,11 @@ private fun LiveRefresh(vm: MainViewModel) {
     }
 }
 
+@Composable
 private fun topBarSubtitle(state: UiState): String {
     val throughShizuku = state.modem.access == Access.SHIZUKU_ADB || state.modem.access == Access.SHIZUKU_ROOT
-    val accessSuffix = if (throughShizuku) ", through Shizuku" else ""
-    return (state.modem.backend?.label ?: "Band and cell locking") + accessSuffix
+    val purpose = stringResource(state.modem.backend?.label ?: R.string.shell_subtitle_default)
+    return if (throughShizuku) stringResource(R.string.shell_subtitle_shizuku, purpose) else purpose
 }
 
 /** [selected] counts from 1. */
@@ -280,13 +284,14 @@ private fun SimChip(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val current = sims.firstOrNull { it.slot + 1 == selected } ?: return
+    val chipDescription = stringResource(R.string.shell_sim_chip_description, selected, current.name)
     Box {
         FilledTonalButton(
             onClick = { expanded = true },
             enabled = enabled,
             shapes = ButtonDefaults.shapes(),
             contentPadding = PaddingValues(start = 8.dp, end = 6.dp),
-            modifier = Modifier.semantics { contentDescription = "SIM $selected, ${current.name}. Switch SIM" },
+            modifier = Modifier.semantics { contentDescription = chipDescription },
         ) {
             SimNumber(selected)
             Spacer(Modifier.width(8.dp))
@@ -297,9 +302,9 @@ private fun SimChip(
             sims.forEach { sim ->
                 val number = sim.slot + 1
                 DropdownMenuItem(
-                    text = { Text("SIM $number: ${sim.name}") },
+                    text = { Text(stringResource(R.string.shell_sim_menu_item, number, sim.name)) },
                     leadingIcon = { SimNumber(number) },
-                    trailingIcon = { if (number == selected) Icon(Icons.Rounded.Check, contentDescription = "Selected") },
+                    trailingIcon = { if (number == selected) Icon(Icons.Rounded.Check, contentDescription = stringResource(R.string.shell_sim_selected)) },
                     onClick = {
                         expanded = false
                         if (number != selected) onSelect(number)

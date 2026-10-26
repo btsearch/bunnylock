@@ -2,6 +2,7 @@
 
 package dev.ririxi.bunnylock.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -45,14 +46,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.data.Carrier
 import dev.ririxi.bunnylock.data.Cell
 import dev.ririxi.bunnylock.data.Rat
 import dev.ririxi.bunnylock.data.Signal
 import dev.ririxi.bunnylock.modem.ModemState
-import dev.ririxi.bunnylock.modem.andList
 import dev.ririxi.bunnylock.modem.formatPlmn
 import dev.ririxi.bunnylock.ui.theme.LocalLockGreen
 import dev.ririxi.bunnylock.ui.theme.LocalSignalScale
@@ -74,14 +77,14 @@ fun HomeScreen(
 
         val carriers = state.modem.carriers
         item {
-            SectionHeader("Connection")
-            if (carriers.isEmpty()) Panel { SleepyBunny("No serving cell") } else ConnectionCard(state.modem)
+            SectionHeader(stringResource(R.string.home_connection))
+            if (carriers.isEmpty()) Panel { SleepyBunny(stringResource(R.string.home_no_serving_cell)) } else ConnectionCard(state.modem)
         }
 
         if (carriers.isNotEmpty()) {
             item {
                 val anchoredOnLte = carriers.any { it.primary && it.rat == Rat.LTE }
-                SectionHeader(if (carriers.size > 1) "Carriers" else "Carrier")
+                SectionHeader(pluralStringResource(R.plurals.home_carriers_header, carriers.size))
                 Segmented(Modifier.animateContentSize()) {
                     carriers.forEach { carrier -> item { shapes -> CarrierItem(shapes, carrier, anchoredOnLte) } }
                 }
@@ -90,18 +93,19 @@ fun HomeScreen(
 
         item {
             val device = state.modem.device
+            val chipset = device?.let { stringResource(it.vendorLabel) }.orEmpty()
             val deviceName = "${device?.manufacturer.orEmpty()} ${device?.model.orEmpty()}".trim()
             val platform =
                 listOfNotNull(
                     device?.socModel?.ifEmpty { null },
                     device?.platform?.ifEmpty { null },
                 ).joinToString(", ")
-            SectionHeader("Modem")
+            SectionHeader(stringResource(R.string.common_modem))
             Segmented {
-                item { InfoItem(it, "Chipset", device?.vendorLabel.orEmpty()) }
-                item { InfoItem(it, "Device", deviceName) }
-                item { InfoItem(it, "Platform", platform) }
-                item { InfoItem(it, "Baseband", device?.baseband.orEmpty()) }
+                item { InfoItem(it, stringResource(R.string.home_chipset), chipset) }
+                item { InfoItem(it, stringResource(R.string.common_device), deviceName) }
+                item { InfoItem(it, stringResource(R.string.common_platform), platform) }
+                item { InfoItem(it, stringResource(R.string.common_baseband), device?.baseband.orEmpty()) }
             }
         }
     }
@@ -115,10 +119,10 @@ private fun Hero(
     onCell: () -> Unit,
 ) {
     val locked = state.modem.anyBandLock || state.modem.anyCellLock || state.modem.anyPlmnLock
-    val strayLocation =
-        state.modem.strayBand?.let { "$it, outside the locked bands" }
-            ?: state.modem.strayChannel?.let { "$it, off the locked frequency" }
-    val lockHeld = locked && strayLocation === null
+    val strayNote =
+        state.modem.strayBand?.let { stringResource(R.string.home_stray_band, it) }
+            ?: state.modem.strayChannel?.let { stringResource(R.string.home_stray_channel, it) }
+    val lockHeld = locked && strayNote === null
     val green = LocalLockGreen.current
     val containerColor by animateColorAsState(
         if (lockHeld) {
@@ -133,26 +137,28 @@ private fun Hero(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        when {
-                            strayLocation !== null -> "Ignored"
-                            locked -> "Locked"
-                            else -> "Free"
-                        },
+                        stringResource(
+                            when {
+                                strayNote !== null -> R.string.home_state_ignored
+                                locked -> R.string.home_state_locked
+                                else -> R.string.home_state_free
+                            },
+                        ),
                         style = MaterialTheme.typography.displaySmallEmphasized.copy(fontWeight = FontWeight.Bold),
                         color =
                             when {
-                                strayLocation !== null -> MaterialTheme.colorScheme.error
+                                strayNote !== null -> MaterialTheme.colorScheme.error
                                 locked -> green
                                 else -> MaterialTheme.colorScheme.onSurface
                             },
                     )
                     Text(
-                        if (strayLocation !== null) "The phone is on $strayLocation." else pinnedSummary(state),
+                        strayNote ?: stringResource(pinnedSummary(state)),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                BouncyLockBadge(locked = locked, ignored = strayLocation !== null, userAction = state.busy, size = 88.dp)
+                BouncyLockBadge(locked = locked, ignored = strayNote !== null, userAction = state.busy, size = 88.dp)
             }
 
             val lockRows = activeLockRows(state)
@@ -188,43 +194,50 @@ private fun Hero(
                             modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
                         )
                         Spacer(Modifier.width(10.dp))
-                        Text("Unlock all", style = ButtonDefaults.textStyleFor(buttonHeight), maxLines = 1)
+                        Text(stringResource(R.string.common_unlock_all), style = ButtonDefaults.textStyleFor(buttonHeight), maxLines = 1)
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    FilledTonalButton(onClick = onBands, shapes = ButtonDefaults.shapes(), modifier = Modifier.weight(1f)) { Text("Bands") }
-                    FilledTonalButton(onClick = onCell, shapes = ButtonDefaults.shapes(), modifier = Modifier.weight(1f)) { Text("Cell") }
+                    FilledTonalButton(onClick = onBands, shapes = ButtonDefaults.shapes(), modifier = Modifier.weight(1f)) {
+                        Text(stringResource(R.string.common_bands))
+                    }
+                    FilledTonalButton(onClick = onCell, shapes = ButtonDefaults.shapes(), modifier = Modifier.weight(1f)) {
+                        Text(stringResource(R.string.common_cell))
+                    }
                 }
             }
         }
     }
 }
 
-private fun pinnedSummary(state: UiState): String {
-    val pinned =
-        listOfNotNull(
-            "bands".takeIf { state.modem.anyBandLock },
-            "cell".takeIf { state.modem.anyCellLock },
-            "network".takeIf { state.modem.anyPlmnLock },
-        )
-    val takesSingularVerb = pinned == listOf("cell") || pinned == listOf("network")
+@StringRes
+private fun pinnedSummary(state: UiState): Int {
+    val bands = state.modem.anyBandLock
+    val cell = state.modem.anyCellLock
+    val network = state.modem.anyPlmnLock
     return when {
-        pinned.isEmpty() -> "Nothing is pinned."
-        takesSingularVerb -> "The ${pinned[0]} is pinned."
-        else -> "The ${andList(pinned)} are pinned."
+        bands && cell && network -> R.string.home_pinned_all
+        bands && cell -> R.string.home_pinned_bands_cell
+        bands && network -> R.string.home_pinned_bands_network
+        cell && network -> R.string.home_pinned_cell_network
+        bands -> R.string.home_pinned_bands
+        cell -> R.string.home_pinned_cell
+        network -> R.string.home_pinned_network
+        else -> R.string.home_pinned_nothing
     }
 }
 
+@Composable
 private fun activeLockRows(state: UiState): List<Pair<String, String>> =
     buildList {
         state.modem.groups.filter { it.locked }.forEach { bandGroup ->
             val bands = bandGroup.current!!.sorted().joinToString(", ") { bandGroup.group.bandLabel(it) }
             add(bandGroup.group.label to bands)
         }
-        state.modem.plmnLock?.let { add("Network" to it) }
-        state.modem.lteLock?.let { add("LTE cell" to it) }
-        state.modem.nrLock?.let { add("NR cell" to it) }
-        state.modem.legacyCellLock?.let { add("2G/3G cell" to it) }
+        state.modem.plmnLock?.let { add(stringResource(R.string.common_network) to it) }
+        state.modem.lteLock?.let { add(stringResource(R.string.home_row_lte_cell) to it) }
+        state.modem.nrLock?.let { add(stringResource(R.string.home_row_nr_cell) to it) }
+        state.modem.legacyCellLock?.let { add(stringResource(R.string.home_row_legacy_cell) to it) }
     }
 
 private fun channelName(rat: Rat) =
@@ -236,6 +249,7 @@ private fun channelName(rat: Rat) =
 
 private fun megahertz(khz: Int): String = if (khz % 1000 == 0) "${khz / 1000}" else "%.1f".format(khz / 1000.0)
 
+@Composable
 private fun techSummary(carriers: List<Carrier>): String {
     val lteCount = carriers.count { it.rat == Rat.LTE }
     val technologies =
@@ -253,8 +267,8 @@ private fun techSummary(carriers: List<Carrier>): String {
             "3G".takeIf { carriers.any { it.rat == Rat.WCDMA } },
             "2G".takeIf { carriers.any { it.rat == Rat.GSM } },
         )
-    val count = if (carriers.size == 1) "1 carrier" else "${carriers.size} carriers"
-    return "${technologies.joinToString(" + ")}, $count"
+    val count = pluralStringResource(R.plurals.home_carrier_count, carriers.size, carriers.size)
+    return stringResource(R.string.home_tech_summary, technologies.joinToString(" + "), count)
 }
 
 private fun totalBandwidth(carriers: List<Carrier>): String? {
@@ -288,7 +302,7 @@ private fun ratColor(rat: Rat): Color =
 @Composable
 private fun ConnectionCard(modem: ModemState) {
     val carriers = modem.carriers
-    val network = modem.registeredName ?: modem.registeredPlmn?.let(::formatPlmn) ?: "Unknown network"
+    val network = modem.registeredName ?: modem.registeredPlmn?.let(::formatPlmn) ?: stringResource(R.string.home_unknown_network)
     val primaryRat = carriers.first().rat
     val signals = modem.signals.filter { it.rsrp !== null || it.rsrq !== null || it.sinr !== null }.sortedBy { it.rat != primaryRat }
     Panel(Modifier.animateContentSize(), padding = PaddingValues(20.dp)) {
@@ -304,7 +318,11 @@ private fun ConnectionCard(modem: ModemState) {
                         transitionSpec = { (slideInVertically { it / 2 } + fadeIn()) togetherWith (slideOutVertically { -it / 2 } + fadeOut()) },
                         label = "total bandwidth",
                     ) { shown -> Text(shown, style = MaterialTheme.typography.headlineSmallEmphasized) }
-                    Text("total bandwidth", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        stringResource(R.string.home_total_bandwidth),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 }
             }
         }
@@ -389,9 +407,9 @@ private fun RoleTag(
 ) {
     val colors = MaterialTheme.colorScheme
     when {
-        carrier.primary -> Tag("Primary", colors.secondaryContainer, colors.onSecondaryContainer)
+        carrier.primary -> Tag(stringResource(R.string.home_tag_primary), colors.secondaryContainer, colors.onSecondaryContainer)
         carrier.rat == Rat.NR && anchoredOnLte -> Tag("5G NSA", colors.primaryContainer, colors.onPrimaryContainer)
-        else -> Tag("Secondary", colors.surfaceContainerHighest, colors.onSurfaceVariant)
+        else -> Tag(stringResource(R.string.home_tag_secondary), colors.surfaceContainerHighest, colors.onSurfaceVariant)
     }
 }
 
@@ -400,7 +418,7 @@ private fun CellTag(cell: Cell) {
     val colors = MaterialTheme.colorScheme
     when {
         cell.note == "NSA SCG" -> Tag("5G NSA", colors.primaryContainer, colors.onPrimaryContainer)
-        cell.registered -> Tag("Serving", colors.secondaryContainer, colors.onSecondaryContainer)
+        cell.registered -> Tag(stringResource(R.string.home_tag_serving), colors.secondaryContainer, colors.onSecondaryContainer)
     }
 }
 
@@ -467,7 +485,7 @@ private fun CarrierItem(
 ) = RadioRow(
     shapes,
     carrier.rat,
-    if (carrier.band !== null) carrier.bandLabel else "Unknown band",
+    if (carrier.band !== null) carrier.bandLabel else stringResource(R.string.common_unknown_band),
     carrier.frequencyName,
     radioDetails(carrier.rat, carrier.arfcn, carrier.pci, carrier.bandwidthKhz),
     carrier.rsrp,
@@ -482,7 +500,7 @@ fun CellItem(
 ) = RadioRow(
     shapes,
     cell.rat,
-    if (cell.band !== null) cell.bandLabel else "Unknown band",
+    if (cell.band !== null) cell.bandLabel else stringResource(R.string.common_unknown_band),
     cell.frequencyName,
     radioDetails(cell.rat, cell.arfcn, cell.pci.takeIf { it >= 0 }, cell.bandwidthKhz),
     cell.rsrp,
