@@ -173,6 +173,7 @@ class ModemController(
             ModemState(
                 persist = prefs.getBoolean("persist", true),
                 atNode = prefs.getString("atNode", "") ?: "",
+                sim = prefs.getInt("sim", 1),
             ),
         )
     val state = _state.asStateFlow()
@@ -283,9 +284,10 @@ class ModemController(
         }
         if (sims.isEmpty()) sims += SimInfo(0, SubscriptionManager.getDefaultSubscriptionId(), context.getString(R.string.modem_sim, 1))
         sims.sortBy { it.slot }
+        val savedSim = prefs.getInt("sim", 1)
         updateState {
-            val selectedSimPresent = sims.any { it.slot == sim - 1 }
-            copy(sims = sims, sim = if (selectedSimPresent) sim else sims.first().slot + 1)
+            val selected = listOf(savedSim, sim).firstOrNull { wanted -> sims.any { it.slot == wanted - 1 } } ?: (sims.first().slot + 1)
+            copy(sims = sims, sim = selected)
         }
     }
 
@@ -293,6 +295,7 @@ class ModemController(
         current.sims.firstOrNull { it.slot == current.sim - 1 }?.subId ?: SubscriptionManager.getDefaultSubscriptionId()
 
     fun setSim(sim: Int) {
+        prefs.edit().putInt("sim", sim).apply()
         val atNode = if (current.atNode.startsWith(RIL_NODE_PREFIX)) rilNode(sim) else current.atNode
         updateState { copy(sim = sim, atNode = atNode) }
         refresh()
