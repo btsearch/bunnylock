@@ -3,20 +3,21 @@
 package dev.ririxi.bunnylock.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -244,22 +245,34 @@ private fun BandGroup(
         }
         item { shapes ->
             Panel(shape = shapes.shape, padding = PaddingValues(horizontal = 12.dp, vertical = 10.dp)) {
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    if (pickingFavorites) {
-                        Spacer(Modifier.weight(1f))
+                if (pickingFavorites) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                         Button(onClick = { pickFavorites(false) }, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.bands_done)) }
-                    } else {
+                    }
+                } else {
+                    FlowRow(
+                        Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        itemVerticalAlignment = Alignment.CenterVertically,
+                    ) {
                         TextButton(onClick = { onSelectAll(true) }, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.bands_all)) }
                         TextButton(onClick = { onSelectAll(false) }, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.bands_none)) }
-                        Spacer(Modifier.weight(1f))
-                        OutlinedButton(onClick = onUnlock, enabled = !busy && bandGroup.locked, shapes = ButtonDefaults.shapes()) {
-                            Text(stringResource(R.string.common_unlock))
-                        }
-                        Spacer(Modifier.width(8.dp))
-                        Button(onClick = onLock, enabled = !busy && selected.isNotEmpty(), shapes = ButtonDefaults.shapes()) {
-                            Icon(BunnyIcons.Lock, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Spacer(Modifier.width(6.dp))
-                            Text(stringResource(R.string.common_lock))
+                        Row(
+                            Modifier.weight(1f),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            OutlinedButton(onClick = onUnlock, enabled = !busy && bandGroup.locked, shapes = ButtonDefaults.shapes()) {
+                                Text(stringResource(R.string.common_unlock), maxLines = 1)
+                            }
+                            FilledIconButton(
+                                onClick = onLock,
+                                enabled = !busy && selected.isNotEmpty(),
+                                shapes = IconButtonDefaults.shapes(),
+                                modifier = Modifier.size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Wide)),
+                            ) {
+                                Icon(BunnyIcons.Lock, contentDescription = stringResource(R.string.common_lock))
+                            }
                         }
                     }
                 }

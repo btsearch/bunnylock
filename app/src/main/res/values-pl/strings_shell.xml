@@ -1,7 +1,7 @@
 <resources>
     <string name="shell_tab_home">Start</string>
     <string name="shell_tab_bands">Pasma</string>
-    <string name="shell_tab_cell">Komórka</string>
+    <string name="shell_tab_cell">Wymuszanie</string>
     <string name="shell_tab_tools">Narzędzia</string>
     <string name="shell_refresh">Odśwież</string>
     <string name="shell_denied_title">Potrzebny root lub Shizuku</string>
