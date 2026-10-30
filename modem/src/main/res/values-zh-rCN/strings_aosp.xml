@@ -33,7 +33,7 @@
     <string name="aosp_radio_not_on">射频无法重新开启：%1$s。</string>
     <string name="aosp_radio_not_off">射频无法关闭：%1$s。</string>
 
-    <string name="sys_samsung_menu_denied">这台手机只允许三星自家应用打开频段菜单，因此需要 Root。</string>
+    <string name="sys_samsung_menu_denied">三星只允许自家应用打开频段菜单。</string>
     <string name="sys_samsung_menu_missing">这台手机上找不到三星频段菜单。</string>
 
     <string name="samsung_no_nr_mode">这台手机没有三星的 5G 模式控制。</string>
