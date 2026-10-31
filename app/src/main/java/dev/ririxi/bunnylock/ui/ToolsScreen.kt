@@ -122,10 +122,10 @@ fun ToolsScreen(
                 item {
                     SwitchItem(
                         it,
-                        stringResource(R.string.tools_no_bands_off),
-                        stringResource(R.string.tools_no_bands_off_hint),
-                        checked = state.noBandsTurnsOff,
-                        onCheckedChange = vm::setNoBandsTurnsOff,
+                        stringResource(R.string.tools_exclusive_lock),
+                        stringResource(R.string.tools_exclusive_lock_hint),
+                        checked = state.exclusiveBandLock,
+                        onCheckedChange = vm::setExclusiveBandLock,
                     )
                 }
             }

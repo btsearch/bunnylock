@@ -41,6 +41,8 @@ import kotlinx.coroutines.launch
 
 private const val MAX_TOOL_OUTPUT_CHARS = 8000
 
+private const val EXCLUSIVE_BAND_LOCK_KEY = "noBandsTurnsOff"
+
 class MainViewModel(
     private val app: Application,
 ) : AndroidViewModel(app) {
@@ -51,7 +53,7 @@ class MainViewModel(
             UiState(
                 dynamicColor = prefs.getBoolean("dynamicColor", true),
                 checkUpdates = prefs.getBoolean("checkUpdates", true),
-                noBandsTurnsOff = prefs.getBoolean("noBandsTurnsOff", false),
+                exclusiveBandLock = prefs.getBoolean(EXCLUSIVE_BAND_LOCK_KEY, false),
                 favoriteBands = loadFavoriteBands(),
             ),
         )
@@ -203,9 +205,9 @@ class MainViewModel(
 
     fun setPersist(enabled: Boolean) = modem.setPersist(enabled)
 
-    fun setNoBandsTurnsOff(enabled: Boolean) {
-        prefs.edit().putBoolean("noBandsTurnsOff", enabled).apply()
-        updateState { copy(noBandsTurnsOff = enabled) }
+    fun setExclusiveBandLock(enabled: Boolean) {
+        prefs.edit().putBoolean(EXCLUSIVE_BAND_LOCK_KEY, enabled).apply()
+        updateState { copy(exclusiveBandLock = enabled) }
     }
 
     fun setDynamicColor(enabled: Boolean) {
@@ -282,13 +284,13 @@ class MainViewModel(
         group: Group,
         unlock: Boolean = false,
     ) = launchAction {
-        val turnOn = ui.noBandsTurnsOff
+        val exclusive = ui.exclusiveBandLock
         val selected = groupState(group)?.let(ui::selectedBands).orEmpty()
         val outcome =
             when {
-                unlock -> modem.unlockBands(group, turnOn)
+                unlock -> modem.unlockBands(group, exclusive)
                 selected.isEmpty() && ui.canTurnOff(group) -> modem.turnOff(group)
-                else -> modem.lockBands(group, selected, turnOn)
+                else -> modem.lockBands(group, selected, exclusive)
             }
         updateState { copy(bandSelections = bandSelections - group) }
         outcome
@@ -364,7 +366,7 @@ class MainViewModel(
 
     fun unlockPlmn() = launchAction { modem.unlockPlmn() }
 
-    fun unlockEverything() = launchAction { modem.unlockEverything() }
+    fun unlockEverything() = launchAction { modem.unlockEverything(ui.exclusiveBandLock) }
 
     fun radioCycle() = launchAction { modem.radioCycle() }
 

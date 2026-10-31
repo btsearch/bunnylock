@@ -1209,31 +1209,35 @@ class ModemController(
         return if (manualPlmn.isEmpty()) context.getString(R.string.modem_plmn_manual) else formatPlmn(manualPlmn)
     }
 
-    /** [turnOn] also adds the network back to the network mode if it was turned off. */
+    /** With [exclusive], every network without a band lock of its own is turned off, and unlocking turns networks back on. */
     suspend fun lockBands(
         group: Group,
         bands: Collection<Int>,
-        turnOn: Boolean = false,
-    ): String = applyGroup(group, unlock = false, turnOn, bands)
+        exclusive: Boolean = false,
+    ): String = applyGroup(group, unlock = false, exclusive, bands)
 
     suspend fun unlockBands(
         group: Group,
-        turnOn: Boolean = false,
-    ): String = applyGroup(group, unlock = true, turnOn)
+        exclusive: Boolean = false,
+    ): String = applyGroup(group, unlock = true, exclusive)
 
     /** Takes [group]'s network out of the network mode. */
-    suspend fun turnOff(group: Group): String {
-        val done = Text(R.string.modem_network_off, group.label)
-        return change(Text(R.string.modem_goal_network_off, group.label), done) {
-            val mask = (current.allowedMask ?: NetMode.AUTO.mask) and group.generation.inv()
-            setAllowedMask(mask, done)
+    suspend fun turnOff(group: Group): String =
+        change(Text(R.string.modem_goal_network_off, group.label), Text(R.string.modem_network_off, group.label)) {
+            switchNetworks(current.netModeMask and group.generation.inv()).also { resendHalLocks() }
         }
+
+    /** Samsung's RIL stops following radio HAL locks once the network mode changes. */
+    private suspend fun resendHalLocks() {
+        if (current.backend != Backend.ANDROID && current.backend !== null) return
+        val held = savedChannelSpecs()
+        if (held.isNotEmpty()) setChannels(JSONArray(held))
     }
 
     private suspend fun applyGroup(
         group: Group,
         unlock: Boolean,
-        turnOn: Boolean,
+        exclusive: Boolean,
         selected: Collection<Int> = emptyList(),
     ) = change(
         Text(if (unlock) R.string.modem_goal_unlock_bands else R.string.modem_goal_lock_bands, group.label),
@@ -1242,13 +1246,69 @@ class ModemController(
         val groupState = current.groups.first { it.group == group }
         val bands = if (unlock) groupState.supported else selected.distinct().sorted()
         if (bands.isEmpty()) fail(R.string.modem_pick_band)
-        val turningOn = turnOn && current.isOff(group)
-        // Unlocking a network that's only turned off just turns it back on.
-        val note = if (unlock && turningOn && !groupState.locked) null else sendBands(group, groupState, bands, unlock)
-        if (!turningOn) return@change note
-        val done = (note ?: bandsDone(group, unlock)).followedBy(Text(R.string.modem_network_back_on, group.label))
-        setAllowedMask((current.allowedMask ?: 0L) or group.generation, done) ?: done
+        if (exclusive) applyExclusive(group, groupState, bands, unlock) else sendBands(group, groupState, bands, unlock)
     }
+
+    /** Changes the network mode before the bands, since a lock sent before the change is ignored (see [resendHalLocks]). */
+    private suspend fun applyExclusive(
+        group: Group,
+        groupState: BandGroupState,
+        bands: List<Int>,
+        unlock: Boolean,
+    ): Text? {
+        val othersLocked = current.groups.any { it.group != group && it.locked }
+        val mask =
+            when {
+                !unlock -> current.maskKeepingLocks(group)
+                othersLocked -> current.netModeMask or group.generation
+                else -> maskBeforeLock ?: (current.netModeMask or group.generation)
+            }
+        // A network that's only turned off has no lock to lift.
+        val onlyTurnsOn = unlock && !groupState.locked && current.isOff(group)
+        val before = current.netModeMask
+        val switched = switchNetworks(mask)
+        val sent =
+            if (onlyTurnsOn) {
+                null
+            } else {
+                runSuspendCatching { sendBands(group, groupState, bands, unlock) }
+                    .onFailure { runSuspendCatching { switchNetworks(before) } }
+                    .getOrThrow() ?: bandsDone(group, unlock)
+            }
+        if (unlock && !othersLocked) maskBeforeLock = null
+        return listOfNotNull(sent, switched).reduceOrNull(Text::followedBy)
+    }
+
+    /** Sets the network mode to [mask] and says which networks that turned off or on. */
+    private suspend fun switchNetworks(mask: Long): Text? {
+        val before = current.netModeMask
+        val turnedOff = current.networkNames(before and mask.inv())
+        val turnedOn = current.networkNames(mask and before.inv())
+        if (turnedOff.isEmpty() && turnedOn.isEmpty()) return null
+        if (turnedOff.isNotEmpty() && maskBeforeLock === null) maskBeforeLock = before
+        val changes =
+            listOfNotNull(
+                turnedOff.takeIf { it.isNotEmpty() }?.let { Text(R.string.modem_network_off, it) },
+                turnedOn.takeIf { it.isNotEmpty() }?.let { Text(R.string.modem_network_back_on, it) },
+            ).reduce(Text::followedBy)
+        return setAllowedMask(mask, changes) ?: changes
+    }
+
+    /** Brings back the network mode from before a lock turned networks off. */
+    private suspend fun restoreNetworks(): Text? {
+        val mask = maskBeforeLock ?: return null
+        return switchNetworks(mask).also { maskBeforeLock = null }
+    }
+
+    private var maskBeforeLock: Long?
+        get() = prefs.getLong(maskBeforeLockKey(), -1L).takeIf { it >= 0 }
+        set(value) {
+            val editor = prefs.edit()
+            if (value === null) editor.remove(maskBeforeLockKey()) else editor.putLong(maskBeforeLockKey(), value)
+            editor.apply()
+        }
+
+    private fun maskBeforeLockKey() = "maskBeforeLock.sim${current.sim}"
 
     private suspend fun sendBands(
         group: Group,
@@ -1448,7 +1508,10 @@ class ModemController(
 
     suspend fun setNetMode(mode: NetMode): String {
         val done = Text(R.string.modem_net_mode_set, Text(mode.label))
-        return change(Text(R.string.modem_goal_net_mode), done) { setAllowedMask(mode.mask, done) }
+        return change(Text(R.string.modem_goal_net_mode), done) {
+            // A mode picked by hand replaces the one an unlock would bring back.
+            setAllowedMask(mode.mask, done).also { maskBeforeLock = null }
+        }
     }
 
     /** Returns [done] with any notes added, or null if there are none. */
@@ -1843,56 +1906,63 @@ class ModemController(
         prefs.edit().remove(plmnKey(current.sim)).apply()
     }
 
-    suspend fun unlockEverything() =
+    /** With [exclusive], the network mode from before the first exclusive lock comes back too. */
+    suspend fun unlockEverything(exclusive: Boolean = false) =
         change(Text(R.string.modem_goal_unlock_all), Text(R.string.modem_all_unlocked)) {
-            if (current.anyPlmnLock) runSuspendCatching { clearPlmn() }
-            when (current.backend) {
-                Backend.QUALCOMM -> {
-                    helper.call("qc.reset") {
-                        put("sim", current.sim)
-                        put("persist", current.persist)
-                    }
-                    runSuspendCatching { helper.call("qc.lteUnlock", QC_LTE_LOCK_TIMEOUT) { put("sim", current.sim) } }
-                        .onSuccess { prefs.edit().remove(qcLteLockKey(current.sim)).apply() }
-                    runSuspendCatching { helper.call("qc.nrUnlock") { put("sim", current.sim) } }
-                }
+            val note = unlockAllLocks()
+            val restored = if (exclusive) restoreNetworks() else null
+            if (restored === null) note else (note ?: Text(R.string.modem_all_unlocked)).followedBy(restored)
+        }
 
-                Backend.MEDIATEK -> {
-                    val empty = JSONArray()
-                    val hasNr = current.groups.any { it.group == Group.NR }
-                    callMediatek("mtk.setBands") {
-                        put("gsm", empty)
-                        put("wcdma", empty)
-                        put("lte", empty)
-                        if (hasNr) put("nr", empty)
-                    }
-                    if (current.mtkCellLockRefused) {
-                        val held = savedChannelSpecs()
-                        runSuspendCatching { setChannels(JSONArray()) }
-                        if (held.isNotEmpty()) finishHalUnlock(held)?.let { return@change Text(R.string.modem_all_unlocked).followedBy(it) }
-                    } else {
-                        val heldCellLock = current.anyCellLock
-                        runSuspendCatching { callMediatek("mtk.cellUnlock") }
-                        if (heldCellLock) restartSimRadio()
-                    }
+    private suspend fun unlockAllLocks(): Text? {
+        if (current.anyPlmnLock) runSuspendCatching { clearPlmn() }
+        when (current.backend) {
+            Backend.QUALCOMM -> {
+                helper.call("qc.reset") {
+                    put("sim", current.sim)
+                    put("persist", current.persist)
                 }
+                runSuspendCatching { helper.call("qc.lteUnlock", QC_LTE_LOCK_TIMEOUT) { put("sim", current.sim) } }
+                    .onSuccess { prefs.edit().remove(qcLteLockKey(current.sim)).apply() }
+                runSuspendCatching { helper.call("qc.nrUnlock") { put("sim", current.sim) } }
+            }
 
-                Backend.PIXEL -> {
-                    helper.call("pixel.setLte") { put("bands", JSONArray()) }
-                    helper.call("pixel.setNr") { put("bands", JSONArray()) }
-                    setChannels(JSONArray())
-                    restartRadio()
+            Backend.MEDIATEK -> {
+                val empty = JSONArray()
+                val hasNr = current.groups.any { it.group == Group.NR }
+                callMediatek("mtk.setBands") {
+                    put("gsm", empty)
+                    put("wcdma", empty)
+                    put("lte", empty)
+                    if (hasNr) put("nr", empty)
                 }
-
-                Backend.ANDROID, null -> {
+                if (current.mtkCellLockRefused) {
                     val held = savedChannelSpecs()
-                    replaceSavedBands(held.map { it.optInt("ran") } + Ran.EUTRAN)
-                    setChannels(JSONArray())
-                    finishHalUnlock(held)?.let { return@change Text(R.string.modem_all_unlocked).followedBy(it) }
+                    runSuspendCatching { setChannels(JSONArray()) }
+                    if (held.isNotEmpty()) finishHalUnlock(held)?.let { return Text(R.string.modem_all_unlocked).followedBy(it) }
+                } else {
+                    val heldCellLock = current.anyCellLock
+                    runSuspendCatching { callMediatek("mtk.cellUnlock") }
+                    if (heldCellLock) restartSimRadio()
                 }
             }
-            null
+
+            Backend.PIXEL -> {
+                helper.call("pixel.setLte") { put("bands", JSONArray()) }
+                helper.call("pixel.setNr") { put("bands", JSONArray()) }
+                setChannels(JSONArray())
+                restartRadio()
+            }
+
+            Backend.ANDROID, null -> {
+                val held = savedChannelSpecs()
+                replaceSavedBands(held.map { it.optInt("ran") } + Ran.EUTRAN)
+                setChannels(JSONArray())
+                finishHalUnlock(held)?.let { return Text(R.string.modem_all_unlocked).followedBy(it) }
+            }
         }
+        return null
+    }
 
     suspend fun radioCycle() =
         change(Text(R.string.modem_goal_restart_radio), Text(R.string.modem_radio_restarted)) {
