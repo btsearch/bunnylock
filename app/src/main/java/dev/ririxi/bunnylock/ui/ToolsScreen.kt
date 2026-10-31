@@ -116,6 +116,21 @@ fun ToolsScreen(
             }
         }
 
+        item {
+            SectionHeader(stringResource(R.string.tools_bands))
+            Segmented {
+                item {
+                    SwitchItem(
+                        it,
+                        stringResource(R.string.tools_no_bands_off),
+                        stringResource(R.string.tools_no_bands_off_hint),
+                        checked = state.noBandsTurnsOff,
+                        onCheckedChange = vm::setNoBandsTurnsOff,
+                    )
+                }
+            }
+        }
+
         if (dynamicColorAvailable) {
             item {
                 SectionHeader(stringResource(R.string.tools_appearance))

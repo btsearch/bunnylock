@@ -6,6 +6,9 @@
     <string name="tools_persist_hint">When this is off, locks are cleared on reboot.</string>
 
     <string name="tools_appearance">Appearance</string>
+    <string name="tools_bands">Band locks</string>
+    <string name="tools_no_bands_off">Turn off networks with no bands</string>
+    <string name="tools_no_bands_off_hint">Locking a network with no bands picked turns it off, like in Samsung\'s band menu. Unlock turns it back on.</string>
     <string name="tools_dynamic_color">Dynamic color</string>
     <string name="tools_dynamic_color_hint">Use your wallpaper colors. Off uses the default blue theme.</string>
 

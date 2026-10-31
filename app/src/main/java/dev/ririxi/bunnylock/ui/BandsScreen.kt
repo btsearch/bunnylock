@@ -127,6 +127,9 @@ fun BandsScreen(
             BandGroup(
                 bandGroup,
                 selected = state.selectedBands(bandGroup),
+                applied = state.appliedBands(bandGroup),
+                off = state.isOff(bandGroup.group),
+                canTurnOff = state.canTurnOff(bandGroup.group),
                 favorites = state.favoritesOf(bandGroup.group),
                 busy = state.busy,
                 onToggle = { vm.toggleBand(bandGroup.group, it) },
@@ -156,12 +159,17 @@ private fun backendHint(state: UiState): String =
 private fun selectionSummary(
     bandGroup: BandGroupState,
     selected: Set<Int>,
+    applied: Set<Int>,
+    off: Boolean,
 ): String {
     val count = selected.size
     val total = bandGroup.supported.size
-    val pending = selected != bandGroup.allowed
+    val pending = selected != applied
     val stray = bandGroup.stray
     return when {
+        off && pending -> stringResource(R.string.bands_summary_off_pending, count, total)
+        off -> stringResource(R.string.bands_summary_off)
+
         stray !== null -> {
             val band = bandGroup.group.bandLabel(stray)
             stringResource(if (pending) R.string.bands_summary_stray_pending else R.string.bands_summary_stray, count, total, band)
@@ -176,6 +184,9 @@ private fun selectionSummary(
 private fun BandGroup(
     bandGroup: BandGroupState,
     selected: Set<Int>,
+    applied: Set<Int>,
+    off: Boolean,
+    canTurnOff: Boolean,
     favorites: Set<Int>,
     busy: Boolean,
     onToggle: (Int) -> Unit,
@@ -201,7 +212,7 @@ private fun BandGroup(
                 shapes = shapes,
                 colors = segmentColors(),
                 supportingContent = {
-                    Text(if (pickingFavorites) stringResource(R.string.bands_pick_favorites_hint) else selectionSummary(bandGroup, selected))
+                    Text(if (pickingFavorites) stringResource(R.string.bands_pick_favorites_hint) else selectionSummary(bandGroup, selected, applied, off))
                 },
                 trailingContent = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -262,12 +273,12 @@ private fun BandGroup(
                             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            OutlinedButton(onClick = onUnlock, enabled = !busy && bandGroup.locked, shapes = ButtonDefaults.shapes()) {
+                            OutlinedButton(onClick = onUnlock, enabled = !busy && (bandGroup.locked || off), shapes = ButtonDefaults.shapes()) {
                                 Text(stringResource(R.string.common_unlock), maxLines = 1)
                             }
                             FilledIconButton(
                                 onClick = onLock,
-                                enabled = !busy && selected.isNotEmpty(),
+                                enabled = !busy && (selected.isNotEmpty() || canTurnOff),
                                 shapes = IconButtonDefaults.shapes(),
                                 modifier = Modifier.size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Wide)),
                             ) {

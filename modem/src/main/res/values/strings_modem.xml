@@ -12,6 +12,7 @@
     <string name="modem_goal_lock_bands">lock the %1$s bands</string>
     <string name="modem_goal_unlock_bands">unlock the %1$s bands</string>
     <string name="modem_goal_net_mode">change the network mode</string>
+    <string name="modem_goal_network_off">turn %1$s off</string>
     <string name="modem_goal_nr_mode">switch the 5G mode to %1$s</string>
     <string name="modem_goal_nr_dc_on">turn on NSA (EN-DC)</string>
     <string name="modem_goal_nr_dc_off">turn off NSA (EN-DC)</string>
@@ -30,6 +31,8 @@
     <string name="modem_bands_locked">%1$s bands locked.</string>
     <string name="modem_bands_unlocked">%1$s bands unlocked.</string>
     <string name="modem_net_mode_set">Network mode is now \"%1$s\".</string>
+    <string name="modem_network_off">%1$s turned off.</string>
+    <string name="modem_network_back_on">%1$s turned back on.</string>
     <string name="modem_nr_mode_set">5G mode switched to %1$s.</string>
     <string name="modem_nr_dc_on">NSA (EN-DC) is on.</string>
     <string name="modem_nr_dc_off">NSA (EN-DC) is off.</string>
@@ -65,6 +68,7 @@
     <string name="modem_plmn_manual">Manual selection</string>
 
     <string name="modem_pick_band">Pick at least one band.</string>
+    <string name="modem_last_network">At least one network has to stay on.</string>
     <string name="modem_nr_list_too_long">This phone only takes %1$d 5G bands in one lock, so pick %1$d or fewer.</string>
     <string name="modem_note_needs_channels">This phone needs visible frequencies together with the selected bands, so bunnylock included them in the lock.</string>
     <string name="modem_no_gsm_1800">This phone\'s radio software doesn\'t know GSM 1800, so it refuses a 2G lock to 1800 alone.</string>

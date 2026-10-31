@@ -6,6 +6,9 @@
     <string name="tools_persist_hint">关闭后，重启会清除锁定。</string>
 
     <string name="tools_appearance">外观</string>
+    <string name="tools_bands">频段锁定</string>
+    <string name="tools_no_bands_off">未选频段时关闭网络</string>
+    <string name="tools_no_bands_off_hint">锁定时若某个网络未选任何频段，就会关闭该网络，和三星的频段菜单一样。解锁后重新开启。</string>
     <string name="tools_dynamic_color">动态取色</string>
     <string name="tools_dynamic_color_hint">跟随壁纸配色。关闭则使用默认蓝色主题。</string>
 

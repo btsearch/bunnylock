@@ -40,6 +40,8 @@ data class UiState(
     val plmnMnc: String = "",
     val dynamicColor: Boolean = true,
     val checkUpdates: Boolean = true,
+    /** Locking a group with no bands picked takes its network out of the network mode. */
+    val noBandsTurnsOff: Boolean = false,
     val toolOutput: String = "",
     val update: Release? = null,
     val favoriteBands: Map<String, Set<Int>> = emptyMap(),
@@ -48,5 +50,11 @@ data class UiState(
 
     val lockRat get() = if (modem.supports5g) form.rat else LockRat.LTE
 
-    fun selectedBands(groupState: BandGroupState): Set<Int> = bandSelections[groupState.group] ?: groupState.allowed
+    fun isOff(group: Group) = noBandsTurnsOff && modem.isOff(group)
+
+    fun canTurnOff(group: Group) = noBandsTurnsOff && group.canTurnOff
+
+    fun appliedBands(groupState: BandGroupState): Set<Int> = if (isOff(groupState.group)) emptySet() else groupState.allowed
+
+    fun selectedBands(groupState: BandGroupState): Set<Int> = bandSelections[groupState.group] ?: appliedBands(groupState)
 }

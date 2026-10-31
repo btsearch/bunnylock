@@ -1209,16 +1209,31 @@ class ModemController(
         return if (manualPlmn.isEmpty()) context.getString(R.string.modem_plmn_manual) else formatPlmn(manualPlmn)
     }
 
+    /** [turnOn] also adds the network back to the network mode if it was turned off. */
     suspend fun lockBands(
         group: Group,
         bands: Collection<Int>,
-    ): String = applyGroup(group, unlock = false, selected = bands)
+        turnOn: Boolean = false,
+    ): String = applyGroup(group, unlock = false, turnOn, bands)
 
-    suspend fun unlockBands(group: Group): String = applyGroup(group, unlock = true)
+    suspend fun unlockBands(
+        group: Group,
+        turnOn: Boolean = false,
+    ): String = applyGroup(group, unlock = true, turnOn)
+
+    /** Takes [group]'s network out of the network mode. */
+    suspend fun turnOff(group: Group): String {
+        val done = Text(R.string.modem_network_off, group.label)
+        return change(Text(R.string.modem_goal_network_off, group.label), done) {
+            val mask = (current.allowedMask ?: NetMode.AUTO.mask) and group.generation.inv()
+            setAllowedMask(mask, done)
+        }
+    }
 
     private suspend fun applyGroup(
         group: Group,
         unlock: Boolean,
+        turnOn: Boolean,
         selected: Collection<Int> = emptyList(),
     ) = change(
         Text(if (unlock) R.string.modem_goal_unlock_bands else R.string.modem_goal_lock_bands, group.label),
@@ -1227,11 +1242,25 @@ class ModemController(
         val groupState = current.groups.first { it.group == group }
         val bands = if (unlock) groupState.supported else selected.distinct().sorted()
         if (bands.isEmpty()) fail(R.string.modem_pick_band)
+        val turningOn = turnOn && current.isOff(group)
+        // Unlocking a network that's only turned off just turns it back on.
+        val note = if (unlock && turningOn && !groupState.locked) null else sendBands(group, groupState, bands, unlock)
+        if (!turningOn) return@change note
+        val done = (note ?: bandsDone(group, unlock)).followedBy(Text(R.string.modem_network_back_on, group.label))
+        setAllowedMask((current.allowedMask ?: 0L) or group.generation, done) ?: done
+    }
+
+    private suspend fun sendBands(
+        group: Group,
+        groupState: BandGroupState,
+        bands: List<Int>,
+        unlock: Boolean,
+    ): Text? {
         val allBandsSelected = bands.containsAll(groupState.supported)
         // An empty list lifts the restriction on every backend.
         val bandsToSend = if (allBandsSelected) emptyList() else bands
         val bandsJson = JSONArray(bandsToSend)
-        when (current.backend) {
+        return when (current.backend) {
             Backend.QUALCOMM -> {
                 val kind =
                     when (group) {
@@ -1417,64 +1446,73 @@ class ModemController(
         return specs
     }
 
-    suspend fun setNetMode(mode: NetMode) =
-        change(Text(R.string.modem_goal_net_mode), Text(R.string.modem_net_mode_set, Text(mode.label))) {
-            val subscriptionId = subId()
-            // A modem without 5G never reads the 5G bit back, so asking for it would look like a refusal.
-            val mask = if (current.supports5g) mode.mask else mode.mask and Masks.G5.inv()
-            var setThroughAndroid = true
-            val result =
-                try {
-                    helper.call("aosp.setAllowed", NET_MODE_TIMEOUT) {
-                        put("subId", subscriptionId)
-                        put("mask", mask)
-                        put("slot", current.sim - 1)
-                    }
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    setThroughAndroid = false
-                    when (current.backend) {
-                        Backend.QUALCOMM ->
-                            helper.call("qc.setRat") {
-                                put("sim", current.sim)
-                                put("mask", Masks.toQmi(mask))
-                                put("persist", current.persist)
-                            }
+    suspend fun setNetMode(mode: NetMode): String {
+        val done = Text(R.string.modem_net_mode_set, Text(mode.label))
+        return change(Text(R.string.modem_goal_net_mode), done) { setAllowedMask(mode.mask, done) }
+    }
 
-                        Backend.MEDIATEK -> {
-                            try {
-                                callMediatek("mtk.setRat") { put("mask", mask) }
-                            } catch (atError: CancellationException) {
-                                throw atError
-                            } catch (atError: Exception) {
-                                log("AT+ERAT didn't set the network mode either (${englishReason(atError).asClause()}).")
-                                throw e
-                            }
-                            log("Android refused the network mode (${englishReason(e).asClause()}), so bunnylock set it with AT+ERAT.")
-                            JSONObject().put("setByAt", true)
+    /** Returns [done] with any notes added, or null if there are none. */
+    private suspend fun setAllowedMask(
+        requested: Long,
+        done: Text,
+    ): Text? {
+        val subscriptionId = subId()
+        // A modem without 5G never reads the 5G bit back, so asking for it would look like a refusal.
+        val mask = if (current.supports5g) requested else requested and Masks.G5.inv()
+        if (mask and Masks.GENERATIONS == 0L) fail(R.string.modem_last_network)
+        var setThroughAndroid = true
+        val result =
+            try {
+                helper.call("aosp.setAllowed", NET_MODE_TIMEOUT) {
+                    put("subId", subscriptionId)
+                    put("mask", mask)
+                    put("slot", current.sim - 1)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                setThroughAndroid = false
+                when (current.backend) {
+                    Backend.QUALCOMM ->
+                        helper.call("qc.setRat") {
+                            put("sim", current.sim)
+                            put("mask", Masks.toQmi(mask))
+                            put("persist", current.persist)
                         }
 
-                        else -> throw e
+                    Backend.MEDIATEK -> {
+                        try {
+                            callMediatek("mtk.setRat") { put("mask", mask) }
+                        } catch (atError: CancellationException) {
+                            throw atError
+                        } catch (atError: Exception) {
+                            log("AT+ERAT didn't set the network mode either (${englishReason(atError).asClause()}).")
+                            throw e
+                        }
+                        log("Android refused the network mode (${englishReason(e).asClause()}), so bunnylock set it with AT+ERAT.")
+                        JSONObject().put("setByAt", true)
                     }
+
+                    else -> throw e
                 }
-            // MediaTek's RIL skips a mode it thinks is already set, and it doesn't see one set with AT+ERAT.
-            if (current.backend == Backend.MEDIATEK && !result.optBoolean("setByAt")) runSuspendCatching { callMediatek("mtk.setRat") { put("mask", mask) } }
-            val heldBack = result.optText("heldBack")
-            // Some radios report the new mode while the SIM stays on its old network.
-            val stayed = setThroughAndroid && !result.optBoolean("airplaneMode") && heldBack === null && !reachesNetworkIn(mask, subscriptionId)
-            val reapplied = stayed && reapplyNetMode(subscriptionId, mask)
-            val notes =
-                buildList {
-                    if (result.optBoolean("setByAt")) add(Text(R.string.modem_note_set_by_at))
-                    if (result.optBoolean("airplaneMode")) add(Text(R.string.modem_note_mode_airplane))
-                    if (reapplied) add(Text(R.string.modem_note_mode_reapplied, current.sim))
-                    if (stayed && !reapplied) add(Text(R.string.modem_note_mode_stayed, current.sim))
-                    heldBack?.let { add(Text(R.string.modem_note_mode_held_back, it)) }
-                }
-            if (notes.isEmpty()) return@change null
-            notes.fold(Text(R.string.modem_net_mode_set, Text(mode.label)), Text::followedBy)
-        }
+            }
+        // MediaTek's RIL skips a mode it thinks is already set, and it doesn't see one set with AT+ERAT.
+        if (current.backend == Backend.MEDIATEK && !result.optBoolean("setByAt")) runSuspendCatching { callMediatek("mtk.setRat") { put("mask", mask) } }
+        val heldBack = result.optText("heldBack")
+        // Some radios report the new mode while the SIM stays on its old network.
+        val stayed = setThroughAndroid && !result.optBoolean("airplaneMode") && heldBack === null && !reachesNetworkIn(mask, subscriptionId)
+        val reapplied = stayed && reapplyNetMode(subscriptionId, mask)
+        val notes =
+            buildList {
+                if (result.optBoolean("setByAt")) add(Text(R.string.modem_note_set_by_at))
+                if (result.optBoolean("airplaneMode")) add(Text(R.string.modem_note_mode_airplane))
+                if (reapplied) add(Text(R.string.modem_note_mode_reapplied, current.sim))
+                if (stayed && !reapplied) add(Text(R.string.modem_note_mode_stayed, current.sim))
+                heldBack?.let { add(Text(R.string.modem_note_mode_held_back, it)) }
+            }
+        if (notes.isEmpty()) return null
+        return notes.fold(done, Text::followedBy)
+    }
 
     /** True once the SIM is on a network [mask] allows. Also true when its network type is unknown, since there's nothing to compare. */
     @SuppressLint("MissingPermission")

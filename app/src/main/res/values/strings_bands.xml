@@ -17,6 +17,8 @@
     <string name="bands_summary_locked_pending">%1$d of %2$d selected, locked, not applied yet</string>
     <string name="bands_summary_stray">%1$d of %2$d selected, locked but the phone is on %3$s</string>
     <string name="bands_summary_stray_pending">%1$d of %2$d selected, locked but the phone is on %3$s, not applied yet</string>
+    <string name="bands_summary_off">Turned off</string>
+    <string name="bands_summary_off_pending">%1$d of %2$d selected, turned off, not applied yet</string>
     <string name="bands_pick_favorites">Pick favorite bands</string>
     <string name="bands_pick_favorites_hint">Tap the bands you want to keep in view.</string>
     <string name="bands_show_favorites">Show favorites only</string>

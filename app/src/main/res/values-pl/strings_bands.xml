@@ -17,6 +17,8 @@
     <string name="bands_summary_locked_pending">Wybrano %1$d z %2$d, blokada aktywna, zmiany jeszcze niezastosowane</string>
     <string name="bands_summary_stray">Wybrano %1$d z %2$d, blokada aktywna, ale telefon siedzi na %3$s</string>
     <string name="bands_summary_stray_pending">Wybrano %1$d z %2$d, blokada aktywna, ale telefon siedzi na %3$s, zmiany jeszcze niezastosowane</string>
+    <string name="bands_summary_off">Wyłączone</string>
+    <string name="bands_summary_off_pending">Wybrano %1$d z %2$d, wyłączone, zmiany jeszcze niezastosowane</string>
     <string name="bands_pick_favorites">Wybierz ulubione pasma</string>
     <string name="bands_pick_favorites_hint">Stuknij pasma, które chcesz mieć pod ręką.</string>
     <string name="bands_show_favorites">Pokaż tylko ulubione</string>

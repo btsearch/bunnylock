@@ -6,6 +6,9 @@
     <string name="tools_persist_hint">Po wyłączeniu blokady znikają przy restarcie.</string>
 
     <string name="tools_appearance">Wygląd</string>
+    <string name="tools_bands">Blokada pasm</string>
+    <string name="tools_no_bands_off">Wyłączaj sieci bez pasm</string>
+    <string name="tools_no_bands_off_hint">Zablokowanie sieci bez zaznaczonych pasm wyłącza ją, tak jak w menu pasm Samsunga. Odblokowanie włącza ją ponownie.</string>
     <string name="tools_dynamic_color">Dynamiczne kolory</string>
     <string name="tools_dynamic_color_hint">Kolory z tapety. Po wyłączeniu aplikacja używa domyślnego niebieskiego motywu.</string>
 

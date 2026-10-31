@@ -52,6 +52,18 @@ enum class Group(
             WCDMA -> Bands.WCDMA
             GSM -> Bands.GSM
         }
+
+    val generation: Long
+        get() =
+            when (this) {
+                LTE -> Masks.G4
+                NR, NR_SA, NR_NSA -> Masks.G5
+                WCDMA -> Masks.G3
+                GSM -> Masks.G2
+            }
+
+    /** The network mode has no separate bit for 5G SA or NSA, so neither can be turned off alone. */
+    val canTurnOff get() = this != NR_SA && this != NR_NSA
 }
 
 data class BandGroupState(
@@ -127,6 +139,7 @@ object Masks {
         )
     val G4 = maskOf(TelephonyManager.NETWORK_TYPE_LTE)
     val G5 = maskOf(TelephonyManager.NETWORK_TYPE_NR)
+    val GENERATIONS = G2 or G3 or G4 or G5
 
     // TelephonyManager.NETWORK_TYPE_LTE_CA, which the SDK hides.
     private const val NETWORK_TYPE_LTE_CA = 19
@@ -371,6 +384,8 @@ data class ModemState(
 
     val netMode: NetMode?
         get() = NetMode.of(allowedMask).let { if (it == NetMode.NO_NR && !supports5g) NetMode.AUTO else it }
+
+    fun isOff(group: Group) = allowedMask?.let { it and group.generation == 0L } == true
 
     val supportsNrMode
         get() =

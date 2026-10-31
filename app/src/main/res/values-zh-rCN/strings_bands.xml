@@ -17,6 +17,8 @@
     <string name="bands_summary_locked_pending">已选 %1$d/%2$d，已锁定，新选择尚未生效</string>
     <string name="bands_summary_stray">已选 %1$d/%2$d，已锁定，但手机仍驻留在 %3$s</string>
     <string name="bands_summary_stray_pending">已选 %1$d/%2$d，已锁定，但手机仍驻留在 %3$s，新选择尚未生效</string>
+    <string name="bands_summary_off">已关闭</string>
+    <string name="bands_summary_off_pending">已选 %1$d/%2$d，已关闭，新选择尚未生效</string>
     <string name="bands_pick_favorites">选择常用频段</string>
     <string name="bands_pick_favorites_hint">点选常用频段，平时只显示它们。</string>
     <string name="bands_show_favorites">仅显示常用</string>

@@ -51,6 +51,7 @@ class MainViewModel(
             UiState(
                 dynamicColor = prefs.getBoolean("dynamicColor", true),
                 checkUpdates = prefs.getBoolean("checkUpdates", true),
+                noBandsTurnsOff = prefs.getBoolean("noBandsTurnsOff", false),
                 favoriteBands = loadFavoriteBands(),
             ),
         )
@@ -146,11 +147,17 @@ class MainViewModel(
         unlockEverything()
     }
 
-    // A refresh replaces the band groups, so picks that weren't applied start over.
+    // Unapplied selections survive a refresh, minus any bands the modem no longer offers.
     private fun refreshed(modemState: ModemState) {
-        updateState { copy(bandSelections = emptyMap()) }
+        val supported = modemState.groups.associate { it.group to it.supported.toSet() }
+        updateState {
+            val selections = bandSelections.filterKeys { it in supported }.mapValues { (group, bands) -> bands intersect supported.getValue(group) }
+            copy(bandSelections = selections)
+        }
         updateNotification(modemState)
     }
+
+    private fun clearBandSelections() = updateState { copy(bandSelections = emptyMap()) }
 
     /** Lists the locks that hold. One the phone has strayed from is left out. */
     private fun updateNotification(modemState: ModemState) {
@@ -184,11 +191,22 @@ class MainViewModel(
 
     fun loadSims() = modem.loadSims()
 
-    fun setSim(sim: Int) = modem.setSim(sim)
+    fun setSim(sim: Int) {
+        clearBandSelections()
+        modem.setSim(sim)
+    }
 
-    fun setBackend(backend: Backend) = modem.setBackend(backend)
+    fun setBackend(backend: Backend) {
+        clearBandSelections()
+        modem.setBackend(backend)
+    }
 
     fun setPersist(enabled: Boolean) = modem.setPersist(enabled)
+
+    fun setNoBandsTurnsOff(enabled: Boolean) {
+        prefs.edit().putBoolean("noBandsTurnsOff", enabled).apply()
+        updateState { copy(noBandsTurnsOff = enabled) }
+    }
 
     fun setDynamicColor(enabled: Boolean) {
         prefs.edit().putBoolean("dynamicColor", enabled).apply()
@@ -264,11 +282,16 @@ class MainViewModel(
         group: Group,
         unlock: Boolean = false,
     ) = launchAction {
-        if (unlock) {
-            modem.unlockBands(group)
-        } else {
-            modem.lockBands(group, groupState(group)?.let(ui::selectedBands).orEmpty())
-        }
+        val turnOn = ui.noBandsTurnsOff
+        val selected = groupState(group)?.let(ui::selectedBands).orEmpty()
+        val outcome =
+            when {
+                unlock -> modem.unlockBands(group, turnOn)
+                selected.isEmpty() && ui.canTurnOff(group) -> modem.turnOff(group)
+                else -> modem.lockBands(group, selected, turnOn)
+            }
+        updateState { copy(bandSelections = bandSelections - group) }
+        outcome
     }
 
     fun setNetMode(mode: NetMode) = launchAction { modem.setNetMode(mode) }

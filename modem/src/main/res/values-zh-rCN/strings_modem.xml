@@ -12,6 +12,7 @@
     <string name="modem_goal_lock_bands">锁定 %1$s 频段</string>
     <string name="modem_goal_unlock_bands">解锁 %1$s 频段</string>
     <string name="modem_goal_net_mode">更改网络模式</string>
+    <string name="modem_goal_network_off">关闭 %1$s</string>
     <string name="modem_goal_nr_mode">将 5G 模式切换为“%1$s”</string>
     <string name="modem_goal_nr_dc_on">开启 NSA（EN-DC）</string>
     <string name="modem_goal_nr_dc_off">关闭 NSA（EN-DC）</string>
@@ -30,6 +31,8 @@
     <string name="modem_bands_locked">已锁定 %1$s 频段。</string>
     <string name="modem_bands_unlocked">已解锁 %1$s 频段。</string>
     <string name="modem_net_mode_set">网络模式已切换为“%1$s”。</string>
+    <string name="modem_network_off">已关闭 %1$s。</string>
+    <string name="modem_network_back_on">已重新开启 %1$s。</string>
     <string name="modem_nr_mode_set">5G 模式已切换为“%1$s”。</string>
     <string name="modem_nr_dc_on">已开启 NSA（EN-DC）。</string>
     <string name="modem_nr_dc_off">已关闭 NSA（EN-DC）。</string>
@@ -65,6 +68,7 @@
     <string name="modem_plmn_manual">手动选网</string>
 
     <string name="modem_pick_band">请至少选择一个频段。</string>
+    <string name="modem_last_network">至少要保留一种网络。</string>
     <string name="modem_nr_list_too_long">这台手机一次最多只能锁定 %1$d 个 5G 频段，请选择不超过 %1$d 个。</string>
     <string name="modem_note_needs_channels">这台手机锁频段时还需要附带可见频点，因此 bunnylock 已把它们一并加入锁定。</string>
     <string name="modem_no_gsm_1800">这台手机的射频软件不认识 GSM 1800，因此拒绝只锁定 1800 的 2G 锁。</string>
