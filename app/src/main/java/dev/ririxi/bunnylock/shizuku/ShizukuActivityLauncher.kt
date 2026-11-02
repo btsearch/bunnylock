@@ -21,18 +21,35 @@ import kotlinx.coroutines.CancellationException
 /**
  * Opens Samsung's band menu however the phone allows it. Shizuku speaks for the app on the activity service itself,
  * Samsung's telecom server gets the intent by broadcast when the front door is shut, and the assist is pointed at the
- * menu and triggered when even the broadcast is. The root helper stays with `am start`, which only root's uid may use.
+ * menu with the dialer's key codes in its bundle and triggered when even the broadcast is. The root helper stays with
+ * `am start`, which only root's uid may use.
  */
 object ShizukuActivityLauncher {
-    // One UI 6+ first, then the older standalone package.
+    // Only the RIL service mode app the dialer codes drive: the band pick lives behind the *#*#2263#*#* key.
     private val SAMSUNG_MENUS =
         listOf(
-            "com.samsung.android.app.telephonyui" to "com.samsung.android.app.telephonyui.hiddennetworksetting.MainActivity",
-            "com.samsung.hiddennetworksetting" to "com.samsung.hiddennetworksetting.MainActivity",
+            Menu("com.sec.android.RilServiceModeApp", ".ServiceModeApp", bandSelect("2263")),
         )
 
-    // The start results are SDK-hidden, and binders count its fatal errors from -100 up: among them Samsung's
-    // permission gate and the activity class the menu's older home has already lost.
+    // A menu to try, with the extras the assist funnel passes over only when the target reads them.
+    private class Menu(
+        val pkg: String,
+        val activity: String,
+        val assistExtras: Bundle? = null,
+    ) {
+        val wanted get() = "$pkg/$activity"
+
+        fun intent(): Intent = Intent().setClassName(pkg, activity)
+    }
+
+    // The band pick behind the *#*#2263#*#* dialer code, carried under the extra the menu's own permission is named
+    // after: the hidden menus open on dialer key codes, and this word is how they get past the assist funnel.
+    private const val KEYSTRING_EXTRA = "keyString"
+
+    private fun bandSelect(keyString: String): Bundle = Bundle().apply { putString(KEYSTRING_EXTRA, keyString) }
+
+    // The start results are SDK-hidden, and binders count its fatal errors from -100 up: among them the refusals a
+    // hidden menu answers with, the permission gate and the not-exported wall.
     private const val START_SUCCESS = 0
     private const val START_PERMISSION_DENIED = -94
 
@@ -61,46 +78,46 @@ object ShizukuActivityLauncher {
         // permission nobody else has, so then the package service is asked whether the shell can be granted it.
         val activityManager = shizukuActivityManager()
         val callingPackage = context.shellCallingPackage()
-        for ((pkg, activity) in SAMSUNG_MENUS) {
-            val wanted = "$pkg/$activity"
-            val intent = Intent().setClassName(pkg, activity)
+        for (menu in SAMSUNG_MENUS) {
+            val intent = menu.intent()
             val first = binderStart(activityManager, intent, callingPackage) ?: return
             if (first.isDenied) {
-                denied = denied ?: "through Shizuku, $wanted: ${first.why}"
+                denied = denied ?: "through Shizuku, ${menu.wanted}: ${first.why}"
                 // Ask for the permission the shell lacks, and retry the same start when it came through.
                 if (grantToShell(HIDDEN_MENU_PERMISSION)) {
                     val again = binderStart(activityManager, intent, callingPackage) ?: return
-                    if (!again.isDenied) failures += "through Shizuku, $wanted: ${again.why}"
+                    if (!again.isDenied) failures += "through Shizuku, ${menu.wanted}: ${again.why}"
                 }
             } else {
-                failures += "through Shizuku, $wanted: ${first.why}"
+                failures += "through Shizuku, ${menu.wanted}: ${first.why}"
             }
         }
 
         // Then Samsung's telecom server, which starts the broadcast's payload with its own privileges, no root asked.
         // Neither route can confirm the menu opened, but a sent broadcast is as good as Samsung allows.
-        for ((pkg, activity) in SAMSUNG_MENUS) {
+        for (menu in SAMSUNG_MENUS) {
             try {
                 context.sendBroadcast(
-                    Intent(TELECOM_ROUTE_ACTION).putExtra(TELECOM_ROUTE_INTENT_EXTRA, Intent().setClassName(pkg, activity)),
+                    Intent(TELECOM_ROUTE_ACTION).putExtra(TELECOM_ROUTE_INTENT_EXTRA, menu.intent()),
                 )
                 return
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
-                record(e, failures, { denied = denied ?: it }, "through Samsung's telecom route, $pkg/$activity")
+                record(e, failures, { denied = denied ?: it }, "through Samsung's telecom route, ${menu.wanted}")
             }
         }
 
-        // Last, Samsung's assist: the framework's own funnel starts the assistant from its side of the table, where
-        // the band menu is nobody's business to refuse. The setting holds the menu while the assist asks for it,
-        // and goes back once the start is under way.
-        for ((pkg, activity) in SAMSUNG_MENUS) {
+        // Last, Samsung's assist: the funnel hands the setting's component to the search service with the extras of
+        // the ask, and the system starts it from its own side of the table, where export checks and the menu's
+        // permission are nobody's business. The setting holds the menu while the assist carries the key codes, and
+        // goes back once the start is under way.
+        for (menu in SAMSUNG_MENUS) {
             try {
-                assistStart(context, pkg, activity)
+                assistStart(context, menu)
                 return
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
-                record(e, failures, { denied = denied ?: it }, "through Samsung's assist, $pkg/$activity")
+                record(e, failures, { denied = denied ?: it }, "through Samsung's assist, ${menu.wanted}")
             }
         }
 
@@ -222,17 +239,18 @@ object ShizukuActivityLauncher {
         }.isSuccess
 
     /**
-     * The assist funnel: points Samsung's assistant at [pkg]/[activity] through the Shizuku shell, stirs the Assist
-     * key, and puts the old target back once the start is under way.
+     * The assist funnel: points Samsung's assistant at [menu]'s component through the Shizuku shell, stirs the
+     * assist while it carries [menu]'s extras, and puts the old target back once the start is under way. The system
+     * starts the component out of SystemUI, so neither the export check nor the menu's key-string permission applies.
      */
-    private fun assistStart(context: Context, pkg: String, activity: String) {
+    private fun assistStart(context: Context, menu: Menu) {
         val before = runCatching { Settings.Secure.getString(context.contentResolver, ASSISTANT_SETTING) }.getOrNull()
         try {
-            if (!context.runShizukuCommand("settings put secure $ASSISTANT_SETTING $pkg/$activity")) {
+            if (!context.runShizukuCommand("settings put secure $ASSISTANT_SETTING ${menu.wanted}")) {
                 throw IllegalStateException("the assistant setting wouldn't take the band menu")
             }
             try {
-                launchAssist(context)
+                launchAssist(context, menu)
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 if (!context.runShizukuCommand("input keyevent $ASSIST_KEYCODE")) throw e
@@ -247,11 +265,14 @@ object ShizukuActivityLauncher {
         }
     }
 
-    private fun launchAssist(context: Context) {
+    /** The assist ask: the funnel resolves the assistant with the extras riding along in the [Bundle]. */
+    private fun launchAssist(context: Context, menu: Menu) {
         val searchManager =
             context.getSystemService(Context.SEARCH_SERVICE) as? SearchManager
                 ?: throw IllegalStateException("the search service is not on")
-        SearchManager::class.java.getMethod("launchAssist", Bundle::class.java).invoke(searchManager, Bundle())
+        SearchManager::class.java
+            .getMethod("launchAssist", Bundle::class.java)
+            .invoke(searchManager, menu.assistExtras ?: Bundle())
     }
 
     /** Runs a shell line under Shizuku and reports whether it came back clean. */
