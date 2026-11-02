@@ -33,7 +33,7 @@
     <string name="aosp_radio_not_on">The radio refused to turn back on: %1$s.</string>
     <string name="aosp_radio_not_off">The radio refused to turn off: %1$s.</string>
 
-    <string name="sys_samsung_menu_denied">This phone only lets Samsung\'s own apps open its band menu, so it needs root.</string>
+    <string name="sys_samsung_menu_denied">Samsung only lets its own apps open the band menu.</string>
     <string name="sys_samsung_menu_missing">Couldn\'t find the Samsung band menu on this phone.</string>
 
     <string name="samsung_no_nr_mode">This phone doesn\'t have Samsung\'s 5G mode control.</string>

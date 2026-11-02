@@ -8,6 +8,7 @@ coreKtx = "1.19.1"
 lifecycle = "2.11.0"
 shizuku = "13.1.5"
 coroutines = "1.9.0"
+hiddenApiBypass = "6.1"
 annotation = "1.10.0"
 
 [libraries]
@@ -23,6 +24,7 @@ compose-material3 = { module = "androidx.compose.material3:material3", version.r
 compose-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
 shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku" }
 shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku" }
+hidden-api-bypass = { module = "org.lsposed.hiddenapibypass:hiddenapibypass", version.ref = "hiddenApiBypass" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 

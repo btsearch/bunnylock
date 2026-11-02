@@ -1,7 +1,6 @@
 package dev.ririxi.bunnylock.root
 
 import android.os.Build
-import android.system.Os
 import dev.ririxi.bunnylock.modem.R
 import dev.ririxi.bunnylock.modem.Text
 import dev.ririxi.bunnylock.modem.toJson
@@ -53,11 +52,10 @@ object Sys {
         val atNodes = JSONArray(knownAtNodes.distinct().filter { File(it).exists() })
 
         val samsungMenu =
-            Os.getuid() == 0 &&
-                SAMSUNG_MENUS.any { component ->
-                    val packageName = component.substringBefore('/')
-                    sh("pm path $packageName").startsWith("package:")
-                }
+            SAMSUNG_MENUS.any { component ->
+                val packageName = component.substringBefore('/')
+                sh("pm path $packageName").startsWith("package:")
+            }
 
         return JSONObject()
             .put("vendor", vendor)
@@ -97,7 +95,7 @@ object Sys {
             else -> "unknown"
         }
 
-    /** One UI 6+ first, then the older standalone package. Root only. */
+    /** One UI 6+ first, then the older standalone package. */
     private val SAMSUNG_MENUS =
         listOf(
             "com.samsung.android.app.telephonyui/.hiddennetworksetting.MainActivity",

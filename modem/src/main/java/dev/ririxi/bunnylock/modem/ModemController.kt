@@ -158,6 +158,7 @@ class ModemController(
     private val starter: HelperStarter,
     private val onConnected: () -> Unit = {},
     private val onRefreshed: (ModemState) -> Unit = {},
+    private val shizukuMenuLauncher: (suspend () -> Unit)? = null,
 ) {
     private val context: Context = context.applicationContext
     private val englishContext: Context =
@@ -2002,7 +2003,8 @@ class ModemController(
 
     suspend fun samsungMenu() =
         change(Text(R.string.modem_goal_samsung_menu), Text(R.string.modem_samsung_menu_opened)) {
-            helper.call("samsung.menu", 40.seconds)
+            // Samsung refuses `am start` from the shell user, so with ADB access the app opens the menu itself.
+            if (current.limited && shizukuMenuLauncher !== null) shizukuMenuLauncher() else helper.call("samsung.menu", 40.seconds)
             null
         }
 

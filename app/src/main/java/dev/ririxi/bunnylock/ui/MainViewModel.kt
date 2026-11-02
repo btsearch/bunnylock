@@ -29,6 +29,7 @@ import dev.ririxi.bunnylock.modem.reason
 import dev.ririxi.bunnylock.modem.string
 import dev.ririxi.bunnylock.shizuku.RootOrShizuku
 import dev.ririxi.bunnylock.shizuku.ShizukuClient
+import dev.ririxi.bunnylock.shizuku.samsung.SamsungBandMenu
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,7 +68,14 @@ class MainViewModel(
     private var pendingUnlock = false
 
     private val modem =
-        ModemController(app, viewModelScope, RootOrShizuku(app, ::shizukuLost), onConnected = ::unlockIfPending, onRefreshed = ::refreshed)
+        ModemController(
+            app,
+            viewModelScope,
+            RootOrShizuku(app, ::shizukuLost),
+            onConnected = ::unlockIfPending,
+            onRefreshed = ::refreshed,
+            shizukuMenuLauncher = { SamsungBandMenu.open(app) },
+        )
 
     // Shizuku hands over its binder a moment after the app starts, or whenever it is started later, so a failed attempt is redone then.
     private val stopWatchingShizuku = ShizukuClient.onBinderReceived(modem::reconnect)

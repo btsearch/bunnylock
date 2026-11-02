@@ -101,6 +101,7 @@ dependencies {
     implementation(project(":modem"))
     implementation(libs.shizuku.api)
     implementation(libs.shizuku.provider)
+    implementation(libs.hidden.api.bypass)
     debugImplementation(libs.compose.ui.tooling)
 }
 
