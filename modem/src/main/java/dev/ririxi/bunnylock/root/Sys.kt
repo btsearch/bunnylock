@@ -51,8 +51,6 @@ object Sys {
             Mediatek.CANDIDATES + listOf(Pixel.NODE, "/dev/smd7", "/dev/smd11", "/dev/at_mdm0", "/dev/stty_lte0", "/dev/stty_nr0")
         val atNodes = JSONArray(knownAtNodes.distinct().filter { File(it).exists() })
 
-        // Kind matters for the launch, not the detection: the helper under root starts the menu with `am start`, and
-        // under Shizuku's ADB access the app itself opens it over Shizuku's binder, which the shell alone can't get past.
         val samsungMenu =
             SAMSUNG_MENUS.any { component ->
                 val packageName = component.substringBefore('/')
@@ -97,7 +95,7 @@ object Sys {
             else -> "unknown"
         }
 
-    /** One UI 6+ first, then the older standalone package. A root helper launches it with `am start`; the app does the rest. */
+    /** One UI 6+ first, then the older standalone package. */
     private val SAMSUNG_MENUS =
         listOf(
             "com.samsung.android.app.telephonyui/.hiddennetworksetting.MainActivity",

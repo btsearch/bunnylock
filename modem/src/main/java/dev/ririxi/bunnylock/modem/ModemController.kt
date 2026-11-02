@@ -158,7 +158,6 @@ class ModemController(
     private val starter: HelperStarter,
     private val onConnected: () -> Unit = {},
     private val onRefreshed: (ModemState) -> Unit = {},
-    /** Opens Samsung's band menu without the helper, for Shizuku that only offers ADB access, which no `am start` gets past. */
     private val shizukuMenuLauncher: (suspend () -> Unit)? = null,
 ) {
     private val context: Context = context.applicationContext
@@ -2004,10 +2003,8 @@ class ModemController(
 
     suspend fun samsungMenu() =
         change(Text(R.string.modem_goal_samsung_menu), Text(R.string.modem_samsung_menu_opened)) {
-            // The helper opens the menu with `am start` under root, but ADB-level Shizuku is denied there, so then
-            // the app starts the activity itself with Shizuku speaking for it, leaving the helper alone.
-            if (current.access == Access.SHIZUKU_ADB && shizukuMenuLauncher !== null) shizukuMenuLauncher()
-            else helper.call("samsung.menu", 40.seconds)
+            // Samsung refuses `am start` from the shell user, so with ADB access the app opens the menu itself.
+            if (current.limited && shizukuMenuLauncher !== null) shizukuMenuLauncher() else helper.call("samsung.menu", 40.seconds)
             null
         }
 

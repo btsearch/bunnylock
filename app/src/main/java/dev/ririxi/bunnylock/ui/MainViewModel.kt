@@ -28,10 +28,9 @@ import dev.ririxi.bunnylock.modem.optText
 import dev.ririxi.bunnylock.modem.reason
 import dev.ririxi.bunnylock.modem.string
 import dev.ririxi.bunnylock.shizuku.RootOrShizuku
-import dev.ririxi.bunnylock.shizuku.ShizukuActivityLauncher
 import dev.ririxi.bunnylock.shizuku.ShizukuClient
+import dev.ririxi.bunnylock.shizuku.samsung.SamsungBandMenu
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -40,7 +39,6 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 private const val MAX_TOOL_OUTPUT_CHARS = 8000
 
@@ -76,7 +74,7 @@ class MainViewModel(
             RootOrShizuku(app, ::shizukuLost),
             onConnected = ::unlockIfPending,
             onRefreshed = ::refreshed,
-            shizukuMenuLauncher = { withContext(Dispatchers.IO) { ShizukuActivityLauncher.openSamsungMenu(app) } },
+            shizukuMenuLauncher = { SamsungBandMenu.open(app) },
         )
 
     // Shizuku hands over its binder a moment after the app starts, or whenever it is started later, so a failed attempt is redone then.
