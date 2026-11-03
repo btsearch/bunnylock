@@ -27,6 +27,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
@@ -73,7 +75,9 @@ fun HomeScreen(
     goTo: (Tab) -> Unit,
 ) {
     LazyColumn(contentPadding = contentPadding.withScreenMargins(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        item { Hero(state, onUnlock = vm::unlockEverything, onBands = { goTo(Tab.BANDS) }, onCell = { goTo(Tab.CELL) }) }
+        item {
+            Hero(state, onUnlock = vm::unlockEverything, onRelock = vm::relock, onBands = { goTo(Tab.BANDS) }, onCell = { goTo(Tab.CELL) })
+        }
 
         val carriers = state.modem.carriers
         item {
@@ -115,6 +119,7 @@ fun HomeScreen(
 private fun Hero(
     state: UiState,
     onUnlock: () -> Unit,
+    onRelock: () -> Unit,
     onBands: () -> Unit,
     onCell: () -> Unit,
 ) {
@@ -176,25 +181,40 @@ private fun Hero(
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 val buttonHeight = ButtonDefaults.MediumContainerHeight
                 if (locked) {
-                    Button(
-                        onClick = onUnlock,
-                        enabled = !state.busy,
-                        shapes = ButtonDefaults.shapes(),
-                        modifier = Modifier.fillMaxWidth().height(buttonHeight),
-                        contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
-                        colors =
-                            ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.error,
-                                contentColor = MaterialTheme.colorScheme.onError,
-                            ),
-                    ) {
-                        Icon(
-                            BunnyIcons.LockOpen,
-                            contentDescription = null,
-                            modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
-                        )
-                        Spacer(Modifier.width(10.dp))
-                        Text(stringResource(R.string.common_unlock_all), style = ButtonDefaults.textStyleFor(buttonHeight), maxLines = 1)
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Button(
+                            onClick = onUnlock,
+                            enabled = !state.busy,
+                            shapes = ButtonDefaults.shapes(),
+                            modifier = Modifier.weight(1f).height(buttonHeight),
+                            contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
+                            colors =
+                                ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.error,
+                                    contentColor = MaterialTheme.colorScheme.onError,
+                                ),
+                        ) {
+                            Icon(
+                                BunnyIcons.LockOpen,
+                                contentDescription = null,
+                                modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
+                            )
+                            Spacer(Modifier.width(10.dp))
+                            Text(stringResource(R.string.common_unlock_all), style = ButtonDefaults.textStyleFor(buttonHeight), maxLines = 1)
+                        }
+                        FilledTonalButton(
+                            onClick = onRelock,
+                            enabled = !state.busy,
+                            shapes = ButtonDefaults.shapes(),
+                            modifier = Modifier.height(buttonHeight),
+                            contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
+                        ) {
+                            Icon(
+                                Icons.Rounded.Refresh,
+                                contentDescription = stringResource(R.string.home_relock),
+                                modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
+                            )
+                        }
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

@@ -23,6 +23,7 @@
     <string name="modem_goal_unlock_all">unlock everything</string>
     <string name="modem_goal_restart_radio">restart the radio</string>
     <string name="modem_goal_reattach">re-attach SIM %1$d</string>
+    <string name="modem_goal_relock">re-lock SIM %1$d</string>
     <string name="modem_goal_reboot">reboot the modem</string>
     <string name="modem_goal_samsung_menu">open the Samsung band menu</string>
     <string name="modem_goal_send_at">send the AT command</string>
@@ -44,6 +45,7 @@
     <string name="modem_all_unlocked">Everything is unlocked.</string>
     <string name="modem_radio_restarted">Radio restarted.</string>
     <string name="modem_reattached">SIM %1$d is attached again.</string>
+    <string name="modem_relocked">SIM %1$d picked a cell again and its locks were sent again.</string>
     <string name="modem_rebooting">Modem is rebooting.</string>
     <string name="modem_samsung_menu_opened">Opened the Samsung band menu.</string>
 

@@ -1986,6 +1986,23 @@ class ModemController(
             Text(R.string.modem_note_reattach_radio, current.sim, qmiError)
         }
 
+    /** Makes the phone pick a cell again under the locks it holds. The locks go out after the restart, since a restart can lose them. */
+    suspend fun relock() =
+        change(Text(R.string.modem_goal_relock, current.sim), Text(R.string.modem_relocked, current.sim)) {
+            restartSimRadio()
+            resendLocks()
+            null
+        }
+
+    /** A Pixel's band lock is left alone, since sending it restarts the radio again. */
+    private suspend fun resendLocks() {
+        if (current.backend == Backend.QUALCOMM || current.backend == Backend.MEDIATEK) {
+            current.groups.filter { it.locked }.forEach { sendBands(it.group, it, it.current.orEmpty().sorted(), unlock = false) }
+        }
+        val held = savedChannelSpecs()
+        if (held.isNotEmpty()) setChannels(JSONArray(held))
+    }
+
     suspend fun rebootModem() =
         change(Text(R.string.modem_goal_reboot), Text(R.string.modem_rebooting)) {
             if (!current.limited && current.device?.qrtr == true) {

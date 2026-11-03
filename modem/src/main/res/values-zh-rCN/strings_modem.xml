@@ -23,6 +23,7 @@
     <string name="modem_goal_unlock_all">解除全部锁定</string>
     <string name="modem_goal_restart_radio">重启移动网络</string>
     <string name="modem_goal_reattach">让 SIM %1$d 重新附着网络</string>
+    <string name="modem_goal_relock">重新锁定 SIM %1$d</string>
     <string name="modem_goal_reboot">重启基带</string>
     <string name="modem_goal_samsung_menu">打开三星频段菜单</string>
     <string name="modem_goal_send_at">发送 AT 指令</string>
@@ -44,6 +45,7 @@
     <string name="modem_all_unlocked">已解除全部锁定。</string>
     <string name="modem_radio_restarted">移动网络已重启。</string>
     <string name="modem_reattached">SIM %1$d 已重新附着网络。</string>
+    <string name="modem_relocked">SIM %1$d 已重新选择小区，并已重新应用锁定。</string>
     <string name="modem_rebooting">基带正在重启。</string>
     <string name="modem_samsung_menu_opened">已打开三星频段菜单。</string>
 

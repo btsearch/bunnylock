@@ -9,6 +9,7 @@
     <string name="home_state_ignored">Ignored</string>
     <string name="home_state_locked">Locked</string>
     <string name="home_state_free">Free</string>
+    <string name="home_relock">Re-lock and pick a cell again</string>
     <string name="home_stray_band">The phone is on %1$s, outside the locked bands.</string>
     <string name="home_stray_channel">The phone is on %1$s, off the locked frequency.</string>
     <string name="home_pinned_nothing">Nothing is pinned.</string>

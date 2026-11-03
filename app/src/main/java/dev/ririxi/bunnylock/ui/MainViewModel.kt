@@ -380,6 +380,8 @@ class MainViewModel(
 
     fun reattach() = launchAction { modem.reattach() }
 
+    fun relock() = launchAction { modem.relock() }
+
     fun rebootModem() = launchAction(refreshAfter = false) { modem.rebootModem() }
 
     fun samsungMenu() = launchAction(refreshAfter = false) { modem.samsungMenu() }

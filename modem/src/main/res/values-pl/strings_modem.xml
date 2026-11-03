@@ -23,6 +23,7 @@
     <string name="modem_goal_unlock_all">zdjąć wszystkich blokad</string>
     <string name="modem_goal_restart_radio">zrestartować radia</string>
     <string name="modem_goal_reattach">ponownie podłączyć SIM %1$d do sieci</string>
+    <string name="modem_goal_relock">ponownie zablokować SIM %1$d</string>
     <string name="modem_goal_reboot">zrestartować modemu</string>
     <string name="modem_goal_samsung_menu">otworzyć menu pasm Samsunga</string>
     <string name="modem_goal_send_at">wysłać komendy AT</string>
@@ -44,6 +45,7 @@
     <string name="modem_all_unlocked">Wszystkie blokady zdjęte.</string>
     <string name="modem_radio_restarted">Radio zrestartowane.</string>
     <string name="modem_reattached">SIM %1$d jest znowu podłączona do sieci.</string>
+    <string name="modem_relocked">SIM %1$d wybrała komórkę od nowa, a blokady zostały wysłane ponownie.</string>
     <string name="modem_rebooting">Modem uruchamia się ponownie.</string>
     <string name="modem_samsung_menu_opened">Otwarto menu pasm Samsunga.</string>
 
