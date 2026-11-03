@@ -60,7 +60,7 @@ Without root, bunnylock runs through Shizuku. Some MediaTek phones allow AT comm
 | Ulefone Note 6T               |   12    | Shizuku | MediaTek AT       |  ✅  |  ✅   | ✅  | ✅  |                                                                                                           |
 | Xiaomi 14                     |   16    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
 | Xiaomi 14T                    |   16    | Shizuku | MediaTek AT       |  ✅  |  ❌   | ✅  | ❌  | Modem throws "GENERAL_FAILURE" on Channel Lock cmd. Radio HAL ignores every setting                       |
-| Xiaomi Redmi K80 Ultra        |   17    | Shizuku | MediaTek AT       |  ✅  |  ✅   |  -   | ❌  | Cell lock not available                                                                                   |
+| Xiaomi Redmi K80 Ultra        |   17    | Shizuku | MediaTek AT       |  ✅  |  ✅   |  -  | ❌  | Cell lock not available                                                                                   |
 | Xiaomi Redmi Note 10 5G       |   13    | Shizuku | MediaTek AT       |  ✅  |  ✅   | ✅  | ✅  | Stock ROM                                                                                                 |
 | Xiaomi Redmi Note 13 5G       |   16    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  | Stock ROM                                                                                                 |
 | Xiaomi POCO F5 5G             |   17    | Root    | Qualcomm QMI      |  ✅  |  ✅   | ✅  | ✅  | Custom ROM                                                                                                |
