@@ -1192,8 +1192,17 @@ class ModemController(
             cells.firstOrNull { it.registered && it.rat == rat && it.arfcn.toInt() !in locked }?.let { "${channelName(ran)} ${it.arfcn}" }
         }
 
-    /** A modem that follows a HAL lock leaves the old cell within seconds, so the wait only grows while [findStray] still finds one. */
+    /** A MediaTek modem takes a HAL lock right away but may only move to it once the radio has restarted. */
     private suspend fun settledCells(findStray: (List<Cell>) -> Any?): List<Cell> {
+        val cells = scanUntilSettled(findStray)
+        if (findStray(cells) === null || current.device?.vendor != "mediatek") return cells
+        log("The phone stayed on its old cell after the lock, so SIM ${current.sim}'s radio is restarted to make it move.")
+        runSuspendCatching { restartSimRadio() }
+        return scanUntilSettled(findStray)
+    }
+
+    /** A modem that follows a HAL lock leaves the old cell within seconds, so the wait only grows while [findStray] still finds one. */
+    private suspend fun scanUntilSettled(findStray: (List<Cell>) -> Any?): List<Cell> {
         delay(HAL_LOCK_SETTLE)
         var cells = Cells.scan(context, subId())
         repeat(HAL_LOCK_RECHECKS) {
@@ -1802,13 +1811,7 @@ class ModemController(
         }
         val heldSpecs = savedChannelSpecs()
 
-        suspend fun settledStray() = strayChannel(settledCells { strayChannel(it, heldSpecs) }, heldSpecs)
-        var stray = settledStray()
-        // A MediaTek modem takes the lock right away but may only move to it once the radio has restarted.
-        if (stray !== null && current.device?.vendor == "mediatek") {
-            runSuspendCatching { restartSimRadio() }
-            stray = settledStray()
-        }
+        val stray = strayChannel(settledCells { strayChannel(it, heldSpecs) }, heldSpecs)
         if (stray !== null) return Text(R.string.modem_note_cell_lock_ignored, stray)
         return if (pcisGiven) Text(R.string.modem_note_frequency_only) else null
     }

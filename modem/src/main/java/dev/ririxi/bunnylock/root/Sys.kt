@@ -88,12 +88,15 @@ object Sys {
     ): String =
         when {
             qrtr || "qti" in hints || "qcom" in hints || "qualcomm" in hints -> "qualcomm"
-            "mediatek" in hints || Regex("\\bmt\\d{4}").containsMatchIn(hints) -> "mediatek"
+            isMediatek(hints) -> "mediatek"
             "google" in socManufacturer.lowercase() || Regex("gs\\d{3}|zuma|laguna|malibu").containsMatchIn(hints) -> "tensor"
             "samsung" in socManufacturer.lowercase() || "exynos" in hints || Regex("s5e\\d{4}|erd\\d{4}").containsMatchIn(hints) -> "exynos"
             "unisoc" in hints || "spreadtrum" in hints || Regex("\\bums\\d{3}|\\bsp\\d{4}").containsMatchIn(hints) -> "unisoc"
             else -> "unknown"
         }
+
+    /** [hints] is lowercase. A Tensor Pixel with a MediaTek modem only names it in its RIL, as in "MTK-t900-Release". */
+    fun isMediatek(hints: String) = "mediatek" in hints || Regex("\\bmt\\d{4}|\\bmtk").containsMatchIn(hints)
 
     /** One UI 6+ first, then the older standalone package. */
     private val SAMSUNG_MENUS =
