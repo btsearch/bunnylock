@@ -1,0 +1,22 @@
+<resources>
+    <string name="shell_tab_home">Головна</string>
+    <string name="shell_tab_bands">Діапазони</string>
+    <string name="shell_tab_cell">Сота</string>
+    <string name="shell_tab_tools">Інструменти</string>
+    <string name="shell_refresh">Оновити</string>
+    <string name="shell_denied_title">Потрібен root або Shizuku</string>
+    <string name="shell_try_again">Спробувати ще раз</string>
+    <string name="shell_subtitle_default">Блокування діапазонів і сот</string>
+    <string name="shell_subtitle_shizuku">%1$s (Shizuku)</string>
+    <string name="shell_sim_chip_description">SIM %1$d, %2$s. Змінити SIM</string>
+    <string name="shell_sim_menu_item">SIM %1$d: %2$s</string>
+    <string name="shell_sim_selected">Вибрано</string>
+    <string name="shell_update_title">Доступне оновлення</string>
+    <string name="shell_update_message">Вийшла версія %1$s.</string>
+    <string name="shell_update_download">Завантажити</string>
+    <string name="shell_update_skip">Пропустити цю версію</string>
+    <string name="shell_update_later">Пізніше</string>
+    <string name="shell_lock_badge_ignored">Блокування проігноровано</string>
+    <string name="shell_lock_badge_locked">Заблоковано</string>
+    <string name="shell_lock_badge_unlocked">Розблоковано</string>
+</resources>

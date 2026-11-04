@@ -12,7 +12,7 @@ import androidx.core.content.edit
 import java.util.Locale
 
 object AppLanguage {
-    val tags = listOf("en", "pl", "zh-CN")
+    val tags = listOf("en", "pl", "ru", "uk", "zh-CN")
 
     private const val KEY = "language"
 

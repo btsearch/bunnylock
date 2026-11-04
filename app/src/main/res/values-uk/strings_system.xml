@@ -1,0 +1,41 @@
+<resources>
+    <string name="system_notify_channel_name">Активні блокування</string>
+    <string name="system_notify_channel_description">Показує, які діапазони, соти чи мережі заблокував bunnylock.</string>
+    <string name="system_notify_title">bunnylock: заблоковано</string>
+    <string name="system_notify_line_separator">", "</string>
+    <string name="system_notify_line_bands">%1$s: %2$s</string>
+    <string name="system_notify_line_network">Мережа: %1$s</string>
+    <string name="system_notify_line_lte_cell">Сота LTE: %1$s</string>
+    <string name="system_notify_line_nr_cell">Сота NR: %1$s</string>
+    <string name="system_notify_line_legacy_cell">Сота 2G/3G: %1$s</string>
+
+    <string name="system_helper_not_running">Помічник не працює, тому нічого не змінено. Повторне підключення…</string>
+    <string name="system_at_replied">Модем відповів. Дивіться результат нижче.</string>
+    <string name="system_qmi_replied">Надіслано повідомлення 0x%1$04X. Модем відповів: %2$s.</string>
+    <string name="system_clip_label_diagnostics">діагностика bunnylock</string>
+    <string name="system_diagnostics_copied">Діагностику скопійовано в буфер обміну.</string>
+
+    <string name="system_shizuku_step_root">Запит root-доступу…</string>
+    <string name="system_shizuku_step_looking">Пошук Shizuku…</string>
+    <string name="system_shizuku_step_connecting">Підключення до Shizuku. Дозвольте bunnylock, якщо з\'явиться запит…</string>
+
+    <string name="system_shizuku_root_failed">Немає root-доступу: %1$s</string>
+    <string name="system_shizuku_root_denied">У root-доступі відмовлено.</string>
+    <string name="system_shizuku_not_installed">Shizuku теж не встановлено. Надайте root або встановіть і запустіть Shizuku, потім спробуйте ще раз.</string>
+    <string name="system_shizuku_not_running">Shizuku встановлено, але він не підключився до bunnylock, тож, імовірно, не запущений. Відкрийте Shizuku, щоб перевірити, і спробуйте ще раз.</string>
+    <string name="system_shizuku_failed">Shizuku теж не спрацював: %1$s</string>
+    <string name="system_shizuku_failed_no_reason">Shizuku теж не спрацював (причину не вказано).</string>
+
+    <string name="system_shizuku_lost">Служба Shizuku зупинилася. Спробуйте ще раз, щоб перезапустити її.</string>
+    <string name="system_shizuku_too_old">Ця версія Shizuku надто стара. Оновіть Shizuku і спробуйте ще раз.</string>
+    <string name="system_shizuku_stopped">Shizuku зупинено.</string>
+    <string name="system_shizuku_no_shell">Shizuku не зміг відкрити оболонку (%1$s).</string>
+    <string name="system_shizuku_denied_earlier">Раніше в доступі до Shizuku було відмовлено. Дозвольте bunnylock у застосунку Shizuku і спробуйте ще раз.</string>
+    <string name="system_shizuku_denied">У доступі до Shizuku відмовлено.</string>
+    <string name="system_shizuku_prompt_unanswered">Запит дозволу Shizuku залишився без відповіді. Якщо він так і не з\'явився, дозвольте bunnylock у застосунку Shizuku і поверніться.</string>
+    <string name="system_shizuku_service_no_response">Служба Shizuku запустилася, але не відповідає.</string>
+    <string name="system_shizuku_service_start_timeout">Служба Shizuku не запустилася вчасно.</string>
+    <string name="system_shizuku_service_not_running">Служба Shizuku не запущена.</string>
+    <string name="system_shizuku_service_timeout">Служба Shizuku не відповіла вчасно.</string>
+    <string name="system_shizuku_service_died">Служба Shizuku неочікувано зупинилася.</string>
+</resources>

@@ -1,0 +1,32 @@
+<resources>
+    <string name="cell_network_header">Сеть (PLMN)</string>
+    <string name="cell_current_lock">Текущая блокировка соты</string>
+    <string name="cell_clear_lock">Снять блокировку соты</string>
+    <string name="cell_lock_to">Заблокировать на</string>
+    <string name="cell_visible">Видимые соты (нажмите, чтобы заполнить)</string>
+    <string name="cell_none_found">Соты не найдены</string>
+    <string name="cell_none_found_hint">Для поиска сот требуется доступ к местоположению.</string>
+    <string name="cell_plmn_automatic">Автоматически</string>
+    <string name="cell_plmn_locked_to">Заблокировано на %1$s</string>
+    <string name="cell_not_registered">Нет регистрации в сети.</string>
+    <string name="cell_connected">Подключено к %1$s.</string>
+    <string name="cell_connected_named">Подключено к %1$s (%2$s).</string>
+    <string name="cell_lock_ignored">Игнорируется</string>
+    <string name="cell_lock_locked">Заблокировано</string>
+    <string name="cell_lock_none">Не заблокировано</string>
+    <string name="cell_lock_stray">Android принял блокировку, но телефон сейчас на %1$s.</string>
+    <string name="cell_lock_pinned">Модем закреплён за определённой сотой.</string>
+    <string name="cell_lock_free">Модем выбирает соты самостоятельно.</string>
+    <string name="cell_plmn_hint_qualcomm">Сначала задаётся через QMI. Если модем отказывается, используется выбор сети Android.</string>
+    <string name="cell_plmn_hint_android">Используется ручной выбор сети Android, который сохраняется после перезагрузки.</string>
+    <string name="cell_hint_qualcomm">Блокирует LTE и NR на PCI (SA PCell или NSA SCG). Оставьте NR PCI пустым, чтобы заблокировать только частоту; несколько PCI разделяйте запятыми.</string>
+    <string name="cell_hint_mtk_at">Используется команда AT+EMMCHLCK, которая поддерживает только одну блокировку за раз. PCI необязателен, а для применения блокировки радиомодуль перезапускается.</string>
+    <string name="cell_hint_mtk_hal">Этот модем не принимает AT+EMMCHLCK, поэтому частота (ARFCN) блокируется через Radio HAL. Так нельзя привязаться к PCI, а некоторые модемы такую блокировку игнорируют.</string>
+    <string name="cell_hint_hal">Блокирует частоту (ARFCN) через Radio HAL. Этот бэкенд не может заблокировать на PCI, а некоторые модемы (например, стоковый Qualcomm) применяют только диапазон и игнорируют канал.</string>
+    <string name="cell_lte_channel">B%1$d на %2$.1f МГц</string>
+    <string name="cell_lte_anchor">Якорная сота LTE</string>
+    <string name="cell_nr_scg">Вторичный NR (SCG)</string>
+    <string name="cell_pcis">PCI</string>
+    <string name="cell_band">Диапазон</string>
+    <string name="cell_scs">Разнос поднесущих (кГц)</string>
+</resources>

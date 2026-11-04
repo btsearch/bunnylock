@@ -18,6 +18,8 @@
     <string name="tools_language_helper_english">A few messages from the root helper may still show up in English.</string>
     <string name="tools_language_en" translatable="false">English</string>
     <string name="tools_language_pl" translatable="false">Polski</string>
+    <string name="tools_language_ru" translatable="false">Русский</string>
+    <string name="tools_language_uk" translatable="false">Українська</string>
     <string name="tools_language_zh_cn" translatable="false">简体中文</string>
 
     <string name="tools_updates">Updates</string>

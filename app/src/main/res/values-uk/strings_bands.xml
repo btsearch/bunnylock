@@ -1,0 +1,34 @@
+<resources>
+    <string name="bands_network_mode">Режим мережі</string>
+    <string name="bands_5g_mode">Режим 5G</string>
+    <string name="bands_nsa_on">NSA увімкнено</string>
+    <string name="bands_nsa_off">NSA вимкнено</string>
+    <string name="bands_samsung_menu">Відкрити меню діапазонів Samsung</string>
+    <string name="bands_samsung_menu_hint">Вбудоване в телефон меню Samsung для блокування частотних діапазонів.</string>
+    <string name="bands_hint_qualcomm_persist">Зміни одразу застосовуються через QMI. Блокування зберігаються після перезавантаження (це можна змінити в розділі «Інструменти»).</string>
+    <string name="bands_hint_qualcomm_volatile">Зміни одразу застосовуються через QMI. Блокування знімаються під час перезавантаження.</string>
+    <string name="bands_hint_mediatek">Зміни надсилаються командами AT+EPBSE і AT+EPBSEH через %1$s.</string>
+    <string name="bands_hint_mediatek_auto">Зміни надсилаються командами AT+EPBSE і AT+EPBSEH через автоматично знайдений порт AT.</string>
+    <string name="bands_hint_pixel">Зміни записуються в NV-пам\'ять модема, і радіомодуль сам перезапускається, щоб їх застосувати.</string>
+    <string name="bands_hint_android">Використовуються канали системного вибору Radio HAL. Чи враховуватиме їх модем, залежить від виробника телефона.</string>
+    <string name="bands_summary">Вибрано %1$d з %2$d</string>
+    <string name="bands_summary_pending">Вибрано %1$d з %2$d, ще не застосовано</string>
+    <string name="bands_summary_locked">Вибрано %1$d з %2$d, заблоковано</string>
+    <string name="bands_summary_locked_pending">Вибрано %1$d з %2$d, заблоковано, ще не застосовано</string>
+    <string name="bands_summary_stray">Вибрано %1$d з %2$d, заблоковано, але телефон працює на %3$s</string>
+    <string name="bands_summary_stray_pending">Вибрано %1$d з %2$d, заблоковано, але телефон працює на %3$s, ще не застосовано</string>
+    <string name="bands_summary_off">Вимкнено</string>
+    <string name="bands_summary_off_pending">Вибрано %1$d з %2$d, вимкнено, ще не застосовано</string>
+    <string name="bands_pick_favorites">Виберіть улюблені діапазони</string>
+    <string name="bands_pick_favorites_hint">Торкніться діапазонів, які хочете тримати під рукою.</string>
+    <string name="bands_show_favorites">Показувати лише улюблені</string>
+    <plurals name="bands_show_all">
+        <item quantity="one">Показати %d діапазон</item>
+        <item quantity="few">Показати всі %d діапазони</item>
+        <item quantity="many">Показати всі %d діапазонів</item>
+        <item quantity="other">Показати всі %d діапазони</item>
+    </plurals>
+    <string name="bands_done">Готово</string>
+    <string name="bands_all">Усі</string>
+    <string name="bands_none">Жодного</string>
+</resources>

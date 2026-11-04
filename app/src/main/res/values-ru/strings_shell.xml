@@ -1,0 +1,22 @@
+<resources>
+    <string name="shell_tab_home">Главная</string>
+    <string name="shell_tab_bands">Диапазоны</string>
+    <string name="shell_tab_cell">Сота</string>
+    <string name="shell_tab_tools">Инструменты</string>
+    <string name="shell_refresh">Обновить</string>
+    <string name="shell_denied_title">Требуется root или Shizuku</string>
+    <string name="shell_try_again">Повторить</string>
+    <string name="shell_subtitle_default">Блокировка диапазонов и сот</string>
+    <string name="shell_subtitle_shizuku">%1$s (Shizuku)</string>
+    <string name="shell_sim_chip_description">SIM %1$d, %2$s. Сменить SIM</string>
+    <string name="shell_sim_menu_item">SIM %1$d: %2$s</string>
+    <string name="shell_sim_selected">Выбрано</string>
+    <string name="shell_update_title">Доступно обновление</string>
+    <string name="shell_update_message">Вышла версия %1$s.</string>
+    <string name="shell_update_download">Скачать</string>
+    <string name="shell_update_skip">Пропустить эту версию</string>
+    <string name="shell_update_later">Позже</string>
+    <string name="shell_lock_badge_ignored">Блокировка игнорируется</string>
+    <string name="shell_lock_badge_locked">Заблокировано</string>
+    <string name="shell_lock_badge_unlocked">Разблокировано</string>
+</resources>
