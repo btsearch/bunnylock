@@ -1,0 +1,44 @@
+<resources>
+    <string name="aosp_sentences">%1$s %2$s</string>
+    <string name="aosp_with_details">%1$s (%2$s)</string>
+    <string name="aosp_unknown_error">невідома помилка</string>
+
+    <string name="aosp_no_method">Ця версія Android не надає ITelephony.%1$s.</string>
+
+    <string name="aosp_held_back">Android поки не дозволяє %1$s: %2$s.</string>
+    <string name="aosp_held_back_power">увімкнено економію енергії (режим заощадження акумулятора або адаптивне підключення)</string>
+    <string name="aosp_held_back_carrier">налаштування оператора не містять %1$s</string>
+    <string name="aosp_held_back_2g">параметр «Дозволити 2G» вимкнено</string>
+
+    <string name="aosp_plmn_not_registered">Не вдалося зареєструватися в %1$s %2$s. Мережа може бути поза зоною дії або не приймати цю SIM.</string>
+
+    <string name="aosp_mode_refused">Радіо відхилило цей режим мережі.</string>
+    <string name="aosp_mode_refused_restored">Радіо відхилило цей режим мережі. Попередній режим мережі відновлено.</string>
+    <string name="aosp_mode_refused_radio_off">Радіо відхилило режим мережі з вимкненим радіо.</string>
+
+    <string name="aosp_nr_dc_unavailable">Радіо зараз недоступне.</string>
+    <string name="aosp_nr_dc_error">Радіо повернуло помилку. Можливо, воно не підтримує перемикання EN-DC.</string>
+    <string name="aosp_nr_dc_refused">Радіо не прийняло цей стан EN-DC.</string>
+    <string name="aosp_nr_dc_code">Радіо повернуло помилку %1$d.</string>
+
+    <string name="aosp_no_subscription">В Android немає активної підписки для цієї SIM, тож надсилати блокування нікуди. Перевірте, що SIM вставлено й увімкнено, а bunnylock має дозвіл «Телефон».</string>
+    <string name="aosp_channels_rejected">Служба радіозв\'язку Android відхилила блокування каналів.</string>
+    <string name="aosp_channels_rejected_fewer">Служба радіозв\'язку Android відхилила блокування каналів. На цьому телефоні може спрацювати вибір %1$d або меншої кількості діапазонів.</string>
+    <string name="aosp_channels_rejected_split">Служба радіозв\'язку Android відхилила блокування каналів, зокрема після поділу діапазонів на групи по %1$d. На цьому телефоні може спрацювати вибір %1$d або меншої кількості діапазонів.</string>
+    <string name="aosp_channels_not_started">Служба радіозв\'язку Android не змогла запустити блокування каналів.</string>
+
+    <string name="aosp_reboot_refused">Радіо HAL відхилило перезавантаження модема.</string>
+    <string name="aosp_no_sim_radio_restart">Ця версія Android не може перезапускати радіо окремої SIM.</string>
+    <string name="aosp_sim_radio_off">Радіо цієї SIM вимкнено.</string>
+    <string name="aosp_radio_not_on">Радіо відмовилося вмикатися назад: %1$s.</string>
+    <string name="aosp_radio_not_off">Радіо відмовилося вимикатися: %1$s.</string>
+
+    <string name="sys_samsung_menu_denied">Samsung дозволяє відкривати Band Menu лише власним застосункам.</string>
+    <string name="sys_samsung_menu_missing">Не вдалося знайти Samsung Band Menu на цьому телефоні.</string>
+
+    <string name="samsung_no_nr_mode">На цьому телефоні немає керування режимом 5G від Samsung.</string>
+    <string name="samsung_nr_mode_refused">Телефонна служба Samsung не прийняла цей режим 5G.</string>
+
+    <string name="server_unknown_subscription">Підписка цієї SIM невідома.</string>
+    <string name="server_unknown_command">Невідома команда: %1$s.</string>
+</resources>

@@ -25,7 +25,7 @@ android {
         minSdk = 30
         targetSdk = 37
         versionCode = 1
-        versionName = "1.4.0"
+        versionName = "1.4.1"
         ndk {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
         }
@@ -61,7 +61,7 @@ android {
     }
 
     androidResources {
-        localeFilters += listOf("en", "pl", "zh-rCN")
+        localeFilters += listOf("en", "pl", "ru", "uk", "zh-rCN")
     }
 
     packaging {

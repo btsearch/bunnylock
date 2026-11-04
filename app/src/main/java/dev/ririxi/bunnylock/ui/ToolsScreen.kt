@@ -487,6 +487,8 @@ private fun languageName(tag: String): String =
         "" -> stringResource(R.string.tools_language_system)
         "en" -> stringResource(R.string.tools_language_en)
         "pl" -> stringResource(R.string.tools_language_pl)
+        "ru" -> stringResource(R.string.tools_language_ru)
+        "uk" -> stringResource(R.string.tools_language_uk)
         "zh-CN" -> stringResource(R.string.tools_language_zh_cn)
         else -> tag
     }

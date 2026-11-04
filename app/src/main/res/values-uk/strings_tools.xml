@@ -1,0 +1,81 @@
+<resources>
+    <string name="tools_backend">Бекенд</string>
+    <string name="tools_backend_needs_root">Потрібен root</string>
+    <string name="tools_backend_detected">Виявлено для цього пристрою</string>
+    <string name="tools_persist">Зберігати блокування діапазонів після перезавантаження</string>
+    <string name="tools_persist_hint">Коли вимкнено, блокування скидаються під час перезавантаження.</string>
+
+    <string name="tools_appearance">Вигляд</string>
+    <string name="tools_bands">Блокування діапазонів</string>
+    <string name="tools_exclusive_lock">Вимикати мережі без блокування</string>
+    <string name="tools_exclusive_lock_hint">Блокування діапазонів вимикає всі мережі, які не мають власного блокування діапазонів. Розблокування вмикає їх знову.</string>
+    <string name="tools_dynamic_color">Динамічні кольори</string>
+    <string name="tools_dynamic_color_hint">Використовувати кольори шпалер. Коли вимкнено, використовується стандартна синя тема.</string>
+
+    <string name="tools_language">Мова</string>
+    <string name="tools_language_system">Системна</string>
+    <string name="tools_language_system_hint">Як у налаштуваннях телефона.</string>
+    <string name="tools_language_helper_english">Деякі повідомлення допоміжного root-процесу можуть усе ще відображатися англійською.</string>
+
+    <string name="tools_updates">Оновлення</string>
+    <string name="tools_check_updates">Перевіряти оновлення</string>
+    <string name="tools_check_updates_hint">Шукає новий випуск на GitHub під час запуску застосунку.</string>
+
+    <string name="tools_radio">Радіо</string>
+    <string name="tools_restart_radio">Перезапустити радіо</string>
+    <string name="tools_restart_radio_hint">Вмикає і знову вимикає режим польоту.</string>
+    <string name="tools_reattach">Перепідключити</string>
+    <string name="tools_reattach_hint">Скидає з\'єднання даних і знову підключається через QMI.</string>
+    <string name="tools_reboot_modem">Перезавантажити модем</string>
+    <string name="tools_reboot_modem_hint">Це також перезапускає SIM.</string>
+    <string name="tools_samsung_menu">Samsung Band Menu</string>
+    <string name="tools_samsung_menu_hint">Відкриває приховані налаштування діапазонів Samsung.</string>
+
+    <string name="tools_at_console">Консоль AT</string>
+    <string name="tools_at_port">Порт AT</string>
+    <string name="tools_at_command">Команда</string>
+    <string name="tools_at_ports_ril">ril:1 і ril:2 (через RIL)</string>
+    <string name="tools_at_ports_none">Порти AT не знайдено.</string>
+    <string name="tools_at_ports_found">Знайдено: %1$s.</string>
+
+    <string name="tools_qmi_console">Консоль QMI</string>
+    <string name="tools_qmi_service">Служба</string>
+    <string name="tools_qmi_message">Повідомлення (hex)</string>
+    <string name="tools_qmi_payload">Корисне навантаження TLV (hex)</string>
+    <string name="tools_qmi_nas_hint">NAS (служба 3) працює з вибраною SIM.</string>
+
+    <string name="tools_output">Вивід</string>
+    <string name="tools_clear">Очистити</string>
+
+    <string name="tools_copy_diagnostics_hint">Відомості про пристрій, перевірка пробросу та журнал</string>
+    <string name="tools_access">Доступ</string>
+    <string name="tools_passthrough">Проброс команд модему</string>
+    <string name="tools_services_checked">Перевірені служби (%1$d)</string>
+    <string name="tools_collapse">Згорнути</string>
+    <string name="tools_expand">Розгорнути</string>
+    <string name="tools_qmi_over_qrtr">QMI через QRTR</string>
+    <string name="tools_yes">Так</string>
+    <string name="tools_no">Ні</string>
+    <string name="tools_hal_channel_lock">API блокування каналів HAL</string>
+    <string name="tools_present">Є</string>
+    <string name="tools_absent">Немає</string>
+
+    <string name="tools_log">Журнал</string>
+
+    <string name="tools_about">Про застосунок</string>
+    <string name="tools_author">від @ririxi (розробника BTSearch.pl)</string>
+    <string name="tools_version">Версія %1$s</string>
+    <string name="tools_bunny_fact">Факт про кроликів: %1$s</string>
+    <string-array name="bunny_facts">
+        <item>Зуби кролика ростуть усе життя, тож йому доводиться постійно щось гризти, щоб їх стирати.</item>
+        <item>Щасливий кролик робить «бінкі»: стрибок з обертом у повітрі.</item>
+        <item>Кролики бачать майже все навколо себе, крім невеликої сліпої зони просто перед носом.</item>
+        <item>Кролики не можуть блювати, тому з\'їдене щось погане для них особливо небезпечне.</item>
+        <item>Задоволений кролик «муркоче», тихо скриплячи зубами.</item>
+        <item>Дитинчат кроликів називають кроленятами.</item>
+        <item>Кролики найактивніші на світанку та в сутінках.</item>
+        <item>Ці великі вуха також працюють як радіатори й допомагають кролику охолоджуватися.</item>
+        <item>Групу кроликів іноді називають «флафлом».</item>
+        <item>Кролик, що тупає лапою, попереджає всіх довкола, що щось не так.</item>
+    </string-array>
+</resources>

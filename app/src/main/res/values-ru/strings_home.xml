@@ -1,0 +1,40 @@
+<resources>
+    <string name="home_connection">Соединение</string>
+    <string name="home_no_serving_cell">Нет обслуживающей соты</string>
+    <plurals name="home_carriers_header">
+        <item quantity="one">Несущая</item>
+        <item quantity="few">Несущие</item>
+        <item quantity="many">Несущих</item>
+        <item quantity="other">Несущие</item>
+    </plurals>
+    <string name="home_chipset">Чипсет</string>
+    <string name="home_state_ignored">Игнор.</string>
+    <string name="home_state_locked">Заблок.</string>
+    <string name="home_state_free">Свободно</string>
+    <string name="home_relock">Заблокировать снова и выбрать соту заново</string>
+    <string name="home_stray_band">Телефон находится в %1$s, вне заблокированных диапазонов.</string>
+    <string name="home_stray_channel">Телефон находится на %1$s, вне заблокированной частоты.</string>
+    <string name="home_pinned_nothing">Ничего не закреплено.</string>
+    <string name="home_pinned_bands">Диапазоны закреплены.</string>
+    <string name="home_pinned_cell">Сота закреплена.</string>
+    <string name="home_pinned_network">Сеть закреплена.</string>
+    <string name="home_pinned_bands_cell">Диапазоны и сота закреплены.</string>
+    <string name="home_pinned_bands_network">Диапазоны и сеть закреплены.</string>
+    <string name="home_pinned_cell_network">Сота и сеть закреплены.</string>
+    <string name="home_pinned_all">Диапазоны, сота и сеть закреплены.</string>
+    <string name="home_row_lte_cell">Сота LTE</string>
+    <string name="home_row_nr_cell">Сота NR</string>
+    <string name="home_row_legacy_cell">Сота 2G/3G</string>
+    <plurals name="home_carrier_count">
+        <item quantity="one">%d несущая</item>
+        <item quantity="few">%d несущие</item>
+        <item quantity="many">%d несущих</item>
+        <item quantity="other">%d несущей</item>
+    </plurals>
+    <string name="home_tech_summary">%1$s, %2$s</string>
+    <string name="home_unknown_network">Неизвестная сеть</string>
+    <string name="home_total_bandwidth">общая полоса</string>
+    <string name="home_tag_primary">Основная</string>
+    <string name="home_tag_secondary">Доп.</string>
+    <string name="home_tag_serving">Обсл.</string>
+</resources>

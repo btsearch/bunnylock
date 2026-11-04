@@ -1,0 +1,16 @@
+<resources>
+    <string name="common_lock">Заблок.</string>
+    <string name="common_unlock">Розблок.</string>
+    <string name="common_unlock_all">Зняти все</string>
+    <string name="common_unknown">Невідомо</string>
+    <string name="common_unknown_band">Невідомий діапазон</string>
+    <string name="common_copy_diagnostics">Скопіювати діагностику</string>
+    <string name="common_send">Надіслати</string>
+    <string name="common_bands">Діапазони</string>
+    <string name="common_cell">Сота</string>
+    <string name="common_network">Мережа</string>
+    <string name="common_modem">Модем</string>
+    <string name="common_device">Пристрій</string>
+    <string name="common_platform">Платформа</string>
+    <string name="common_baseband">Версія модема</string>
+</resources>
