@@ -12,8 +12,8 @@
     <string name="mtk_no_epbseh">Цей модем не підтримує AT+EPBSEH, тож у нього може не бути 5G.</string>
 
     <string name="oem_working_through">Робота через %1$s.</string>
-    <string name="oem_no_passthrough">На цьому телефоні не відповідає жоден проброс OEM-запитів.</string>
-    <string name="oem_no_ril_passthrough">На цьому телефоні немає доступного пробросу RIL.</string>
+    <string name="oem_no_passthrough">На цьому телефоні не відповів жоден канал передавання OEM-запитів.</string>
+    <string name="oem_no_ril_passthrough">На цьому телефоні немає каналу передавання команд через RIL.</string>
     <string name="oem_no_raw_route">У цього телефона немає маршруту OEM-запитів для перевірки.</string>
     <string name="oem_no_callback_reply">Немає відповіді зворотного виклику для %1$s.</string>
     <string name="oem_timeout">Модем не відповів на %1$s вчасно.</string>

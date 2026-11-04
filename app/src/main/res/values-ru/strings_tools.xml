@@ -21,8 +21,8 @@
     <string name="tools_check_updates">Проверять обновления</string>
     <string name="tools_check_updates_hint">Ищет новый выпуск на GitHub при запуске приложения.</string>
 
-    <string name="tools_radio">Радио</string>
-    <string name="tools_restart_radio">Перезапустить радио</string>
+    <string name="tools_radio">Радиомодуль</string>
+    <string name="tools_restart_radio">Перезапустить радиомодуль</string>
     <string name="tools_restart_radio_hint">Включает и снова выключает режим полёта.</string>
     <string name="tools_reattach">Переподключить</string>
     <string name="tools_reattach_hint">Сбрасывает подключение данных и снова подключается через QMI.</string>
@@ -63,14 +63,14 @@
     <string name="tools_log">Журнал</string>
 
     <string name="tools_about">О приложении</string>
-    <string name="tools_author">от @ririxi (разработчика BTSearch.pl)</string>
+    <string name="tools_author">Автор: @ririxi (разработчик BTSearch.pl)</string>
     <string name="tools_version">Версия %1$s</string>
     <string name="tools_bunny_fact">Факт о кроликах: %1$s</string>
     <string-array name="bunny_facts">
         <item>Зубы кролика растут всю жизнь, поэтому ему приходится постоянно что-то грызть, чтобы их стачивать.</item>
         <item>Счастливый кролик делает «бинки»: прыжок с поворотом в воздухе.</item>
         <item>Кролики видят почти всё вокруг себя, кроме небольшой слепой зоны прямо перед носом.</item>
-        <item>Кролики не могут вызывать рвоту, поэтому съеденное что-то плохое особенно опасно для них.</item>
+        <item>Кролики физически не могут срыгнуть, поэтому съесть что-нибудь не то для них особенно опасно.</item>
         <item>Довольный кролик «мурлычет», тихо поскрипывая зубами.</item>
         <item>Детёнышей кроликов называют крольчатами.</item>
         <item>Кролики наиболее активны на рассвете и в сумерках.</item>

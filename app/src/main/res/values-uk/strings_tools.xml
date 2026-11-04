@@ -15,20 +15,20 @@
     <string name="tools_language">Мова</string>
     <string name="tools_language_system">Системна</string>
     <string name="tools_language_system_hint">Як у налаштуваннях телефона.</string>
-    <string name="tools_language_helper_english">Деякі повідомлення допоміжного root-процесу можуть усе ще відображатися англійською.</string>
+    <string name="tools_language_helper_english">Деякі повідомлення root-помічника можуть і далі відображатися англійською.</string>
 
     <string name="tools_updates">Оновлення</string>
     <string name="tools_check_updates">Перевіряти оновлення</string>
     <string name="tools_check_updates_hint">Шукає новий випуск на GitHub під час запуску застосунку.</string>
 
-    <string name="tools_radio">Радіо</string>
-    <string name="tools_restart_radio">Перезапустити радіо</string>
+    <string name="tools_radio">Радіомодуль</string>
+    <string name="tools_restart_radio">Перезапустити радіомодуль</string>
     <string name="tools_restart_radio_hint">Вмикає і знову вимикає режим польоту.</string>
     <string name="tools_reattach">Перепідключити</string>
     <string name="tools_reattach_hint">Скидає з\'єднання даних і знову підключається через QMI.</string>
     <string name="tools_reboot_modem">Перезавантажити модем</string>
     <string name="tools_reboot_modem_hint">Це також перезапускає SIM.</string>
-    <string name="tools_samsung_menu">Samsung Band Menu</string>
+    <string name="tools_samsung_menu">Меню діапазонів Samsung</string>
     <string name="tools_samsung_menu_hint">Відкриває приховані налаштування діапазонів Samsung.</string>
 
     <string name="tools_at_console">Консоль AT</string>
@@ -44,12 +44,12 @@
     <string name="tools_qmi_payload">Корисне навантаження TLV (hex)</string>
     <string name="tools_qmi_nas_hint">NAS (служба 3) працює з вибраною SIM.</string>
 
-    <string name="tools_output">Вивід</string>
+    <string name="tools_output">Результат</string>
     <string name="tools_clear">Очистити</string>
 
-    <string name="tools_copy_diagnostics_hint">Відомості про пристрій, перевірка пробросу та журнал</string>
+    <string name="tools_copy_diagnostics_hint">Відомості про пристрій, перевірка прямого передавання команд і журнал</string>
     <string name="tools_access">Доступ</string>
-    <string name="tools_passthrough">Проброс команд модему</string>
+    <string name="tools_passthrough">Пряме передавання команд модему</string>
     <string name="tools_services_checked">Перевірені служби (%1$d)</string>
     <string name="tools_collapse">Згорнути</string>
     <string name="tools_expand">Розгорнути</string>
@@ -63,16 +63,16 @@
     <string name="tools_log">Журнал</string>
 
     <string name="tools_about">Про застосунок</string>
-    <string name="tools_author">від @ririxi (розробника BTSearch.pl)</string>
+    <string name="tools_author">Автор: @ririxi (розробник BTSearch.pl)</string>
     <string name="tools_version">Версія %1$s</string>
     <string name="tools_bunny_fact">Факт про кроликів: %1$s</string>
     <string-array name="bunny_facts">
         <item>Зуби кролика ростуть усе життя, тож йому доводиться постійно щось гризти, щоб їх стирати.</item>
         <item>Щасливий кролик робить «бінкі»: стрибок з обертом у повітрі.</item>
         <item>Кролики бачать майже все навколо себе, крім невеликої сліпої зони просто перед носом.</item>
-        <item>Кролики не можуть блювати, тому з\'їдене щось погане для них особливо небезпечне.</item>
-        <item>Задоволений кролик «муркоче», тихо скриплячи зубами.</item>
-        <item>Дитинчат кроликів називають кроленятами.</item>
+        <item>Кролики не можуть блювати, тому з\'їсти щось погане для них особливо небезпечно.</item>
+        <item>Задоволений кролик «муркоче», тихенько поскрипуючи зубами.</item>
+        <item>Дитинчат кроликів українською називають кроленятами, а англійською kits.</item>
         <item>Кролики найактивніші на світанку та в сутінках.</item>
         <item>Ці великі вуха також працюють як радіатори й допомагають кролику охолоджуватися.</item>
         <item>Групу кроликів іноді називають «флафлом».</item>

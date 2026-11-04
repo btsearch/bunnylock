@@ -22,7 +22,7 @@
     <string name="system_shizuku_root_failed">Нет root-доступа: %1$s</string>
     <string name="system_shizuku_root_denied">В root-доступе отказано.</string>
     <string name="system_shizuku_not_installed">Shizuku тоже не установлен. Предоставьте root или установите и запустите Shizuku, затем повторите попытку.</string>
-    <string name="system_shizuku_not_running">Shizuku установлен, но не подключился к bunnylock, вероятно, он не запущен. Откройте Shizuku, чтобы проверить, и повторите попытку.</string>
+    <string name="system_shizuku_not_running">Shizuku установлен, но не подключился к bunnylock, так что он, вероятно, не запущен. Откройте Shizuku, чтобы проверить, и повторите попытку.</string>
     <string name="system_shizuku_failed">Shizuku тоже не сработал: %1$s</string>
     <string name="system_shizuku_failed_no_reason">Shizuku тоже не сработал (причина не указана).</string>
 

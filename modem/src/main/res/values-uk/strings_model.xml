@@ -35,8 +35,8 @@
     <string name="list_and">%1$s і %2$s</string>
     <string name="list_or">%1$s або %2$s</string>
 
-    <string name="helper_root">root-помічник</string>
-    <string name="helper_shizuku">помічник Shizuku</string>
+    <string name="helper_root">Root-помічник</string>
+    <string name="helper_shizuku">Помічник Shizuku</string>
 
     <string name="something_went_wrong">Щось пішло не так.</string>
 </resources>

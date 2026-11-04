@@ -1,6 +1,6 @@
 <resources>
-    <string name="common_lock">Блок.</string>
-    <string name="common_unlock">Разблок.</string>
+    <string name="common_lock">Заблокировать</string>
+    <string name="common_unlock">Снять</string>
     <string name="common_unlock_all">Снять всё</string>
     <string name="common_unknown">Неизвестно</string>
     <string name="common_unknown_band">Неизвестный диапазон</string>

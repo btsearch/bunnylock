@@ -16,7 +16,7 @@
     <string name="shell_update_download">Скачать</string>
     <string name="shell_update_skip">Пропустить эту версию</string>
     <string name="shell_update_later">Позже</string>
-    <string name="shell_lock_badge_ignored">Блокировка не учтена</string>
+    <string name="shell_lock_badge_ignored">Блокировка игнорируется</string>
     <string name="shell_lock_badge_locked">Заблокировано</string>
     <string name="shell_lock_badge_unlocked">Разблокировано</string>
 </resources>

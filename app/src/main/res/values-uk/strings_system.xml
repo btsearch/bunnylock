@@ -9,8 +9,8 @@
     <string name="system_notify_line_nr_cell">Сота NR: %1$s</string>
     <string name="system_notify_line_legacy_cell">Сота 2G/3G: %1$s</string>
 
-    <string name="system_helper_not_running">Допоміжний процес не запущено, тому нічого не змінено. Повторне підключення…</string>
-    <string name="system_at_replied">Модем відповів. Дивіться вивід нижче.</string>
+    <string name="system_helper_not_running">Помічник не працює, тому нічого не змінено. Повторне підключення…</string>
+    <string name="system_at_replied">Модем відповів. Дивіться результат нижче.</string>
     <string name="system_qmi_replied">Надіслано повідомлення 0x%1$04X. Модем відповів: %2$s.</string>
     <string name="system_clip_label_diagnostics">діагностика bunnylock</string>
     <string name="system_diagnostics_copied">Діагностику скопійовано в буфер обміну.</string>

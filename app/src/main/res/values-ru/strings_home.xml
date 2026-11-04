@@ -4,16 +4,16 @@
     <plurals name="home_carriers_header">
         <item quantity="one">Несущая</item>
         <item quantity="few">Несущие</item>
-        <item quantity="many">Несущих</item>
+        <item quantity="many">Несущие</item>
         <item quantity="other">Несущие</item>
     </plurals>
     <string name="home_chipset">Чипсет</string>
-    <string name="home_state_ignored">Игнор.</string>
-    <string name="home_state_locked">Заблок.</string>
-    <string name="home_state_free">Свободно</string>
-    <string name="home_relock">Заблокировать снова и выбрать соту заново</string>
-    <string name="home_stray_band">Телефон находится в %1$s, вне заблокированных диапазонов.</string>
-    <string name="home_stray_channel">Телефон находится на %1$s, вне заблокированной частоты.</string>
+    <string name="home_state_ignored">Не действует</string>
+    <string name="home_state_locked">Закреплено</string>
+    <string name="home_state_free">Без блокировок</string>
+    <string name="home_relock">Заблокировать повторно и заново выбрать соту</string>
+    <string name="home_stray_band">Телефон сейчас на %1$s, вне заблокированных диапазонов.</string>
+    <string name="home_stray_channel">Телефон сейчас на %1$s, а не на заблокированной частоте.</string>
     <string name="home_pinned_nothing">Ничего не закреплено.</string>
     <string name="home_pinned_bands">Диапазоны закреплены.</string>
     <string name="home_pinned_cell">Сота закреплена.</string>
@@ -35,6 +35,6 @@
     <string name="home_unknown_network">Неизвестная сеть</string>
     <string name="home_total_bandwidth">общая полоса</string>
     <string name="home_tag_primary">Основная</string>
-    <string name="home_tag_secondary">Доп.</string>
-    <string name="home_tag_serving">Обсл.</string>
+    <string name="home_tag_secondary">Вторичная</string>
+    <string name="home_tag_serving">Обслуживающая</string>
 </resources>

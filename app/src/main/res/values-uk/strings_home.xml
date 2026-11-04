@@ -1,19 +1,19 @@
 <resources>
     <string name="home_connection">З\'єднання</string>
-    <string name="home_no_serving_cell">Немає обслуговуючої соти</string>
+    <string name="home_no_serving_cell">Немає поточної соти</string>
     <plurals name="home_carriers_header">
         <item quantity="one">Несуча</item>
         <item quantity="few">Несучі</item>
-        <item quantity="many">Несучих</item>
+        <item quantity="many">Несучі</item>
         <item quantity="other">Несучі</item>
     </plurals>
     <string name="home_chipset">Чипсет</string>
-    <string name="home_state_ignored">Ігнор.</string>
-    <string name="home_state_locked">Заблок.</string>
+    <string name="home_state_ignored">Не діє</string>
+    <string name="home_state_locked">Замкнено</string>
     <string name="home_state_free">Вільно</string>
-    <string name="home_relock">Заблокувати знову й вибрати соту заново</string>
-    <string name="home_stray_band">Телефон перебуває в %1$s, поза заблокованими діапазонами.</string>
-    <string name="home_stray_channel">Телефон перебуває на %1$s, поза заблокованою частотою.</string>
+    <string name="home_relock">Повторно заблокувати й перевибрати соту</string>
+    <string name="home_stray_band">Телефон працює на %1$s, поза заблокованими діапазонами.</string>
+    <string name="home_stray_channel">Телефон працює на %1$s, поза заблокованою частотою.</string>
     <string name="home_pinned_nothing">Нічого не закріплено.</string>
     <string name="home_pinned_bands">Діапазони закріплено.</string>
     <string name="home_pinned_cell">Соту закріплено.</string>
@@ -36,5 +36,5 @@
     <string name="home_total_bandwidth">загальна смуга</string>
     <string name="home_tag_primary">Основна</string>
     <string name="home_tag_secondary">Додаткова</string>
-    <string name="home_tag_serving">Обсл.</string>
+    <string name="home_tag_serving">Поточна</string>
 </resources>

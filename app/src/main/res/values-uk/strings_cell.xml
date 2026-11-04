@@ -3,9 +3,9 @@
     <string name="cell_current_lock">Поточне блокування соти</string>
     <string name="cell_clear_lock">Зняти блокування соти</string>
     <string name="cell_lock_to">Заблокувати на</string>
-    <string name="cell_visible">Видимі соти (натисніть, щоб заповнити)</string>
+    <string name="cell_visible">Видимі соти (торкніться соти, щоб заповнити поля)</string>
     <string name="cell_none_found">Сот не знайдено</string>
-    <string name="cell_none_found_hint">Для пошуку сот потрібен доступ до місцеположення.</string>
+    <string name="cell_none_found_hint">Для пошуку сот потрібен доступ до геоданих.</string>
     <string name="cell_plmn_automatic">Автоматично</string>
     <string name="cell_plmn_locked_to">Заблоковано на %1$s</string>
     <string name="cell_not_registered">Немає реєстрації в мережі.</string>
@@ -14,19 +14,19 @@
     <string name="cell_lock_ignored">Ігнорується</string>
     <string name="cell_lock_locked">Заблоковано</string>
     <string name="cell_lock_none">Не заблоковано</string>
-    <string name="cell_lock_stray">Android прийняв блокування, але телефон перебуває в %1$s.</string>
+    <string name="cell_lock_stray">Android прийняв блокування, але телефон працює на %1$s.</string>
     <string name="cell_lock_pinned">Модем закріплено за певною сотою.</string>
     <string name="cell_lock_free">Модем вибирає соти самостійно.</string>
     <string name="cell_plmn_hint_qualcomm">Спочатку встановлюється через QMI. Якщо модем відмовляється, використовується вибір мережі Android.</string>
     <string name="cell_plmn_hint_android">Використовує ручний вибір мережі Android, який зберігається після перезавантаження.</string>
     <string name="cell_hint_qualcomm">Блокує LTE і NR на PCI (SA PCell або NSA SCG). Залиште NR PCI порожнім, щоб заблокувати лише частоту; кілька PCI розділяйте комами.</string>
-    <string name="cell_hint_mtk_at">Використовує AT+EMMCHLCK, який утримує лише одне блокування за раз. PCI необов\'язковий, а для застосування блокування радіо перезапускається.</string>
-    <string name="cell_hint_mtk_hal">Цей модем не приймає AT+EMMCHLCK, тому частота (ARFCN) блокується через радіомодуль HAL. Це не дає змоги прив\'язатися до PCI, і деякі модеми це ігнорують.</string>
-    <string name="cell_hint_hal">Блокує частоту (ARFCN) через радіомодуль HAL. Цей бекенд не може заблокуватися на PCI, а деякі модеми (наприклад, стоковий Qualcomm) застосовують лише діапазон і ігнорують канал.</string>
+    <string name="cell_hint_mtk_at">Використовує AT+EMMCHLCK, який підтримує лише одне блокування одночасно. PCI необов\'язковий, а для застосування блокування радіомодуль перезапускається.</string>
+    <string name="cell_hint_mtk_hal">Цей модем не приймає AT+EMMCHLCK, тому частота (ARFCN) блокується через Radio HAL. Так не можна заблокувати на PCI, а деякі модеми це ігнорують.</string>
+    <string name="cell_hint_hal">Блокує частоту (ARFCN) через Radio HAL. Цей бекенд не може блокувати на PCI, а деякі модеми (наприклад, стоковий Qualcomm) застосовують лише діапазон і ігнорують канал.</string>
     <string name="cell_lte_channel">B%1$d на %2$.1f МГц</string>
-    <string name="cell_lte_anchor">Опорний LTE</string>
+    <string name="cell_lte_anchor">Опорна сота LTE</string>
     <string name="cell_nr_scg">Вторинний NR (SCG)</string>
     <string name="cell_pcis">PCI</string>
     <string name="cell_band">Діапазон</string>
-    <string name="cell_scs">Рознос піднесучих (кГц)</string>
+    <string name="cell_scs">Інтервал між піднесучими (кГц)</string>
 </resources>

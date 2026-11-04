@@ -19,7 +19,7 @@
     <string name="oem_timeout">Модем не ответил на %1$s вовремя.</string>
     <string name="oem_service_refused">Служба отклонила %1$s (%2$s).</string>
 
-    <string name="oem_probe_failed">%1$s завершилось ошибкой: %2$s</string>
-    <string name="oem_probe_replied">%1$s ответил: %2$s</string>
-    <string name="oem_probe_silent">%1$s не ответил.</string>
+    <string name="oem_probe_failed">%1$s (ошибка): %2$s</string>
+    <string name="oem_probe_replied">%1$s (ответ): %2$s</string>
+    <string name="oem_probe_silent">%1$s: нет ответа.</string>
 </resources>

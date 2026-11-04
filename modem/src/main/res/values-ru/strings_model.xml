@@ -2,7 +2,7 @@
     <string name="backend_qualcomm">Qualcomm QMI</string>
     <string name="backend_mediatek">MediaTek AT</string>
     <string name="backend_pixel">Pixel (Tensor NV)</string>
-    <string name="backend_android">Android radio HAL</string>
+    <string name="backend_android">Android Radio HAL</string>
 
     <string name="net_mode_auto">Авто</string>
     <string name="net_mode_nr_lte">5G и 4G</string>
@@ -35,8 +35,8 @@
     <string name="list_and">%1$s и %2$s</string>
     <string name="list_or">%1$s или %2$s</string>
 
-    <string name="helper_root">root-помощник</string>
-    <string name="helper_shizuku">помощник Shizuku</string>
+    <string name="helper_root">Вспомогательный root-процесс</string>
+    <string name="helper_shizuku">Вспомогательный процесс Shizuku</string>
 
     <string name="something_went_wrong">Что-то пошло не так.</string>
 </resources>

@@ -10,7 +10,7 @@
     <string name="qmi_error_internal">внутрішня помилка (0x03)</string>
     <string name="qmi_error_no_free_client">немає вільного слота для іншого застосунку, це виправляє перезавантаження телефона (0x05)</string>
     <string name="qmi_error_call_failed">виклик не вдався (0x0E)</string>
-    <string name="qmi_error_not_provisioned">не надано (0x10)</string>
+    <string name="qmi_error_not_provisioned">не налаштовано (0x10)</string>
     <string name="qmi_error_missing_arg">відсутнє значення (0x11)</string>
     <string name="qmi_error_arg_too_long">надто довге значення (0x13)</string>
     <string name="qmi_error_not_supported_modem">не підтримується цим модемом (0x19)</string>
@@ -54,7 +54,7 @@
     <string name="qc_sim_switch_failed">Модем не захотів перемикатися на SIM %1$d: %2$s.</string>
     <string name="qc_lte_lock_too_many_pcis">Модем відхилив %1$s: він приймає менше PCI. Старі модеми приймають не більше %2$d.</string>
     <string name="qc_note_nr_bands_combined">Цей модем не може задати діапазони %1$s окремо, тож діапазони було застосовано і до SA, і до NSA.</string>
-    <string name="qc_invalid_scs">%1$d кГц — недопустимий рознос піднесучих.</string>
+    <string name="qc_invalid_scs">%1$d кГц не є допустимим інтервалом між піднесучими.</string>
     <string name="qc_unknown_band_group">Невідома група діапазонів: %1$s.</string>
     <string name="qc_pci_count">Введіть від 1 до %1$d PCI.</string>
     <string name="qc_needs_nr_band">Для цього блокування потрібен діапазон NR.</string>
