@@ -37,4 +37,6 @@
     <string name="home_tag_primary">Główna</string>
     <string name="home_tag_secondary">Dodatkowa</string>
     <string name="home_tag_serving">Obsługująca</string>
+    <string name="home_feature_on">%1$s wł.</string>
+    <string name="home_feature_off">%1$s wył.</string>
 </resources>

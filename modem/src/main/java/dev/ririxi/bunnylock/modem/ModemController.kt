@@ -58,6 +58,7 @@ private data class BackendReadout(
     val cells: List<Cell> = emptyList(),
     val carriers: List<Carrier> = emptyList(),
     val allowedMask: Long? = null,
+    val carrierAggregation: Boolean? = null,
 )
 
 private const val MAX_HAL_CHANNELS = 32
@@ -323,7 +324,7 @@ class ModemController(
         if (!current.allows(backend)) return
         prefs.edit().putString("backend", backend.name).apply()
         updateState {
-            copy(backend = backend, groups = emptyList(), lteLock = null, nrLock = null, legacyCellLock = null, strayChannel = null)
+            copy(backend = backend, groups = emptyList(), lteLock = null, nrLock = null, legacyCellLock = null, strayChannel = null, carrierAggregation = null)
         }
         refresh()
     }
@@ -789,6 +790,7 @@ class ModemController(
             coroutineScope {
                 val androidCells = async { Cells.scan(context, subscriptionId) }
                 val aospState = runSuspendCatching { helper.call("aosp.state") { put("subId", subscriptionId) } }.getOrNull()
+                val ims = loadIms(subscriptionId)
                 val modem =
                     when (current.backend) {
                         Backend.QUALCOMM -> loadQualcomm(sim, aospState)
@@ -839,6 +841,8 @@ class ModemController(
                         netModeHeldBack = aospState?.optText("modeHeldBack")?.let { context.string(it) },
                         netModeMasks = aospState?.optString("modeMasks")?.takeIf { it.isNotEmpty() },
                         nrDc = aospState?.takeIf { it.has("nrDc") }?.optBoolean("nrDc"),
+                        ims = ims,
+                        carrierAggregation = modem.carrierAggregation,
                     )
                 }
                 onRefreshed(current)
@@ -850,6 +854,16 @@ class ModemController(
         } finally {
             updateState { copy(refreshing = false) }
         }
+    }
+
+    private suspend fun loadIms(subscriptionId: Int): Map<ImsFeature, ImsSetting> =
+        runSuspendCatching { helper.call("aosp.ims") { put("subId", subscriptionId) } }.getOrNull()?.let(::imsSettingsFrom).orEmpty()
+
+    suspend fun refreshIms() {
+        if (!helper.running) return
+        val subscriptionId = subId()
+        val ims = loadIms(subscriptionId)
+        if (subId() == subscriptionId) updateState { copy(ims = ims) }
     }
 
     private suspend fun connectionCarriers(
@@ -1077,6 +1091,7 @@ class ModemController(
         groups += bandGroupState(Group.GSM, supported.intList("gsm"), current.intList("gsm"))
         // While Android holds part of the mode back, its mask stays, so the note can explain the difference.
         val allowedMask = mtkState.takeIf { it.has("ratMask") && aospState?.has("modeHeldBack") != true }?.optLong("ratMask")
+        val carrierAggregation = mtkState.takeIf { it.has("ca") }?.optBoolean("ca")
         // A modem that refuses AT+EMMCHLCK gets its cell lock through the radio HAL, so the lock is read from there too.
         val cellLockState = mtkState.optJSONObject("cellLock")
         if (cellLockState?.optBoolean("refused") == true || mtkCellLockIgnored) {
@@ -1087,6 +1102,7 @@ class ModemController(
                 nrLock = channelLock(specs, Ran.NGRAN),
                 mtkCellLockRefused = true,
                 allowedMask = allowedMask,
+                carrierAggregation = carrierAggregation,
             )
         }
         val cellLock = cellLockState?.takeIf { it.optBoolean("active") }
@@ -1101,6 +1117,7 @@ class ModemController(
             nrLock = lockLabel.takeIf { nrLocked },
             legacyCellLock = lockLabel.takeIf { legacyLocked },
             allowedMask = allowedMask,
+            carrierAggregation = carrierAggregation,
         )
     }
 
@@ -1843,6 +1860,41 @@ class ModemController(
                 put("subId", subId())
                 put("state", requestedState)
             }
+            null
+        }
+
+    suspend fun setIms(
+        feature: ImsFeature,
+        enabled: Boolean,
+    ): String {
+        val (goal, success) =
+            when (feature) {
+                ImsFeature.VOLTE ->
+                    if (enabled) R.string.modem_goal_volte_on to R.string.modem_volte_on else R.string.modem_goal_volte_off to R.string.modem_volte_off
+                ImsFeature.VOWIFI ->
+                    if (enabled) R.string.modem_goal_vowifi_on to R.string.modem_vowifi_on else R.string.modem_goal_vowifi_off to R.string.modem_vowifi_off
+            }
+        return change(Text(goal), Text(success)) {
+            val subscriptionId = subId()
+            val result =
+                helper.call("aosp.setIms") {
+                    put("subId", subscriptionId)
+                    put("feature", feature.key)
+                    put("enabled", enabled)
+                }
+            if (subId() == subscriptionId) updateState { copy(ims = imsSettingsFrom(result)) }
+            null
+        }
+    }
+
+    suspend fun setCarrierAggregation(enabled: Boolean) =
+        change(
+            Text(if (enabled) R.string.modem_goal_ca_on else R.string.modem_goal_ca_off),
+            Text(if (enabled) R.string.modem_ca_on else R.string.modem_ca_off),
+        ) {
+            if (current.backend != Backend.MEDIATEK) fail(R.string.modem_no_ca_control)
+            val result = callMediatek("mtk.setCa") { put("enabled", enabled) }
+            updateState { copy(carrierAggregation = result.optBoolean("ca", enabled)) }
             null
         }
 

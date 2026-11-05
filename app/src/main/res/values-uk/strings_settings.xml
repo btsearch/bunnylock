@@ -1,0 +1,38 @@
+<resources>
+    <string name="settings_backend">Бекенд</string>
+    <string name="settings_backend_needs_root">Потрібен root</string>
+    <string name="settings_backend_detected">Виявлено для цього пристрою</string>
+    <string name="settings_persist">Зберігати блокування діапазонів після перезавантаження</string>
+    <string name="settings_persist_hint">Коли вимкнено, блокування скидаються під час перезавантаження.</string>
+    <string name="settings_appearance">Вигляд</string>
+    <string name="settings_bands">Блокування діапазонів</string>
+    <string name="settings_exclusive_lock">Вимикати мережі без блокування</string>
+    <string name="settings_exclusive_lock_hint">Блокування діапазонів вимикає всі мережі, які не мають власного блокування діапазонів. Розблокування вмикає їх знову.</string>
+    <string name="settings_forget_needs_channels">Повернутися до блокування лише діапазонів</string>
+    <string name="settings_forget_needs_channels_hint">На цьому телефоні до блокування діапазонів додаються видимі частоти, бо блокування лише діапазонів тут раніше не спрацювало. Торкніться, щоб під час наступного блокування bunnylock спершу спробував обійтися без частот.</string>
+    <string name="settings_dynamic_color">Динамічні кольори</string>
+    <string name="settings_dynamic_color_hint">Використовувати кольори шпалер. Коли вимкнено, використовується стандартна синя тема.</string>
+    <string name="settings_language">Мова</string>
+    <string name="settings_language_system">Системна</string>
+    <string name="settings_language_system_hint">Як у налаштуваннях телефона.</string>
+    <string name="settings_language_helper_english">Деякі повідомлення root-помічника можуть і далі відображатися англійською.</string>
+    <string name="settings_updates">Оновлення</string>
+    <string name="settings_check_updates">Перевіряти оновлення</string>
+    <string name="settings_check_updates_hint">Шукає новий випуск на GitHub під час запуску застосунку.</string>
+    <string name="settings_about">Про застосунок</string>
+    <string name="settings_author">Автор: @ririxi (розробник BTSearch.pl)</string>
+    <string name="settings_version">Версія %1$s</string>
+    <string name="settings_bunny_fact">Факт про кроликів: %1$s</string>
+    <string-array name="bunny_facts">
+        <item>Зуби кролика ростуть усе життя, тож йому доводиться постійно щось гризти, щоб їх стирати.</item>
+        <item>Щасливий кролик робить «бінкі»: стрибок з обертом у повітрі.</item>
+        <item>Кролики бачать майже все навколо себе, крім невеликої сліпої зони просто перед носом.</item>
+        <item>Кролики не можуть блювати, тому з\'їсти щось погане для них особливо небезпечно.</item>
+        <item>Задоволений кролик «муркоче», тихенько поскрипуючи зубами.</item>
+        <item>Дитинчат кроликів українською називають кроленятами, а англійською kits.</item>
+        <item>Кролики найактивніші на світанку та в сутінках.</item>
+        <item>Ці великі вуха також працюють як радіатори й допомагають кролику охолоджуватися.</item>
+        <item>Групу кроликів іноді називають «флафлом».</item>
+        <item>Кролик, що тупає лапою, попереджає всіх довкола, що щось не так.</item>
+    </string-array>
+</resources>

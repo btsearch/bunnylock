@@ -3,6 +3,7 @@ package dev.ririxi.bunnylock.root
 import android.system.Os
 import android.telephony.SubscriptionManager
 import dev.ririxi.bunnylock.core.toIntList
+import dev.ririxi.bunnylock.modem.ImsFeature
 import dev.ririxi.bunnylock.modem.R
 import org.json.JSONArray
 import org.json.JSONObject
@@ -112,6 +113,17 @@ object RootServer {
 
             "aosp.setNrDc" -> Aosp.setNrDc(subId, request.getInt("state"))
 
+            "aosp.ims" -> {
+                if (subId < 0) fail(R.string.server_unknown_subscription)
+                Aosp.ims(subId)
+            }
+
+            "aosp.setIms" -> {
+                if (subId < 0) fail(R.string.server_unknown_subscription)
+                val feature = ImsFeature.entries.first { it.key == request.getString("feature") }
+                Aosp.setIms(subId, feature, request.getBoolean("enabled"))
+            }
+
             "aosp.setChannels" -> Aosp.setChannels(subId, request.optJSONArray("specs") ?: JSONArray(), request.optBoolean("split", true))
 
             "aosp.setPlmn" -> Aosp.setPlmn(subId, request.getString("plmn"), persist)
@@ -192,6 +204,8 @@ object RootServer {
             "mtk.cellUnlock" -> Mediatek.cellUnlock(request.getString("node"))
 
             "mtk.setRat" -> Mediatek.setRat(request.getString("node"), request.getLong("mask"))
+
+            "mtk.setCa" -> Mediatek.setCarrierAggregation(request.getString("node"), request.getBoolean("enabled"))
 
             "pixel.state" -> Pixel.state(sim)
 

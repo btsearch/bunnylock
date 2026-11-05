@@ -21,6 +21,8 @@
     <string name="aosp_nr_dc_refused">The radio didn\'t accept that EN-DC state.</string>
     <string name="aosp_nr_dc_code">The radio returned error %1$d.</string>
 
+    <string name="aosp_ims_kept">Android kept the previous setting. The carrier settings for this SIM may not allow this change.</string>
+
     <string name="aosp_no_subscription">Android has no active subscription for this SIM, so there is nothing to send the lock to. Check that the SIM is inserted and switched on, and that bunnylock has the Phone permission.</string>
     <string name="aosp_channels_rejected">Android\'s radio service rejected the channel lock.</string>
     <string name="aosp_channels_rejected_fewer">Android\'s radio service rejected the channel lock. Selecting %1$d or fewer bands may work on this phone.</string>

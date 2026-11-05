@@ -1,28 +1,4 @@
 <resources>
-    <string name="tools_backend">Бекенд</string>
-    <string name="tools_backend_needs_root">Потрібен root</string>
-    <string name="tools_backend_detected">Виявлено для цього пристрою</string>
-    <string name="tools_persist">Зберігати блокування діапазонів після перезавантаження</string>
-    <string name="tools_persist_hint">Коли вимкнено, блокування скидаються під час перезавантаження.</string>
-
-    <string name="tools_appearance">Вигляд</string>
-    <string name="tools_bands">Блокування діапазонів</string>
-    <string name="tools_exclusive_lock">Вимикати мережі без блокування</string>
-    <string name="tools_exclusive_lock_hint">Блокування діапазонів вимикає всі мережі, які не мають власного блокування діапазонів. Розблокування вмикає їх знову.</string>
-    <string name="tools_forget_needs_channels">Повернутися до блокування лише діапазонів</string>
-    <string name="tools_forget_needs_channels_hint">На цьому телефоні до блокування діапазонів додаються видимі частоти, бо блокування лише діапазонів тут раніше не спрацювало. Торкніться, щоб під час наступного блокування bunnylock спершу спробував обійтися без частот.</string>
-    <string name="tools_dynamic_color">Динамічні кольори</string>
-    <string name="tools_dynamic_color_hint">Використовувати кольори шпалер. Коли вимкнено, використовується стандартна синя тема.</string>
-
-    <string name="tools_language">Мова</string>
-    <string name="tools_language_system">Системна</string>
-    <string name="tools_language_system_hint">Як у налаштуваннях телефона.</string>
-    <string name="tools_language_helper_english">Деякі повідомлення root-помічника можуть і далі відображатися англійською.</string>
-
-    <string name="tools_updates">Оновлення</string>
-    <string name="tools_check_updates">Перевіряти оновлення</string>
-    <string name="tools_check_updates_hint">Шукає новий випуск на GitHub під час запуску застосунку.</string>
-
     <string name="tools_radio">Радіомодуль</string>
     <string name="tools_restart_radio">Перезапустити радіомодуль</string>
     <string name="tools_restart_radio_hint">Вмикає і знову вимикає режим польоту.</string>
@@ -66,20 +42,16 @@
     <string name="tools_save_log">Зберегти</string>
     <string name="tools_save_log_description">Зберегти журнал</string>
 
-    <string name="tools_about">Про застосунок</string>
-    <string name="tools_author">Автор: @ririxi (розробник BTSearch.pl)</string>
-    <string name="tools_version">Версія %1$s</string>
-    <string name="tools_bunny_fact">Факт про кроликів: %1$s</string>
-    <string-array name="bunny_facts">
-        <item>Зуби кролика ростуть усе життя, тож йому доводиться постійно щось гризти, щоб їх стирати.</item>
-        <item>Щасливий кролик робить «бінкі»: стрибок з обертом у повітрі.</item>
-        <item>Кролики бачать майже все навколо себе, крім невеликої сліпої зони просто перед носом.</item>
-        <item>Кролики не можуть блювати, тому з\'їсти щось погане для них особливо небезпечно.</item>
-        <item>Задоволений кролик «муркоче», тихенько поскрипуючи зубами.</item>
-        <item>Дитинчат кроликів українською називають кроленятами, а англійською kits.</item>
-        <item>Кролики найактивніші на світанку та в сутінках.</item>
-        <item>Ці великі вуха також працюють як радіатори й допомагають кролику охолоджуватися.</item>
-        <item>Групу кроликів іноді називають «флафлом».</item>
-        <item>Кролик, що тупає лапою, попереджає всіх довкола, що щось не так.</item>
-    </string-array>
+    <string name="tools_calling">Дзвінки</string>
+    <string name="tools_calling_sim">Дзвінки на SIM %1$d</string>
+    <string name="tools_network">Мережа</string>
+    <string name="tools_network_sim">Мережа на SIM %1$d</string>
+    <string name="tools_ca">Агрегація частот (CA)</string>
+    <string name="tools_ca_hint">Об\'єднує кілька несучих LTE для більшої швидкості. Якщо вимкнути, телефон використовує одну несучу.</string>
+    <string name="tools_volte_hint">Дзвінки йдуть через 4G, без переходу на 2G або 3G.</string>
+    <string name="tools_vowifi_hint">Дзвінки йдуть через Wi-Fi, коли мобільний сигнал слабкий.</string>
+    <string name="tools_ims_unknown">Android не повідомляє значення цього налаштування для цієї SIM.</string>
+    <string name="tools_ims_not_offered">У налаштуваннях оператора для цієї SIM цієї функції немає, тому вона може не працювати.</string>
+    <string name="tools_ims_locked">Налаштування оператора для цієї SIM не дозволяють це змінювати, тому Android може повернути попереднє значення.</string>
+    <string name="tools_ims_error">Android не зміг прочитати це налаштування: %1$s</string>
 </resources>

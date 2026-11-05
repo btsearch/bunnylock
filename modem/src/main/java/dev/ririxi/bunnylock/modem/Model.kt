@@ -200,6 +200,46 @@ private fun Context.joinNatural(
         getString(last, items.dropLast(1).joinToString(getString(R.string.list_separator)), items.last())
     }
 
+enum class ImsFeature(
+    val key: String,
+    val label: String,
+) {
+    VOLTE("volte", "VoLTE"),
+    VOWIFI("vowifi", "VoWiFi"),
+}
+
+enum class ImsBlock {
+    NOT_OFFERED,
+    LOCKED,
+}
+
+sealed interface ImsSetting {
+    data class Readable(
+        val enabled: Boolean,
+        val blocked: ImsBlock?,
+    ) : ImsSetting
+
+    data class Unreadable(
+        val error: String,
+    ) : ImsSetting
+
+    companion object {
+        fun from(json: JSONObject): ImsSetting {
+            if (!json.has("enabled")) return Unreadable(json.optString("error"))
+            val blocked =
+                when (json.optString("blocked")) {
+                    "notOffered" -> ImsBlock.NOT_OFFERED
+                    "locked" -> ImsBlock.LOCKED
+                    else -> null
+                }
+            return Readable(json.getBoolean("enabled"), blocked)
+        }
+    }
+}
+
+fun imsSettingsFrom(json: JSONObject): Map<ImsFeature, ImsSetting> =
+    ImsFeature.entries.mapNotNull { feature -> json.optJSONObject(feature.key)?.let { feature to ImsSetting.from(it) } }.toMap()
+
 data class SimInfo(
     val slot: Int,
     val subId: Int,
@@ -321,6 +361,8 @@ data class ModemState(
     val netModeMasks: String? = null,
     val nrMode: NrMode? = null,
     val nrDc: Boolean? = null,
+    val ims: Map<ImsFeature, ImsSetting> = emptyMap(),
+    val carrierAggregation: Boolean? = null,
     val cells: List<Cell> = emptyList(),
     /** Primary first. */
     val carriers: List<Carrier> = emptyList(),

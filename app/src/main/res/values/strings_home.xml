@@ -33,4 +33,6 @@
     <string name="home_tag_primary">Primary</string>
     <string name="home_tag_secondary">Secondary</string>
     <string name="home_tag_serving">Serving</string>
+    <string name="home_feature_on">%1$s on</string>
+    <string name="home_feature_off">%1$s off</string>
 </resources>

@@ -21,6 +21,8 @@
     <string name="aosp_nr_dc_refused">射频不接受该 EN-DC 状态。</string>
     <string name="aosp_nr_dc_code">射频返回错误 %1$d。</string>
 
+    <string name="aosp_ims_kept">Android 保留了之前的设置。此 SIM 的运营商配置可能不允许此更改。</string>
+
     <string name="aosp_no_subscription">Android 没有这张 SIM 卡的有效订阅，无法下发锁定。请检查 SIM 卡已插入并启用，且 bunnylock 已获得“电话”权限。</string>
     <string name="aosp_channels_rejected">Android 射频服务拒绝了这次锁定。</string>
     <string name="aosp_channels_rejected_fewer">Android 射频服务拒绝了这次锁定。在这台手机上，选择不超过 %1$d 个频段或许可行。</string>

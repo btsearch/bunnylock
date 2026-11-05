@@ -16,6 +16,12 @@
     <string name="modem_goal_nr_mode">switch the 5G mode to %1$s</string>
     <string name="modem_goal_nr_dc_on">turn on NSA (EN-DC)</string>
     <string name="modem_goal_nr_dc_off">turn off NSA (EN-DC)</string>
+    <string name="modem_goal_volte_on">turn on VoLTE</string>
+    <string name="modem_goal_volte_off">turn off VoLTE</string>
+    <string name="modem_goal_vowifi_on">turn on VoWiFi</string>
+    <string name="modem_goal_vowifi_off">turn off VoWiFi</string>
+    <string name="modem_goal_ca_on">turn on carrier aggregation</string>
+    <string name="modem_goal_ca_off">turn off carrier aggregation</string>
     <string name="modem_goal_lock_cell">lock the cell</string>
     <string name="modem_goal_unlock_cell">clear the cell lock</string>
     <string name="modem_goal_lock_plmn">lock the network</string>
@@ -37,6 +43,12 @@
     <string name="modem_nr_mode_set">5G mode switched to %1$s.</string>
     <string name="modem_nr_dc_on">NSA (EN-DC) is on.</string>
     <string name="modem_nr_dc_off">NSA (EN-DC) is off.</string>
+    <string name="modem_volte_on">VoLTE is on.</string>
+    <string name="modem_volte_off">VoLTE is off.</string>
+    <string name="modem_vowifi_on">VoWiFi is on.</string>
+    <string name="modem_vowifi_off">VoWiFi is off.</string>
+    <string name="modem_ca_on">Carrier aggregation is on.</string>
+    <string name="modem_ca_off">Carrier aggregation is off.</string>
     <string name="modem_cell_locked">Cell locked.</string>
     <string name="modem_cell_unlocked">Cell lock cleared.</string>
     <string name="modem_plmn_locked">Network locked.</string>
@@ -88,6 +100,7 @@
     <string name="modem_note_mode_stayed">SIM %1$d stayed on its old network. Turning airplane mode on and off may apply the mode.</string>
     <string name="modem_note_mode_held_back">%1$s The mode stays set and applies in full once that changes.</string>
     <string name="modem_backend_no_nr_mode">The %1$s backend can\'t change the 5G mode.</string>
+    <string name="modem_no_ca_control">Only the MediaTek backend can turn carrier aggregation on or off.</string>
     <string name="modem_current_backend_no_nr_mode">The current backend can\'t change the 5G mode.</string>
 
     <string name="modem_enter_earfcn">Enter the LTE EARFCN first.</string>

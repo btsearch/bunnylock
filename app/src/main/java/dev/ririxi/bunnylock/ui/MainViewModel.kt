@@ -17,6 +17,7 @@ import dev.ririxi.bunnylock.modem.Backend
 import dev.ririxi.bunnylock.modem.BandGroupState
 import dev.ririxi.bunnylock.modem.CellLockRequest
 import dev.ririxi.bunnylock.modem.Group
+import dev.ririxi.bunnylock.modem.ImsFeature
 import dev.ririxi.bunnylock.modem.LockRat
 import dev.ririxi.bunnylock.modem.ModemController
 import dev.ririxi.bunnylock.modem.ModemState
@@ -319,6 +320,15 @@ class MainViewModel(
     fun setNrMode(mode: NrMode) = launchAction { modem.setNrMode(mode) }
 
     fun setNrDc(enabled: Boolean) = launchAction { modem.setNrDc(enabled) }
+
+    fun setIms(
+        feature: ImsFeature,
+        enabled: Boolean,
+    ) = launchAction(refreshAfter = false) { modem.setIms(feature, enabled) }
+
+    fun setCarrierAggregation(enabled: Boolean) = launchAction(refreshAfter = false) { modem.setCarrierAggregation(enabled) }
+
+    fun refreshIms() = viewModelScope.launch { modem.refreshIms() }
 
     fun updateForm(transform: CellForm.() -> CellForm) = updateState { copy(form = form.transform()) }
 

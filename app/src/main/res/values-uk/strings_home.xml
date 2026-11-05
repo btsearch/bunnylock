@@ -37,4 +37,6 @@
     <string name="home_tag_primary">Основна</string>
     <string name="home_tag_secondary">Додаткова</string>
     <string name="home_tag_serving">Поточна</string>
+    <string name="home_feature_on">%1$s увімк.</string>
+    <string name="home_feature_off">%1$s вимк.</string>
 </resources>

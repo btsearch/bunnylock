@@ -16,6 +16,12 @@
     <string name="modem_goal_nr_mode">将 5G 模式切换为“%1$s”</string>
     <string name="modem_goal_nr_dc_on">开启 NSA（EN-DC）</string>
     <string name="modem_goal_nr_dc_off">关闭 NSA（EN-DC）</string>
+    <string name="modem_goal_volte_on">开启 VoLTE</string>
+    <string name="modem_goal_volte_off">关闭 VoLTE</string>
+    <string name="modem_goal_vowifi_on">开启 VoWiFi</string>
+    <string name="modem_goal_vowifi_off">关闭 VoWiFi</string>
+    <string name="modem_goal_ca_on">开启载波聚合</string>
+    <string name="modem_goal_ca_off">关闭载波聚合</string>
     <string name="modem_goal_lock_cell">锁定小区</string>
     <string name="modem_goal_unlock_cell">解除锁小区</string>
     <string name="modem_goal_lock_plmn">锁定网络</string>
@@ -37,6 +43,12 @@
     <string name="modem_nr_mode_set">5G 模式已切换为“%1$s”。</string>
     <string name="modem_nr_dc_on">已开启 NSA（EN-DC）。</string>
     <string name="modem_nr_dc_off">已关闭 NSA（EN-DC）。</string>
+    <string name="modem_volte_on">已开启 VoLTE。</string>
+    <string name="modem_volte_off">已关闭 VoLTE。</string>
+    <string name="modem_vowifi_on">已开启 VoWiFi。</string>
+    <string name="modem_vowifi_off">已关闭 VoWiFi。</string>
+    <string name="modem_ca_on">已开启载波聚合。</string>
+    <string name="modem_ca_off">已关闭载波聚合。</string>
     <string name="modem_cell_locked">已锁定小区。</string>
     <string name="modem_cell_unlocked">已解除锁小区。</string>
     <string name="modem_plmn_locked">已锁定网络。</string>
@@ -88,6 +100,7 @@
     <string name="modem_note_mode_stayed">SIM %1$d 仍停留在原来的网络。开关一次飞行模式可能会让模式生效。</string>
     <string name="modem_note_mode_held_back">%1$s模式已保存，情况变化后会完全生效。</string>
     <string name="modem_backend_no_nr_mode">%1$s 后端无法更改 5G 模式。</string>
+    <string name="modem_no_ca_control">只有 MediaTek 后端可以切换载波聚合。</string>
     <string name="modem_current_backend_no_nr_mode">当前后端无法更改 5G 模式。</string>
 
     <string name="modem_enter_earfcn">请先输入 LTE EARFCN。</string>

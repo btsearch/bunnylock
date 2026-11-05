@@ -35,6 +35,7 @@ import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
@@ -177,6 +178,45 @@ fun InfoItem(
 }
 
 private const val MAX_TRAILING_VALUE_LENGTH = 22
+
+@Composable
+fun ActionItem(
+    shapes: ListItemShapes,
+    title: String,
+    subtitle: String,
+    icon: ImageVector,
+    enabled: Boolean,
+    onClick: () -> Unit,
+) {
+    SegmentedListItem(
+        onClick = onClick,
+        enabled = enabled,
+        shapes = shapes,
+        colors = segmentColors(),
+        leadingContent = { Icon(icon, contentDescription = null) },
+        supportingContent = { Text(subtitle) },
+    ) { Text(title) }
+}
+
+@Composable
+fun SwitchItem(
+    shapes: ListItemShapes,
+    title: String,
+    subtitle: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    enabled: Boolean = true,
+) {
+    SegmentedListItem(
+        checked = checked,
+        onCheckedChange = onCheckedChange,
+        enabled = enabled,
+        shapes = shapes,
+        colors = segmentColors(),
+        supportingContent = { Text(subtitle) },
+        trailingContent = { Switch(checked = checked, onCheckedChange = null, enabled = enabled) },
+    ) { Text(title) }
+}
 
 @Composable
 fun <T> ConnectedChoice(

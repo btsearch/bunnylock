@@ -3,6 +3,7 @@
     <string name="shell_tab_bands">Pasma</string>
     <string name="shell_tab_cell">Wymuszanie</string>
     <string name="shell_tab_tools">Narzędzia</string>
+    <string name="shell_tab_settings">Ustawienia</string>
     <string name="shell_refresh">Odśwież</string>
     <string name="shell_stop_waiting">Przestań czekać</string>
     <string name="shell_denied_title">Potrzebny root lub Shizuku</string>

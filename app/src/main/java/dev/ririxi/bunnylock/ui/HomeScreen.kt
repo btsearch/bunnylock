@@ -58,6 +58,8 @@ import dev.ririxi.bunnylock.data.Carrier
 import dev.ririxi.bunnylock.data.Cell
 import dev.ririxi.bunnylock.data.Rat
 import dev.ririxi.bunnylock.data.Signal
+import dev.ririxi.bunnylock.modem.ImsFeature
+import dev.ririxi.bunnylock.modem.ImsSetting
 import dev.ririxi.bunnylock.modem.ModemState
 import dev.ririxi.bunnylock.modem.formatPlmn
 import dev.ririxi.bunnylock.ui.theme.LocalLockGreen
@@ -349,6 +351,21 @@ private fun ConnectionCard(modem: ModemState) {
         }
         if (carriers.all { it.bandwidthKhz !== null }) BandwidthBar(carriers)
         signals.forEach { signal -> SignalRow(signal, showRat = signals.size > 1) }
+        FeatureTags(modem)
+    }
+}
+
+@Composable
+private fun FeatureTags(modem: ModemState) {
+    val imsFeatures = ImsFeature.entries.mapNotNull { feature -> (modem.ims[feature] as? ImsSetting.Readable)?.let { feature.label to it.enabled } }
+    val features = imsFeatures + listOfNotNull(modem.carrierAggregation?.let { "CA" to it })
+    if (features.isEmpty()) return
+    val colors = MaterialTheme.colorScheme
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        features.forEach { (name, on) ->
+            val (container, content) = if (on) colors.secondaryContainer to colors.onSecondaryContainer else colors.surfaceContainerHighest to colors.onSurfaceVariant
+            Tag(stringResource(if (on) R.string.home_feature_on else R.string.home_feature_off, name), container, content)
+        }
     }
 }
 

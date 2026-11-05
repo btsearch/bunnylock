@@ -1,0 +1,43 @@
+<resources>
+    <string name="settings_backend">Backend</string>
+    <string name="settings_backend_needs_root">Needs root</string>
+    <string name="settings_backend_detected">Detected for this device</string>
+    <string name="settings_persist">Keep band locks after reboot</string>
+    <string name="settings_persist_hint">When this is off, locks are cleared on reboot.</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_bands">Band locks</string>
+    <string name="settings_exclusive_lock">Turn off networks without a lock</string>
+    <string name="settings_exclusive_lock_hint">Locking bands turns off every network without a band lock of its own. Unlocking turns them back on.</string>
+    <string name="settings_forget_needs_channels">Go back to bands-only locks</string>
+    <string name="settings_forget_needs_channels_hint">Band locks on this phone include the visible frequencies, since a bands-only lock didn\'t work here before. Tap to try the bands alone first on the next lock.</string>
+    <string name="settings_dynamic_color">Dynamic color</string>
+    <string name="settings_dynamic_color_hint">Use your wallpaper colors. Off uses the default blue theme.</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_system">System default</string>
+    <string name="settings_language_system_hint">Follows your phone\'s language.</string>
+    <string name="settings_language_helper_english">A few messages from the root helper may still show up in English.</string>
+    <string name="settings_language_en" translatable="false">English</string>
+    <string name="settings_language_pl" translatable="false">Polski</string>
+    <string name="settings_language_ru" translatable="false">Русский</string>
+    <string name="settings_language_uk" translatable="false">Українська</string>
+    <string name="settings_language_zh_cn" translatable="false">简体中文</string>
+    <string name="settings_updates">Updates</string>
+    <string name="settings_check_updates">Check for updates</string>
+    <string name="settings_check_updates_hint">Looks for a new release on GitHub when the app starts.</string>
+    <string name="settings_about">About</string>
+    <string name="settings_author">by @ririxi (BTSearch.pl developer)</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_bunny_fact">Bunny fact: %1$s</string>
+    <string-array name="bunny_facts">
+        <item>A rabbit\'s teeth never stop growing, so they have to keep chewing to wear them down.</item>
+        <item>A happy rabbit does a \"binky\": a jump with a twist in mid-air.</item>
+        <item>Rabbits can see almost all the way around themselves, except for a small blind spot right in front of the nose.</item>
+        <item>Rabbits can\'t vomit, so eating something bad is extra dangerous for them.</item>
+        <item>A content rabbit \"purrs\" by gently grinding its teeth.</item>
+        <item>Baby rabbits are called kits.</item>
+        <item>Rabbits are most active at dawn and dusk.</item>
+        <item>Those big ears also work as radiators and help a rabbit cool down.</item>
+        <item>A group of rabbits is sometimes called a fluffle.</item>
+        <item>A thumping rabbit is warning everyone nearby that something seems off.</item>
+    </string-array>
+</resources>

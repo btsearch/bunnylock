@@ -31,4 +31,6 @@
     <string name="home_tag_primary">主载波</string>
     <string name="home_tag_secondary">辅载波</string>
     <string name="home_tag_serving">服务小区</string>
+    <string name="home_feature_on">%1$s 开</string>
+    <string name="home_feature_off">%1$s 关</string>
 </resources>

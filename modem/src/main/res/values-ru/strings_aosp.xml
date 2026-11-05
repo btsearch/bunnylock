@@ -21,6 +21,8 @@
     <string name="aosp_nr_dc_refused">Радиомодуль не принял это состояние EN-DC.</string>
     <string name="aosp_nr_dc_code">Радиомодуль вернул ошибку %1$d.</string>
 
+    <string name="aosp_ims_kept">Android оставил прежнюю настройку. Настройки оператора для этой SIM могут не разрешать это изменение.</string>
+
     <string name="aosp_no_subscription">Android не видит эту SIM-карту среди активных, поэтому отправлять блокировку некуда. Проверьте, что SIM-карта вставлена и включена, а у bunnylock есть разрешение «Телефон».</string>
     <string name="aosp_channels_rejected">Служба радиосвязи Android отклонила блокировку каналов.</string>
     <string name="aosp_channels_rejected_fewer">Служба радиосвязи Android отклонила блокировку каналов. На этом телефоне может сработать выбор %1$d или меньшего числа диапазонов.</string>

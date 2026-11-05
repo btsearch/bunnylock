@@ -2,26 +2,20 @@
 
 package dev.ririxi.bunnylock.ui
 
-import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Send
-import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Settings
@@ -31,39 +25,33 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItemShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedListItem
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import dev.ririxi.bunnylock.R
-import dev.ririxi.bunnylock.data.AppLanguage
 import dev.ririxi.bunnylock.modem.Backend
 import dev.ririxi.bunnylock.modem.DeviceInfo
+import dev.ririxi.bunnylock.modem.ImsBlock
+import dev.ririxi.bunnylock.modem.ImsFeature
+import dev.ririxi.bunnylock.modem.ImsSetting
 import dev.ririxi.bunnylock.modem.andList
 import dev.ririxi.bunnylock.modem.string
-import dev.ririxi.bunnylock.ui.theme.dynamicColorAvailable
 
 private const val LOG_MIME_TYPE = "text/x-log"
 
@@ -84,105 +72,29 @@ fun ToolsScreen(
     val arrowAngle by animateFloatAsState(if (checkedServicesOpen) 180f else 0f, label = "arrow")
     val saveLog = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(LOG_MIME_TYPE)) { uri -> uri?.let(vm::saveLog) }
 
+    LaunchedEffect(Unit) { vm.refreshIms() }
+
     LazyColumn(contentPadding = contentPadding.withScreenMargins(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        item {
-            SectionHeader(stringResource(R.string.tools_backend))
-            Segmented {
-                Backend.entries.forEach { backend ->
-                    val selected = state.modem.backend == backend
-                    val needsRoot = !state.modem.allows(backend)
-                    item { shapes ->
-                        val hint =
-                            when {
-                                needsRoot -> stringResource(R.string.tools_backend_needs_root)
-                                state.modem.autoBackend == backend -> stringResource(R.string.tools_backend_detected)
-                                else -> null
-                            }
-                        SegmentedListItem(
-                            selected = selected,
-                            onClick = { vm.setBackend(backend) },
-                            enabled = !needsRoot,
-                            shapes = shapes,
-                            colors = segmentColors(),
-                            supportingContent = if (hint !== null) ({ Text(hint) }) else null,
-                            trailingContent = if (selected) ({ Icon(Icons.Rounded.Check, contentDescription = null) }) else null,
-                        ) { Text(stringResource(backend.label)) }
-                    }
-                }
-                if (state.modem.backend == Backend.QUALCOMM) {
-                    item {
-                        SwitchItem(
-                            it,
-                            stringResource(R.string.tools_persist),
-                            stringResource(R.string.tools_persist_hint),
-                            checked = state.modem.persist,
-                            onCheckedChange = vm::setPersist,
-                        )
-                    }
-                }
-            }
-        }
-
-        item {
-            SectionHeader(stringResource(R.string.tools_bands))
-            Segmented {
-                item {
-                    SwitchItem(
-                        it,
-                        stringResource(R.string.tools_exclusive_lock),
-                        stringResource(R.string.tools_exclusive_lock_hint),
-                        checked = state.exclusiveBandLock,
-                        onCheckedChange = vm::setExclusiveBandLock,
-                    )
-                }
-                if (state.modem.halNeedsChannels && state.modem.backend == Backend.ANDROID) {
-                    item {
-                        ActionItem(
-                            it,
-                            stringResource(R.string.tools_forget_needs_channels),
-                            stringResource(R.string.tools_forget_needs_channels_hint),
-                            Icons.Rounded.Refresh,
-                            enabled = !state.busy,
-                            onClick = vm::forgetNeedsChannels,
-                        )
-                    }
-                }
-            }
-        }
-
-        if (dynamicColorAvailable) {
+        val carrierAggregation = state.modem.carrierAggregation
+        if (carrierAggregation !== null) {
             item {
-                SectionHeader(stringResource(R.string.tools_appearance))
+                SectionHeader(simSectionHeader(state, R.string.tools_network, R.string.tools_network_sim))
                 Segmented {
                     item {
                         SwitchItem(
                             it,
-                            stringResource(R.string.tools_dynamic_color),
-                            stringResource(R.string.tools_dynamic_color_hint),
-                            checked = state.dynamicColor,
-                            onCheckedChange = vm::setDynamicColor,
+                            stringResource(R.string.tools_ca),
+                            stringResource(R.string.tools_ca_hint),
+                            checked = carrierAggregation,
+                            onCheckedChange = vm::setCarrierAggregation,
+                            enabled = !state.busy && !state.modem.refreshing,
                         )
                     }
                 }
             }
         }
 
-        item { LanguageSection() }
-
-        item {
-            SectionHeader(stringResource(R.string.tools_updates))
-            Segmented {
-                item {
-                    SwitchItem(
-                        it,
-                        stringResource(R.string.tools_check_updates),
-                        stringResource(R.string.tools_check_updates_hint),
-                        checked = state.checkUpdates,
-                        onCheckedChange = vm::setCheckUpdates,
-                    )
-                }
-            }
-        }
+        item { CallingSection(state, vm) }
 
         item {
             SectionHeader(stringResource(R.string.tools_radio))
@@ -405,61 +317,52 @@ fun ToolsScreen(
                 MonospacePanel(state.modem.log.joinToString("\n"))
             }
         }
-
-        item {
-            SectionHeader(stringResource(R.string.tools_about))
-            About()
-        }
     }
 }
-
-private const val TAPS_FOR_FACT = 5
 
 @Composable
-private fun About() {
-    val context = LocalContext.current
-    val version =
-        remember {
-            runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull().orEmpty()
-        }
-    val facts = stringArrayResource(R.array.bunny_facts)
-    var taps by rememberSaveable { mutableIntStateOf(0) }
-    val fact = if (taps >= TAPS_FOR_FACT) facts[(taps - TAPS_FOR_FACT) % facts.size] else null
-    Panel {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            LockBadge(locked = fact !== null, size = 56.dp, spin = true)
-            Column(Modifier.weight(1f)) {
-                Wordmark(
-                    style = MaterialTheme.typography.headlineMediumEmphasized,
-                    modifier =
-                        Modifier.clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                        ) { taps++ },
-                )
-                Text(stringResource(R.string.tools_author), style = MaterialTheme.typography.bodyMedium)
-                if (version.isNotEmpty()) {
-                    Text(
-                        stringResource(R.string.tools_version, version),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
-        }
-        AnimatedVisibility(visible = fact !== null) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Icon(BunnyIcons.Bunny, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
-                Text(
-                    stringResource(R.string.tools_bunny_fact, fact.orEmpty()),
-                    style = MaterialTheme.typography.bodyMediumEmphasized,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.weight(1f),
+private fun CallingSection(
+    state: UiState,
+    vm: MainViewModel,
+) {
+    SectionHeader(simSectionHeader(state, R.string.tools_calling, R.string.tools_calling_sim))
+    Segmented {
+        ImsFeature.entries.forEach { feature ->
+            item { shapes ->
+                val setting = state.modem.ims[feature]
+                SwitchItem(
+                    shapes,
+                    feature.label,
+                    imsHint(feature, setting),
+                    checked = (setting as? ImsSetting.Readable)?.enabled == true,
+                    onCheckedChange = { vm.setIms(feature, it) },
+                    enabled = !state.busy && !state.modem.refreshing && setting is ImsSetting.Readable,
                 )
             }
         }
     }
 }
+
+@Composable
+private fun simSectionHeader(
+    state: UiState,
+    @StringRes title: Int,
+    @StringRes titleWithSim: Int,
+): String = if (state.modem.sims.size > 1) stringResource(titleWithSim, state.modem.sim) else stringResource(title)
+
+@Composable
+private fun imsHint(
+    feature: ImsFeature,
+    setting: ImsSetting?,
+): String =
+    when {
+        setting === null -> stringResource(R.string.tools_ims_unknown)
+        setting is ImsSetting.Unreadable -> stringResource(R.string.tools_ims_error, setting.error)
+        setting is ImsSetting.Readable && setting.blocked == ImsBlock.NOT_OFFERED -> stringResource(R.string.tools_ims_not_offered)
+        setting is ImsSetting.Readable && setting.blocked == ImsBlock.LOCKED -> stringResource(R.string.tools_ims_locked)
+        feature == ImsFeature.VOLTE -> stringResource(R.string.tools_volte_hint)
+        else -> stringResource(R.string.tools_vowifi_hint)
+    }
 
 @Composable
 private fun atNodesHint(device: DeviceInfo?): String {
@@ -470,90 +373,6 @@ private fun atNodesHint(device: DeviceInfo?): String {
     } else {
         stringResource(R.string.tools_at_ports_found, LocalContext.current.andList(nodes))
     }
-}
-
-@Composable
-private fun LanguageSection() {
-    val activity = LocalActivity.current
-    val context = LocalContext.current
-    var language by remember { mutableStateOf(AppLanguage.current(context)) }
-    val shownInEnglish = LocalConfiguration.current.locales[0].language == "en"
-    SectionHeader(stringResource(R.string.tools_language))
-    Segmented {
-        (listOf("") + AppLanguage.tags).forEach { tag ->
-            item { shapes ->
-                val selected = language == tag
-                val hint =
-                    when {
-                        selected && !shownInEnglish -> stringResource(R.string.tools_language_helper_english)
-                        tag.isEmpty() -> stringResource(R.string.tools_language_system_hint)
-                        else -> null
-                    }
-                SegmentedListItem(
-                    selected = selected,
-                    onClick = {
-                        if (!selected) {
-                            language = tag
-                            activity?.let { AppLanguage.set(it, tag) }
-                        }
-                    },
-                    shapes = shapes,
-                    colors = segmentColors(),
-                    supportingContent = if (hint !== null) ({ Text(hint) }) else null,
-                    trailingContent = if (selected) ({ Icon(Icons.Rounded.Check, contentDescription = null) }) else null,
-                ) { Text(languageName(tag)) }
-            }
-        }
-    }
-}
-
-@Composable
-private fun languageName(tag: String): String =
-    when (tag) {
-        "" -> stringResource(R.string.tools_language_system)
-        "en" -> stringResource(R.string.tools_language_en)
-        "pl" -> stringResource(R.string.tools_language_pl)
-        "ru" -> stringResource(R.string.tools_language_ru)
-        "uk" -> stringResource(R.string.tools_language_uk)
-        "zh-CN" -> stringResource(R.string.tools_language_zh_cn)
-        else -> tag
-    }
-
-@Composable
-private fun ActionItem(
-    shapes: ListItemShapes,
-    title: String,
-    subtitle: String,
-    icon: ImageVector,
-    enabled: Boolean,
-    onClick: () -> Unit,
-) {
-    SegmentedListItem(
-        onClick = onClick,
-        enabled = enabled,
-        shapes = shapes,
-        colors = segmentColors(),
-        leadingContent = { Icon(icon, contentDescription = null) },
-        supportingContent = { Text(subtitle) },
-    ) { Text(title) }
-}
-
-@Composable
-private fun SwitchItem(
-    shapes: ListItemShapes,
-    title: String,
-    subtitle: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-) {
-    SegmentedListItem(
-        checked = checked,
-        onCheckedChange = onCheckedChange,
-        shapes = shapes,
-        colors = segmentColors(),
-        supportingContent = { Text(subtitle) },
-        trailingContent = { Switch(checked = checked, onCheckedChange = null) },
-    ) { Text(title) }
 }
 
 @Composable

@@ -3,6 +3,7 @@
     <string name="shell_tab_bands">Діапазони</string>
     <string name="shell_tab_cell">Сота</string>
     <string name="shell_tab_tools">Інструменти</string>
+    <string name="shell_tab_settings">Налаштування</string>
     <string name="shell_refresh">Оновити</string>
     <string name="shell_stop_waiting">Не чекати</string>
     <string name="shell_denied_title">Потрібен root або Shizuku</string>

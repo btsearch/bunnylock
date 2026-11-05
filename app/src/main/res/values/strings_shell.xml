@@ -3,6 +3,7 @@
     <string name="shell_tab_bands">Bands</string>
     <string name="shell_tab_cell">Cell lock</string>
     <string name="shell_tab_tools">Tools</string>
+    <string name="shell_tab_settings">Settings</string>
     <string name="shell_refresh">Refresh</string>
     <string name="shell_stop_waiting">Stop waiting</string>
     <string name="shell_denied_title">Root or Shizuku needed</string>

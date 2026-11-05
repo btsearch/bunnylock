@@ -1,0 +1,38 @@
+<resources>
+    <string name="settings_backend">Backend</string>
+    <string name="settings_backend_needs_root">Wymaga roota</string>
+    <string name="settings_backend_detected">Wykryty dla tego urządzenia</string>
+    <string name="settings_persist">Zachowaj blokady pasm po restarcie</string>
+    <string name="settings_persist_hint">Po wyłączeniu blokady znikają przy restarcie.</string>
+    <string name="settings_appearance">Wygląd</string>
+    <string name="settings_bands">Blokada pasm</string>
+    <string name="settings_exclusive_lock">Wyłączaj sieci bez blokady</string>
+    <string name="settings_exclusive_lock_hint">Blokada pasm wyłącza każdą sieć bez własnej blokady. Odblokowanie włącza je ponownie.</string>
+    <string name="settings_forget_needs_channels">Wróć do blokad samych pasm</string>
+    <string name="settings_forget_needs_channels_hint">Na tym telefonie blokady pasm zawierają widoczne częstotliwości, bo blokada samych pasm wcześniej tu nie zadziałała. Stuknij, żeby przy następnej blokadzie aplikacja najpierw spróbowała samych pasm.</string>
+    <string name="settings_dynamic_color">Dynamiczne kolory</string>
+    <string name="settings_dynamic_color_hint">Kolory z tapety. Po wyłączeniu aplikacja używa domyślnego niebieskiego motywu.</string>
+    <string name="settings_language">Język</string>
+    <string name="settings_language_system">Język systemu</string>
+    <string name="settings_language_system_hint">Tak jak w ustawieniach telefonu.</string>
+    <string name="settings_language_helper_english">Niektóre komunikaty procesu pomocniczego mogą nadal pojawiać się po angielsku.</string>
+    <string name="settings_updates">Aktualizacje</string>
+    <string name="settings_check_updates">Sprawdzaj aktualizacje</string>
+    <string name="settings_check_updates_hint">Przy starcie aplikacji szuka nowej wersji na GitHubie.</string>
+    <string name="settings_about">O aplikacji</string>
+    <string name="settings_author">od @ririxi, twórcy BTSearch.pl</string>
+    <string name="settings_version">Wersja %1$s</string>
+    <string name="settings_bunny_fact">Królicza ciekawostka: %1$s</string>
+    <string-array name="bunny_facts">
+        <item>W wielu polskich domach drobne prezenty na Wielkanoc przynosi zajączek.</item>
+        <item>Wielkanocny zajączek to zając, a nie królik. Młode zająca rodzą się z futrem i otwartymi oczami, a króliczęta są nagie i ślepe.</item>
+        <item>Zęby królika rosną przez całe życie, więc musi ciągle coś gryźć, żeby je ścierać.</item>
+        <item>Szczęśliwy królik robi „binky”: podskok z obrotem w powietrzu.</item>
+        <item>Króliki nie potrafią wymiotować, więc zjedzenie czegoś szkodliwego jest dla nich szczególnie groźne.</item>
+        <item>Zadowolony królik „mruczy”, delikatnie zgrzytając zębami.</item>
+        <item>Króliki są najbardziej aktywne o świcie i o zmierzchu.</item>
+        <item>Duże uszy działają też jak chłodnica i pomagają królikowi pozbyć się nadmiaru ciepła.</item>
+        <item>Królik tupiący tylną łapą ostrzega wszystkich wokół, że coś jest nie tak.</item>
+        <item>Króliki widzą prawie dookoła siebie. Martwy punkt mają tuż przed nosem.</item>
+    </string-array>
+</resources>

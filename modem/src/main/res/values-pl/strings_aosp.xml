@@ -21,6 +21,8 @@
     <string name="aosp_nr_dc_refused">Radio nie przyjęło tego stanu EN-DC.</string>
     <string name="aosp_nr_dc_code">Radio zwróciło błąd %1$d.</string>
 
+    <string name="aosp_ims_kept">Android zostawił poprzednie ustawienie. Ustawienia operatora dla tej karty SIM mogą nie pozwalać na tę zmianę.</string>
+
     <string name="aosp_no_subscription">Android nie widzi aktywnej subskrypcji dla tej karty SIM, więc nie ma dokąd wysłać blokady. Sprawdź, czy karta jest włożona i włączona oraz czy aplikacja ma uprawnienie „Telefon”.</string>
     <string name="aosp_channels_rejected">Usługa radiowa Androida odrzuciła tę blokadę.</string>
     <string name="aosp_channels_rejected_fewer">Usługa radiowa Androida odrzuciła tę blokadę. Na tym telefonie może zadziałać wybranie do %1$d pasm.</string>

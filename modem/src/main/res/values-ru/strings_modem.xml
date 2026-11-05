@@ -16,6 +16,12 @@
     <string name="modem_goal_nr_mode">переключить режим 5G на %1$s</string>
     <string name="modem_goal_nr_dc_on">включить NSA (EN-DC)</string>
     <string name="modem_goal_nr_dc_off">выключить NSA (EN-DC)</string>
+    <string name="modem_goal_volte_on">включить VoLTE</string>
+    <string name="modem_goal_volte_off">выключить VoLTE</string>
+    <string name="modem_goal_vowifi_on">включить VoWiFi</string>
+    <string name="modem_goal_vowifi_off">выключить VoWiFi</string>
+    <string name="modem_goal_ca_on">включить агрегацию частот</string>
+    <string name="modem_goal_ca_off">выключить агрегацию частот</string>
     <string name="modem_goal_lock_cell">заблокировать соту</string>
     <string name="modem_goal_unlock_cell">снять блокировку соты</string>
     <string name="modem_goal_lock_plmn">заблокировать сеть</string>
@@ -37,6 +43,12 @@
     <string name="modem_nr_mode_set">Режим 5G переключён на %1$s.</string>
     <string name="modem_nr_dc_on">NSA (EN-DC) включён.</string>
     <string name="modem_nr_dc_off">NSA (EN-DC) выключен.</string>
+    <string name="modem_volte_on">VoLTE включён.</string>
+    <string name="modem_volte_off">VoLTE выключен.</string>
+    <string name="modem_vowifi_on">VoWiFi включён.</string>
+    <string name="modem_vowifi_off">VoWiFi выключен.</string>
+    <string name="modem_ca_on">Агрегация частот включена.</string>
+    <string name="modem_ca_off">Агрегация частот выключена.</string>
     <string name="modem_cell_locked">Сота заблокирована.</string>
     <string name="modem_cell_unlocked">Блокировка соты снята.</string>
     <string name="modem_plmn_locked">Сеть заблокирована.</string>
@@ -88,6 +100,7 @@
     <string name="modem_note_mode_stayed">SIM %1$d осталась в старой сети. Включение и выключение режима полёта может применить режим.</string>
     <string name="modem_note_mode_held_back">%1$s Режим останется заданным и применится полностью, как только это изменится.</string>
     <string name="modem_backend_no_nr_mode">Бэкенд %1$s не может изменять режим 5G.</string>
+    <string name="modem_no_ca_control">Переключать агрегацию частот может только бэкенд MediaTek.</string>
     <string name="modem_current_backend_no_nr_mode">Текущий бэкенд не может изменять режим 5G.</string>
 
     <string name="modem_enter_earfcn">Сначала введите LTE EARFCN.</string>

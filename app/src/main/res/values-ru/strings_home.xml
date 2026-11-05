@@ -37,4 +37,6 @@
     <string name="home_tag_primary">Основная</string>
     <string name="home_tag_secondary">Вторичная</string>
     <string name="home_tag_serving">Обслуживающая</string>
+    <string name="home_feature_on">%1$s вкл.</string>
+    <string name="home_feature_off">%1$s выкл.</string>
 </resources>

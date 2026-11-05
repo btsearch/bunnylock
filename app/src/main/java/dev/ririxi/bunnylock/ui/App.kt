@@ -29,6 +29,7 @@ import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -92,6 +93,7 @@ enum class Tab(
     BANDS(R.string.shell_tab_bands, BunnyIcons.Bands),
     CELL(R.string.shell_tab_cell, BunnyIcons.Tower),
     TOOLS(R.string.shell_tab_tools, Icons.Rounded.Build),
+    SETTINGS(R.string.shell_tab_settings, Icons.Rounded.Settings),
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -214,6 +216,7 @@ fun BunnyApp(vm: MainViewModel) {
                             Tab.BANDS -> BandsScreen(state, vm, contentPadding)
                             Tab.CELL -> CellScreen(state, vm, contentPadding)
                             Tab.TOOLS -> ToolsScreen(state, vm, contentPadding)
+                            Tab.SETTINGS -> SettingsScreen(state, vm, contentPadding)
                         }
                     }
                 }

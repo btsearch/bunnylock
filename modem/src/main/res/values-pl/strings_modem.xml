@@ -16,6 +16,12 @@
     <string name="modem_goal_nr_mode">przełączyć 5G na „%1$s”</string>
     <string name="modem_goal_nr_dc_on">włączyć NSA (EN-DC)</string>
     <string name="modem_goal_nr_dc_off">wyłączyć NSA (EN-DC)</string>
+    <string name="modem_goal_volte_on">włączyć VoLTE</string>
+    <string name="modem_goal_volte_off">wyłączyć VoLTE</string>
+    <string name="modem_goal_vowifi_on">włączyć VoWiFi</string>
+    <string name="modem_goal_vowifi_off">wyłączyć VoWiFi</string>
+    <string name="modem_goal_ca_on">włączyć agregację pasm</string>
+    <string name="modem_goal_ca_off">wyłączyć agregację pasm</string>
     <string name="modem_goal_lock_cell">zablokować komórki</string>
     <string name="modem_goal_unlock_cell">zdjąć blokady komórki</string>
     <string name="modem_goal_lock_plmn">zablokować sieci</string>
@@ -37,6 +43,12 @@
     <string name="modem_nr_mode_set">Przełączono 5G na „%1$s”.</string>
     <string name="modem_nr_dc_on">NSA (EN-DC) włączone.</string>
     <string name="modem_nr_dc_off">NSA (EN-DC) wyłączone.</string>
+    <string name="modem_volte_on">VoLTE włączone.</string>
+    <string name="modem_volte_off">VoLTE wyłączone.</string>
+    <string name="modem_vowifi_on">VoWiFi włączone.</string>
+    <string name="modem_vowifi_off">VoWiFi wyłączone.</string>
+    <string name="modem_ca_on">Agregacja pasm włączona.</string>
+    <string name="modem_ca_off">Agregacja pasm wyłączona.</string>
     <string name="modem_cell_locked">Komórka zablokowana.</string>
     <string name="modem_cell_unlocked">Zdjęto blokadę komórki.</string>
     <string name="modem_plmn_locked">Sieć zablokowana.</string>
@@ -88,6 +100,7 @@
     <string name="modem_note_mode_stayed">SIM %1$d została w starej sieci. Włączenie i wyłączenie trybu samolotowego może pomóc.</string>
     <string name="modem_note_mode_held_back">%1$s Tryb zostaje ustawiony i zadziała w pełni, gdy to się zmieni.</string>
     <string name="modem_backend_no_nr_mode">Backend %1$s nie obsługuje zmiany trybu 5G.</string>
+    <string name="modem_no_ca_control">Tylko backend MediaTek może przełączać agregację pasm.</string>
     <string name="modem_current_backend_no_nr_mode">Obecny backend nie obsługuje zmiany trybu 5G.</string>
 
     <string name="modem_enter_earfcn">Najpierw wpisz EARFCN LTE.</string>

@@ -1,28 +1,4 @@
 <resources>
-    <string name="tools_backend">后端</string>
-    <string name="tools_backend_needs_root">需要 Root</string>
-    <string name="tools_backend_detected">本机自动识别</string>
-    <string name="tools_persist">重启后保留锁频段</string>
-    <string name="tools_persist_hint">关闭后，重启会清除锁定。</string>
-
-    <string name="tools_appearance">外观</string>
-    <string name="tools_bands">频段锁定</string>
-    <string name="tools_exclusive_lock">关闭未锁定的网络</string>
-    <string name="tools_exclusive_lock_hint">锁定频段时，会关闭所有没有单独锁定频段的网络。解锁后会重新开启。</string>
-    <string name="tools_forget_needs_channels">改回只锁频段</string>
-    <string name="tools_forget_needs_channels_hint">之前在这台手机上只锁频段没有成功，因此锁频段时会附带可见频点。点击后，下次锁定时 bunnylock 会先尝试只锁频段。</string>
-    <string name="tools_dynamic_color">动态取色</string>
-    <string name="tools_dynamic_color_hint">跟随壁纸配色。关闭则使用默认蓝色主题。</string>
-
-    <string name="tools_language">语言</string>
-    <string name="tools_language_system">跟随系统</string>
-    <string name="tools_language_system_hint">使用手机的系统语言。</string>
-    <string name="tools_language_helper_english">部分来自 Root 辅助进程的消息仍可能显示为英文。</string>
-
-    <string name="tools_updates">更新</string>
-    <string name="tools_check_updates">自动检查更新</string>
-    <string name="tools_check_updates_hint">启动时在 GitHub 上检查新版本。</string>
-
     <string name="tools_radio">射频</string>
     <string name="tools_restart_radio">重启移动网络</string>
     <string name="tools_restart_radio_hint">开关一次飞行模式。</string>
@@ -66,20 +42,16 @@
     <string name="tools_save_log">保存</string>
     <string name="tools_save_log_description">保存日志</string>
 
-    <string name="tools_about">关于</string>
-    <string name="tools_author">作者 @ririxi（BTSearch.pl 开发者）</string>
-    <string name="tools_version">版本 %1$s</string>
-    <string name="tools_bunny_fact">兔兔冷知识：%1$s</string>
-    <string-array name="bunny_facts">
-        <item>传说月亮上住着一只玉兔，陪着嫦娥在广寒宫里捣药。</item>
-        <item>2019 年，玉兔二号随嫦娥四号登陆月球背面，成为第一辆在月背行驶的月球车。</item>
-        <item>兔在十二生肖里排第四，2023 年就是兔年。</item>
-        <item>老北京过中秋要供“兔儿爷”，一种兔首人身的泥塑。</item>
-        <item>兔子的牙齿一辈子都在长，所以得不停地啃东西来磨牙。</item>
-        <item>兔子开心时会蹦起来在空中扭身，这个动作叫“binky”。</item>
-        <item>兔子不会呕吐，误食有害的东西对它们格外危险。</item>
-        <item>兔子的视野几乎能绕身体一圈，盲区就在鼻子正前方。</item>
-        <item>兔子的大耳朵也是“散热器”，能帮它降温。</item>
-        <item>兔子用后腿跺地，是在提醒周围的同伴：好像有危险。</item>
-    </string-array>
+    <string name="tools_calling">通话</string>
+    <string name="tools_calling_sim">SIM %1$d 通话</string>
+    <string name="tools_network">网络</string>
+    <string name="tools_network_sim">SIM %1$d 网络</string>
+    <string name="tools_ca">载波聚合（CA）</string>
+    <string name="tools_ca_hint">合并多个 LTE 载波以提升速度。关闭后手机一次只使用一个载波。</string>
+    <string name="tools_volte_hint">通过 4G 通话，不回落到 2G 或 3G。</string>
+    <string name="tools_vowifi_hint">移动信号弱时通过 Wi-Fi 通话。</string>
+    <string name="tools_ims_unknown">Android 未提供此 SIM 的这项设置。</string>
+    <string name="tools_ims_not_offered">此 SIM 的运营商配置未列出该功能，可能无法使用。</string>
+    <string name="tools_ims_locked">此 SIM 的运营商配置不允许更改此项，Android 可能会将其改回。</string>
+    <string name="tools_ims_error">Android 无法读取此设置：%1$s</string>
 </resources>
