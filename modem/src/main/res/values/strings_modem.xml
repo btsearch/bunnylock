@@ -49,6 +49,7 @@
     <string name="modem_vowifi_off">VoWiFi is off.</string>
     <string name="modem_ca_on">Carrier aggregation is on.</string>
     <string name="modem_ca_off">Carrier aggregation is off.</string>
+    <string name="modem_ca_restart_failed">The modem didn\'t restart, so the change applies after the next modem or phone restart. %1$s</string>
     <string name="modem_cell_locked">Cell locked.</string>
     <string name="modem_cell_unlocked">Cell lock cleared.</string>
     <string name="modem_plmn_locked">Network locked.</string>

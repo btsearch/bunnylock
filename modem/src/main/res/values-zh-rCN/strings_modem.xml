@@ -49,6 +49,7 @@
     <string name="modem_vowifi_off">已关闭 VoWiFi。</string>
     <string name="modem_ca_on">已开启载波聚合。</string>
     <string name="modem_ca_off">已关闭载波聚合。</string>
+    <string name="modem_ca_restart_failed">基带未能重启，更改将在下次重启基带或手机后生效。%1$s</string>
     <string name="modem_cell_locked">已锁定小区。</string>
     <string name="modem_cell_unlocked">已解除锁小区。</string>
     <string name="modem_plmn_locked">已锁定网络。</string>

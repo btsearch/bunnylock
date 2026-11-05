@@ -47,7 +47,7 @@
     <string name="tools_network">Network</string>
     <string name="tools_network_sim">Network on SIM %1$d</string>
     <string name="tools_ca">Carrier aggregation (CA)</string>
-    <string name="tools_ca_hint">Combines several LTE carriers for more speed. When this is off, the phone uses one carrier at a time.</string>
+    <string name="tools_ca_hint">Combines several LTE carriers for more speed. When this is off, the phone uses one carrier at a time. Changing it restarts the modem.</string>
     <string name="tools_volte_hint">Calls go over 4G instead of dropping to 2G or 3G.</string>
     <string name="tools_vowifi_hint">Calls go over Wi-Fi when the mobile signal is weak.</string>
     <string name="tools_ims_unknown">Android doesn\'t report this setting for this SIM.</string>

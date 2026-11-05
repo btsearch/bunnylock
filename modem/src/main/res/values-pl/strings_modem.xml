@@ -49,6 +49,7 @@
     <string name="modem_vowifi_off">VoWiFi wyłączone.</string>
     <string name="modem_ca_on">Agregacja pasm włączona.</string>
     <string name="modem_ca_off">Agregacja pasm wyłączona.</string>
+    <string name="modem_ca_restart_failed">Modem nie uruchomił się ponownie, więc zmiana zadziała po następnym restarcie modemu lub telefonu. %1$s</string>
     <string name="modem_cell_locked">Komórka zablokowana.</string>
     <string name="modem_cell_unlocked">Zdjęto blokadę komórki.</string>
     <string name="modem_plmn_locked">Sieć zablokowana.</string>

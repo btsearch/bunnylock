@@ -49,6 +49,7 @@
     <string name="modem_vowifi_off">VoWiFi вимкнено.</string>
     <string name="modem_ca_on">Агрегацію частот увімкнено.</string>
     <string name="modem_ca_off">Агрегацію частот вимкнено.</string>
+    <string name="modem_ca_restart_failed">Модем не перезавантажився, тому зміна набуде чинності після наступного перезавантаження модема або телефону. %1$s</string>
     <string name="modem_cell_locked">Соту заблоковано.</string>
     <string name="modem_cell_unlocked">Блокування соти знято.</string>
     <string name="modem_plmn_locked">Мережу заблоковано.</string>

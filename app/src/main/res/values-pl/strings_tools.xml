@@ -47,7 +47,7 @@
     <string name="tools_network">Sieć</string>
     <string name="tools_network_sim">Sieć na SIM %1$d</string>
     <string name="tools_ca">Agregacja pasm (CA)</string>
-    <string name="tools_ca_hint">Łączy kilka nośnych LTE, żeby zwiększyć prędkość. Po wyłączeniu telefon używa jednej nośnej naraz.</string>
+    <string name="tools_ca_hint">Łączy kilka nośnych LTE, żeby zwiększyć prędkość. Po wyłączeniu telefon używa jednej nośnej naraz. Po zmianie modem uruchomi się ponownie.</string>
     <string name="tools_volte_hint">Połączenia głosowe przez 4G, bez przełączania na 2G lub 3G.</string>
     <string name="tools_vowifi_hint">Połączenia głosowe przez Wi-Fi, gdy zasięg sieci komórkowej jest słaby.</string>
     <string name="tools_ims_unknown">Android nie podaje tego ustawienia dla tej karty SIM.</string>

@@ -47,7 +47,7 @@
     <string name="tools_network">Сеть</string>
     <string name="tools_network_sim">Сеть на SIM %1$d</string>
     <string name="tools_ca">Агрегация частот (CA)</string>
-    <string name="tools_ca_hint">Объединяет несколько несущих LTE для большей скорости. Если выключить, телефон использует одну несущую.</string>
+    <string name="tools_ca_hint">Объединяет несколько несущих LTE для большей скорости. Если выключить, телефон использует одну несущую. После изменения модем перезагрузится.</string>
     <string name="tools_volte_hint">Звонки идут через 4G, без перехода на 2G или 3G.</string>
     <string name="tools_vowifi_hint">Звонки идут через Wi-Fi, когда мобильный сигнал слабый.</string>
     <string name="tools_ims_unknown">Android не сообщает значение этой настройки для этой SIM.</string>

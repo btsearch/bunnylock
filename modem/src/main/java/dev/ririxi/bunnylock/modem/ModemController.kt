@@ -1711,8 +1711,7 @@ class ModemController(
         done: Text,
     ): Text? {
         val subscriptionId = subId()
-        // A modem without 5G never reads the 5G bit back, so asking for it would look like a refusal.
-        val mask = if (current.supports5g) requested else requested and Masks.G5.inv()
+        val mask = requested and current.missingGenerations.inv()
         if (mask and Masks.GENERATIONS == 0L) fail(R.string.modem_last_network)
         var setThroughAndroid = true
         val result =
@@ -1887,16 +1886,18 @@ class ModemController(
         }
     }
 
-    suspend fun setCarrierAggregation(enabled: Boolean) =
-        change(
-            Text(if (enabled) R.string.modem_goal_ca_on else R.string.modem_goal_ca_off),
-            Text(if (enabled) R.string.modem_ca_on else R.string.modem_ca_off),
-        ) {
+    suspend fun setCarrierAggregation(enabled: Boolean): String {
+        val done = Text(if (enabled) R.string.modem_ca_on else R.string.modem_ca_off)
+        return change(Text(if (enabled) R.string.modem_goal_ca_on else R.string.modem_goal_ca_off), done) {
             if (current.backend != Backend.MEDIATEK) fail(R.string.modem_no_ca_control)
             val result = callMediatek("mtk.setCa") { put("enabled", enabled) }
             updateState { copy(carrierAggregation = result.optBoolean("ca", enabled)) }
-            null
+            // MediaTek modems only apply AT+ECASW after they restart.
+            val restart = runSuspendCatching { restartModem() }
+            restart.exceptionOrNull()?.let { return@change done.followedBy(Text(R.string.modem_ca_restart_failed, reasonOf(it))) }
+            done.followedBy(restart.getOrNull() ?: Text(R.string.modem_rebooting))
         }
+    }
 
     suspend fun lockCells(request: CellLockRequest) =
         change(Text(R.string.modem_goal_lock_cell), Text(R.string.modem_cell_locked)) {
@@ -2219,23 +2220,24 @@ class ModemController(
         if (held.isNotEmpty()) setChannels(JSONArray(held))
     }
 
-    suspend fun rebootModem() =
-        change(Text(R.string.modem_goal_reboot), Text(R.string.modem_rebooting)) {
-            if (!current.limited && current.device?.qrtr == true) {
-                helper.call("qc.reboot", 60.seconds)
-                return@change null
-            }
-            val result =
-                helper.call("aosp.rebootModem", 30.seconds) {
-                    put("sim", current.sim)
-                    put("subId", subId())
-                    put("slot", current.sim - 1)
-                }
-            if (result.optString("method") != "radio") return@change null
-            val rebootError = result.optText("rebootError")?.let(::inEnglish).orEmpty()
-            log("Modem reboot fallback: $rebootError; api=${result.optString("api")}")
-            Text(R.string.modem_note_reboot_radio)
+    suspend fun rebootModem() = change(Text(R.string.modem_goal_reboot), Text(R.string.modem_rebooting)) { restartModem() }
+
+    private suspend fun restartModem(): Text? {
+        if (!current.limited && current.device?.qrtr == true) {
+            helper.call("qc.reboot", 60.seconds)
+            return null
         }
+        val result =
+            helper.call("aosp.rebootModem", 30.seconds) {
+                put("sim", current.sim)
+                put("subId", subId())
+                put("slot", current.sim - 1)
+            }
+        if (result.optString("method") != "radio") return null
+        val rebootError = result.optText("rebootError")?.let(::inEnglish).orEmpty()
+        log("Modem reboot fallback: $rebootError; api=${result.optString("api")}")
+        return Text(R.string.modem_note_reboot_radio)
+    }
 
     suspend fun samsungMenu() =
         change(Text(R.string.modem_goal_samsung_menu), Text(R.string.modem_samsung_menu_opened)) {

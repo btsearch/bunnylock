@@ -47,7 +47,7 @@
     <string name="tools_network">Мережа</string>
     <string name="tools_network_sim">Мережа на SIM %1$d</string>
     <string name="tools_ca">Агрегація частот (CA)</string>
-    <string name="tools_ca_hint">Об\'єднує кілька несучих LTE для більшої швидкості. Якщо вимкнути, телефон використовує одну несучу.</string>
+    <string name="tools_ca_hint">Об\'єднує кілька несучих LTE для більшої швидкості. Якщо вимкнути, телефон використовує одну несучу. Після зміни модем перезавантажиться.</string>
     <string name="tools_volte_hint">Дзвінки йдуть через 4G, без переходу на 2G або 3G.</string>
     <string name="tools_vowifi_hint">Дзвінки йдуть через Wi-Fi, коли мобільний сигнал слабкий.</string>
     <string name="tools_ims_unknown">Android не повідомляє значення цього налаштування для цієї SIM.</string>

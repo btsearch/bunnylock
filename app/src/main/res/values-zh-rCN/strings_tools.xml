@@ -47,7 +47,7 @@
     <string name="tools_network">网络</string>
     <string name="tools_network_sim">SIM %1$d 网络</string>
     <string name="tools_ca">载波聚合（CA）</string>
-    <string name="tools_ca_hint">合并多个 LTE 载波以提升速度。关闭后手机一次只使用一个载波。</string>
+    <string name="tools_ca_hint">合并多个 LTE 载波以提升速度。关闭后手机一次只使用一个载波。更改后基带会重启。</string>
     <string name="tools_volte_hint">通过 4G 通话，不回落到 2G 或 3G。</string>
     <string name="tools_vowifi_hint">移动信号弱时通过 Wi-Fi 通话。</string>
     <string name="tools_ims_unknown">Android 未提供此 SIM 的这项设置。</string>

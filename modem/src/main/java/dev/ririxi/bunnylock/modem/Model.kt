@@ -98,10 +98,14 @@ enum class NetMode(
          * The mode [mask] stands for, going by which of 2G, 3G, 4G and 5G it allows. A modem drops the network types
          * it lacks (TD-SCDMA or CDMA, say) from the mask it was given, so the bits themselves rarely match.
          */
-        fun of(mask: Long?): NetMode? {
+        fun of(
+            mask: Long?,
+            among: List<NetMode> = entries,
+            ignoring: Long = 0L,
+        ): NetMode? {
             mask ?: return null
-            val generations = listOf(Masks.G2, Masks.G3, Masks.G4, Masks.G5)
-            return entries.firstOrNull { mode -> generations.all { (mode.mask and it != 0L) == (mask and it != 0L) } }
+            val generations = listOf(Masks.G2, Masks.G3, Masks.G4, Masks.G5).filter { it and ignoring == 0L }
+            return among.firstOrNull { mode -> generations.all { (mode.mask and it != 0L) == (mask and it != 0L) } }
         }
     }
 }
@@ -423,11 +427,22 @@ data class ModemState(
             return types and Masks.G4 == 0L || types and Masks.G5 != 0L || groups.any { it.group.isNr }
         }
 
+    /** Generations the radio reports it lacks, e.g. 2G on a tablet without GSM. Android drops them from any mask it's given. */
+    val missingGenerations: Long
+        get() {
+            val types = supportedTypes?.takeIf { it and Masks.G4 != 0L } ?: return 0L
+            val missing = listOf(Masks.G2, Masks.G3).filter { types and it == 0L }.fold(0L, Long::or)
+            return if (supports5g) missing else missing or Masks.G5
+        }
+
     val netModes: List<NetMode>
-        get() = if (supports5g) NetMode.entries else NetMode.entries.filter { it.mask and Masks.G5 == 0L } - NetMode.NO_NR
+        get() {
+            val modes = if (supports5g) NetMode.entries else NetMode.entries.filter { it.mask and Masks.G5 == 0L } - NetMode.NO_NR
+            return modes.filter { it.mask and Masks.GENERATIONS and missingGenerations.inv() != 0L }
+        }
 
     val netMode: NetMode?
-        get() = NetMode.of(allowedMask).let { if (it == NetMode.NO_NR && !supports5g) NetMode.AUTO else it }
+        get() = NetMode.of(allowedMask, netModes, missingGenerations)
 
     fun isOff(group: Group) = allowedMask?.let { it and group.generation == 0L } == true
 
