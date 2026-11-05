@@ -9,6 +9,8 @@
     <string name="tools_bands">Blokada pasm</string>
     <string name="tools_exclusive_lock">Wyłączaj sieci bez blokady</string>
     <string name="tools_exclusive_lock_hint">Blokada pasm wyłącza każdą sieć bez własnej blokady. Odblokowanie włącza je ponownie.</string>
+    <string name="tools_forget_needs_channels">Wróć do blokad samych pasm</string>
+    <string name="tools_forget_needs_channels_hint">Na tym telefonie blokady pasm zawierają widoczne częstotliwości, bo blokada samych pasm wcześniej tu nie zadziałała. Stuknij, żeby przy następnej blokadzie aplikacja najpierw spróbowała samych pasm.</string>
     <string name="tools_dynamic_color">Dynamiczne kolory</string>
     <string name="tools_dynamic_color_hint">Kolory z tapety. Po wyłączeniu aplikacja używa domyślnego niebieskiego motywu.</string>
 
@@ -61,6 +63,8 @@
     <string name="tools_absent">Brak</string>
 
     <string name="tools_log">Log</string>
+    <string name="tools_save_log">Zapisz</string>
+    <string name="tools_save_log_description">Zapisz log</string>
 
     <string name="tools_about">O aplikacji</string>
     <string name="tools_author">od @ririxi, twórcy BTSearch.pl</string>

@@ -4,6 +4,7 @@
     <string name="shell_tab_cell">Сота</string>
     <string name="shell_tab_tools">Інструменти</string>
     <string name="shell_refresh">Оновити</string>
+    <string name="shell_stop_waiting">Не чекати</string>
     <string name="shell_denied_title">Потрібен root або Shizuku</string>
     <string name="shell_try_again">Спробувати ще раз</string>
     <string name="shell_subtitle_default">Блокування діапазонів і сот</string>

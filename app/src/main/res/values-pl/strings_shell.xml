@@ -4,6 +4,7 @@
     <string name="shell_tab_cell">Wymuszanie</string>
     <string name="shell_tab_tools">Narzędzia</string>
     <string name="shell_refresh">Odśwież</string>
+    <string name="shell_stop_waiting">Przestań czekać</string>
     <string name="shell_denied_title">Potrzebny root lub Shizuku</string>
     <string name="shell_try_again">Spróbuj ponownie</string>
     <string name="shell_subtitle_default">Blokada pasm i komórek</string>

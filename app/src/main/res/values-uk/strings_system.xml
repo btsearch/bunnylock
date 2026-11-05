@@ -14,6 +14,8 @@
     <string name="system_qmi_replied">Надіслано повідомлення 0x%1$04X. Модем відповів: %2$s.</string>
     <string name="system_clip_label_diagnostics">діагностика bunnylock</string>
     <string name="system_diagnostics_copied">Діагностику скопійовано в буфер обміну.</string>
+    <string name="system_log_saved">Журнал збережено.</string>
+    <string name="system_log_not_saved">Не вдалося зберегти журнал.</string>
 
     <string name="system_shizuku_step_root">Запит root-доступу…</string>
     <string name="system_shizuku_step_looking">Пошук Shizuku…</string>

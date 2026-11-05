@@ -9,6 +9,8 @@
     <string name="tools_bands">Band locks</string>
     <string name="tools_exclusive_lock">Turn off networks without a lock</string>
     <string name="tools_exclusive_lock_hint">Locking bands turns off every network without a band lock of its own. Unlocking turns them back on.</string>
+    <string name="tools_forget_needs_channels">Go back to bands-only locks</string>
+    <string name="tools_forget_needs_channels_hint">Band locks on this phone include the visible frequencies, since a bands-only lock didn\'t work here before. Tap to try the bands alone first on the next lock.</string>
     <string name="tools_dynamic_color">Dynamic color</string>
     <string name="tools_dynamic_color_hint">Use your wallpaper colors. Off uses the default blue theme.</string>
 
@@ -66,6 +68,8 @@
     <string name="tools_absent">Absent</string>
 
     <string name="tools_log">Log</string>
+    <string name="tools_save_log">Save</string>
+    <string name="tools_save_log_description">Save log</string>
 
     <string name="tools_about">About</string>
     <string name="tools_author">by @ririxi (BTSearch.pl developer)</string>

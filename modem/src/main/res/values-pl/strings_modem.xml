@@ -6,7 +6,7 @@
     <string name="modem_root_denied">Odmówiono dostępu roota.</string>
     <string name="modem_sim">SIM %1$d</string>
     <string name="modem_no_mtk_port">Żaden port AT MediaTeka nie odpowiedział. Wybierz go ręcznie w zakładce „Narzędzia”.</string>
-    <string name="modem_lock_unanswered">Radio nie odpowiedziało, więc pewnie nie obsługuje blokad przez HAL radia w Androidzie.</string>
+    <string name="modem_lock_unanswered">Radio nie odpowiedziało, więc pewnie nie obsługuje blokad przez radio HAL w Androidzie.</string>
 
     <string name="modem_goal_refresh">odświeżyć</string>
     <string name="modem_goal_lock_bands">zablokować pasm %1$s</string>
@@ -78,6 +78,9 @@
     <string name="modem_note_band_lock_ignored">Android przyjął blokadę %1$s, ale telefon nadal siedzi na %2$s. Wygląda na to, że ten modem ignoruje blokady pasm wysłane w ten sposób.</string>
     <string name="modem_note_samsung_menu_hint">Zamiast tego może zadziałać menu pasm Samsunga w zakładce „Pasma”.</string>
     <string name="modem_needs_visible_cell">Żeby zablokować wybrane pasma %1$s, ten telefon musi widzieć na nich jakąś komórkę. Odśwież listę komórek i spróbuj ponownie.</string>
+    <string name="modem_blind_lock_reverted">Telefon nie znalazł żadnej komórki na wybranych pasmach, więc aplikacja przywróciła poprzednie pasma.</string>
+    <string name="modem_blind_lock_restore_failed">Telefon nie znalazł żadnej komórki na wybranych pasmach, a aplikacji nie udało się przywrócić poprzednich pasm. Użyj „Odblokuj wszystko”, żeby odzyskać zasięg.</string>
+    <string name="modem_blind_lock_searching">Na wybranych pasmach %1$s nie widać żadnej komórki, więc telefon musi jej poszukać. To może potrwać minutę lub dwie.</string>
 
     <string name="modem_note_set_by_at">Android go odrzucił, więc aplikacja ustawiła go bezpośrednio w modemie. Działa do restartu telefonu.</string>
     <string name="modem_note_mode_airplane">Modem zmienia tryb tylko przy wyłączonym radiu, więc na chwilę włączył się tryb samolotowy.</string>
@@ -96,13 +99,13 @@
     <string name="modem_unknown_nr_arfcn">ARFCN %1$d nie należy do żadnego znanego pasma NR.</string>
     <string name="modem_note_band_only">Oprogramowanie radiowe tego telefonu nie przyjmuje blokad kanałów, więc zablokowano tylko pasmo (%1$s).</string>
     <string name="modem_note_cell_lock_ignored">Android przyjął blokadę komórki, ale telefon nadal siedzi na %1$s. Wygląda na to, że ten modem ignoruje blokady częstotliwości wysłane w ten sposób.</string>
-    <string name="modem_note_frequency_only">Zablokowano tylko częstotliwość. HAL radia nie potrafi zablokować PCI.</string>
+    <string name="modem_note_frequency_only">Zablokowano tylko częstotliwość. radio HAL nie potrafi zablokować PCI.</string>
 
     <string name="modem_mcc_digits">MCC musi mieć 3 cyfry.</string>
     <string name="modem_mnc_digits">MNC musi mieć 2 lub 3 cyfry.</string>
 
     <string name="modem_note_reattach_radio">Modem nie chciał ponownie podłączyć się do sieci, więc zamiast tego zrestartowano radio SIM %1$d. Powód: %2$s</string>
-    <string name="modem_note_reboot_radio">HAL radia nie zrestartował modemu, więc zamiast tego zrestartowano radio komórkowe.</string>
+    <string name="modem_note_reboot_radio">Radio HAL nie zrestartował modemu, więc zamiast tego zrestartowano radio komórkowe.</string>
 
     <string name="modem_helper_start_failed">%1$s nie uruchomił się.</string>
     <string name="modem_helper_start_timed_out">%1$s nie uruchomił się na czas.</string>

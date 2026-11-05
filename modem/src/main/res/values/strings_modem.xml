@@ -78,6 +78,9 @@
     <string name="modem_note_band_lock_ignored">Android accepted the %1$s lock, but the phone is still on %2$s. This modem doesn\'t seem to follow band locks sent this way.</string>
     <string name="modem_note_samsung_menu_hint">Samsung\'s own band menu on the Bands screen may work instead.</string>
     <string name="modem_needs_visible_cell">This phone needs a visible cell on the selected %1$s bands to lock them. Refresh the cell list and try again.</string>
+    <string name="modem_blind_lock_reverted">The phone found no cell on the selected bands, so bunnylock went back to the previous bands.</string>
+    <string name="modem_blind_lock_restore_failed">The phone found no cell on the selected bands, and bunnylock couldn\'t go back to the previous bands. Use Unlock all to get service back.</string>
+    <string name="modem_blind_lock_searching">No cell is visible on the selected %1$s bands, so the phone has to search for one. This can take a minute or two.</string>
 
     <string name="modem_note_set_by_at">Android refused it, so bunnylock set it on the modem directly. It lasts until the phone restarts.</string>
     <string name="modem_note_mode_airplane">The modem only switches modes with the radio off, so airplane mode came on for a moment.</string>

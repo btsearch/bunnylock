@@ -9,6 +9,8 @@
     <string name="tools_bands">Блокування діапазонів</string>
     <string name="tools_exclusive_lock">Вимикати мережі без блокування</string>
     <string name="tools_exclusive_lock_hint">Блокування діапазонів вимикає всі мережі, які не мають власного блокування діапазонів. Розблокування вмикає їх знову.</string>
+    <string name="tools_forget_needs_channels">Повернутися до блокування лише діапазонів</string>
+    <string name="tools_forget_needs_channels_hint">На цьому телефоні до блокування діапазонів додаються видимі частоти, бо блокування лише діапазонів тут раніше не спрацювало. Торкніться, щоб під час наступного блокування bunnylock спершу спробував обійтися без частот.</string>
     <string name="tools_dynamic_color">Динамічні кольори</string>
     <string name="tools_dynamic_color_hint">Використовувати кольори шпалер. Коли вимкнено, використовується стандартна синя тема.</string>
 
@@ -61,6 +63,8 @@
     <string name="tools_absent">Немає</string>
 
     <string name="tools_log">Журнал</string>
+    <string name="tools_save_log">Зберегти</string>
+    <string name="tools_save_log_description">Зберегти журнал</string>
 
     <string name="tools_about">Про застосунок</string>
     <string name="tools_author">Автор: @ririxi (розробник BTSearch.pl)</string>

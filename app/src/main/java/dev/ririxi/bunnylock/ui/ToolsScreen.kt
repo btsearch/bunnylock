@@ -3,6 +3,8 @@
 package dev.ririxi.bunnylock.ui
 
 import androidx.activity.compose.LocalActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
@@ -51,6 +53,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import dev.ririxi.bunnylock.R
@@ -60,6 +64,8 @@ import dev.ririxi.bunnylock.modem.DeviceInfo
 import dev.ririxi.bunnylock.modem.andList
 import dev.ririxi.bunnylock.modem.string
 import dev.ririxi.bunnylock.ui.theme.dynamicColorAvailable
+
+private const val LOG_MIME_TYPE = "text/x-log"
 
 private val AT_COMMAND_PRESETS = listOf("ATI", "AT+EPBSE?", "AT+EPBSEH?", "AT+EMMCHLCK?", "AT+GOOGGETNV=\"NR.CONFIG.MODE\"")
 
@@ -76,6 +82,7 @@ fun ToolsScreen(
     var qmiPayload by rememberSaveable { mutableStateOf("") }
     var checkedServicesOpen by rememberSaveable { mutableStateOf(false) }
     val arrowAngle by animateFloatAsState(if (checkedServicesOpen) 180f else 0f, label = "arrow")
+    val saveLog = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(LOG_MIME_TYPE)) { uri -> uri?.let(vm::saveLog) }
 
     LazyColumn(contentPadding = contentPadding.withScreenMargins(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
@@ -127,6 +134,18 @@ fun ToolsScreen(
                         checked = state.exclusiveBandLock,
                         onCheckedChange = vm::setExclusiveBandLock,
                     )
+                }
+                if (state.modem.halNeedsChannels && state.modem.backend == Backend.ANDROID) {
+                    item {
+                        ActionItem(
+                            it,
+                            stringResource(R.string.tools_forget_needs_channels),
+                            stringResource(R.string.tools_forget_needs_channels_hint),
+                            Icons.Rounded.Refresh,
+                            enabled = !state.busy,
+                            onClick = vm::forgetNeedsChannels,
+                        )
+                    }
                 }
             }
         }
@@ -375,7 +394,14 @@ fun ToolsScreen(
 
         if (state.modem.log.isNotEmpty()) {
             item {
-                SectionHeader(stringResource(R.string.tools_log))
+                Row(Modifier.fillMaxWidth()) {
+                    SectionHeader(stringResource(R.string.tools_log), Modifier.weight(1f))
+                    val saveLogDescription = stringResource(R.string.tools_save_log_description)
+                    TextButton(
+                        onClick = { saveLog.launch(vm.logFileName()) },
+                        modifier = Modifier.semantics { contentDescription = saveLogDescription },
+                    ) { Text(stringResource(R.string.tools_save_log)) }
+                }
                 MonospacePanel(state.modem.log.joinToString("\n"))
             }
         }

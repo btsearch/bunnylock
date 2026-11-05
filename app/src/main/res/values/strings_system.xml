@@ -14,6 +14,8 @@
     <string name="system_qmi_replied">Sent message 0x%1$04X. The modem replied: %2$s.</string>
     <string name="system_clip_label_diagnostics">bunnylock diagnostics</string>
     <string name="system_diagnostics_copied">Diagnostics copied to the clipboard.</string>
+    <string name="system_log_saved">Log saved.</string>
+    <string name="system_log_not_saved">Couldn\'t save the log.</string>
 
     <string name="system_shizuku_step_root">Asking for root access…</string>
     <string name="system_shizuku_step_looking">Looking for Shizuku…</string>

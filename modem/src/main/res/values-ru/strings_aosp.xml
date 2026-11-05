@@ -38,6 +38,7 @@
 
     <string name="samsung_no_nr_mode">На этом телефоне нет управления режимом 5G от Samsung.</string>
     <string name="samsung_nr_mode_refused">Телефонная служба Samsung не приняла этот режим 5G.</string>
+    <string name="samsung_nr_mode_data_sim_only">На этом телефоне режим 5G от Samsung можно изменить только на SIM-карте для мобильных данных. Сначала переключите мобильные данные на эту SIM-карту.</string>
 
     <string name="server_unknown_subscription">Эта SIM-карта не найдена среди активных.</string>
     <string name="server_unknown_command">Неизвестная команда: %1$s.</string>

@@ -4,6 +4,7 @@
     <string name="shell_tab_cell">Cell lock</string>
     <string name="shell_tab_tools">Tools</string>
     <string name="shell_refresh">Refresh</string>
+    <string name="shell_stop_waiting">Stop waiting</string>
     <string name="shell_denied_title">Root or Shizuku needed</string>
     <string name="shell_try_again">Try again</string>
     <string name="shell_subtitle_default">Band and cell locking</string>

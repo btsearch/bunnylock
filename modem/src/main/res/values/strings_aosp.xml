@@ -38,6 +38,7 @@
 
     <string name="samsung_no_nr_mode">This phone doesn\'t have Samsung\'s 5G mode control.</string>
     <string name="samsung_nr_mode_refused">Samsung\'s telephony service didn\'t accept that 5G mode.</string>
+    <string name="samsung_nr_mode_data_sim_only">On this phone, Samsung\'s 5G mode can only be changed on the mobile data SIM. Switch mobile data to this SIM first.</string>
 
     <string name="server_unknown_subscription">This SIM\'s subscription isn\'t known.</string>
     <string name="server_unknown_command">Unknown command: %1$s.</string>

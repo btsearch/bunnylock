@@ -78,6 +78,9 @@
     <string name="modem_note_band_lock_ignored">Android 已接受 %1$s 锁定，但手机仍驻留在 %2$s。这个基带似乎不理会以这种方式下发的锁频段。</string>
     <string name="modem_note_samsung_menu_hint">可以试试“频段”页面里三星自带的频段菜单。</string>
     <string name="modem_needs_visible_cell">这台手机需要在所选的 %1$s 频段上看到小区才能锁定。请刷新小区列表后重试。</string>
+    <string name="modem_blind_lock_reverted">手机在所选频段上没有找到小区，因此 bunnylock 已恢复之前的频段设置。</string>
+    <string name="modem_blind_lock_restore_failed">手机在所选频段上没有找到小区，而且 bunnylock 没能恢复之前的频段设置。请使用“全部解锁”恢复信号。</string>
+    <string name="modem_blind_lock_searching">所选的 %1$s 频段上看不到小区，因此手机需要搜索小区。这可能要一两分钟。</string>
 
     <string name="modem_note_set_by_at">Android 拒绝了该设置，因此 bunnylock 直接在基带上设置，重启手机后失效。</string>
     <string name="modem_note_mode_airplane">这个基带只能在关闭射频时切换模式，因此短暂开启了飞行模式。</string>

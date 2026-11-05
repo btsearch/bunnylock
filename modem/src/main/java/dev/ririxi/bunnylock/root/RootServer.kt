@@ -89,6 +89,8 @@ object RootServer {
 
     private fun JSONObject.intOrNull(key: String): Int? = if (isPresent(key)) getInt(key) else null
 
+    private fun JSONObject.dataSubId(): Int = optInt("dataSubId", SubscriptionManager.INVALID_SUBSCRIPTION_ID)
+
     private fun handle(request: JSONObject): Any? {
         val sim = request.optInt("sim", 1)
         val simSlot = sim - 1
@@ -201,9 +203,9 @@ object RootServer {
 
             "samsung.menu" -> Sys.openSamsungMenu()
 
-            "samsung.nrMode" -> Samsung.nrMode(simSlot)
+            "samsung.nrMode" -> Samsung.nrMode(simSlot, subId, request.dataSubId())
 
-            "samsung.setNrMode" -> Samsung.setNrMode(simSlot, request.getInt("mode"))
+            "samsung.setNrMode" -> Samsung.setNrMode(simSlot, subId, request.dataSubId(), request.getInt("mode"))
 
             "at" -> {
                 val timeoutMs = request.optInt("timeout", DEFAULT_AT_TIMEOUT_MS)

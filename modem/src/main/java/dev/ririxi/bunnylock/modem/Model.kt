@@ -340,6 +340,8 @@ data class ModemState(
     val homePlmn: String? = null,
     val homeName: String? = null,
     val persist: Boolean = true,
+    val halNeedsChannels: Boolean = false,
+    val settling: Boolean = false,
     val atNode: String = "",
     val log: List<String> = emptyList(),
 ) {

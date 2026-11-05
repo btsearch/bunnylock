@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dev.ririxi.bunnylock.R
@@ -31,6 +32,7 @@ import dev.ririxi.bunnylock.shizuku.RootOrShizuku
 import dev.ririxi.bunnylock.shizuku.ShizukuClient
 import dev.ririxi.bunnylock.shizuku.samsung.SamsungBandMenu
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,6 +41,10 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 private const val MAX_TOOL_OUTPUT_CHARS = 8000
 
@@ -212,6 +218,10 @@ class MainViewModel(
     }
 
     fun setPersist(enabled: Boolean) = modem.setPersist(enabled)
+
+    fun forgetNeedsChannels() = modem.forgetNeedsChannels()
+
+    fun stopWaiting() = modem.stopWaiting()
 
     fun setExclusiveBandLock(enabled: Boolean) {
         prefs.edit().putBoolean(EXCLUSIVE_BAND_LOCK_KEY, enabled).apply()
@@ -411,13 +421,28 @@ class MainViewModel(
 
     fun clearOutput() = updateState { copy(toolOutput = "") }
 
-    fun copyDiagnostics() {
+    private fun diagnostics(): String {
         val title = listOfNotNull("bunnylock", appVersion(), "diagnostics").joinToString(" ")
-        val text = modem.diagnostics(title, listOf("Shizuku: ${ShizukuClient.describe(app)}"))
+        return modem.diagnostics(title, listOf("Shizuku: ${ShizukuClient.describe(app)}"))
+    }
+
+    fun copyDiagnostics() {
         val clipboard = app.getSystemService(ClipboardManager::class.java)
         // Kotlin sees primaryClip as read-only because its getter is nullable and its setter isn't.
         @Suppress("UsePropertyAccessSyntax")
-        clipboard.setPrimaryClip(ClipData.newPlainText(app.getString(R.string.system_clip_label_diagnostics), text))
+        clipboard.setPrimaryClip(ClipData.newPlainText(app.getString(R.string.system_clip_label_diagnostics), diagnostics()))
         _events.tryEmit(app.getString(R.string.system_diagnostics_copied))
     }
+
+    fun logFileName(): String = "bunnylock-${SimpleDateFormat("yyyy-MM-dd-HHmmss", Locale.US).format(Date())}.log"
+
+    fun saveLog(uri: Uri) =
+        viewModelScope.launch {
+            val saved =
+                withContext(Dispatchers.IO) {
+                    val text = diagnostics()
+                    runCatching { checkNotNull(app.contentResolver.openOutputStream(uri, "wt")).use { it.write(text.toByteArray()) } }.isSuccess
+                }
+            _events.emit(app.getString(if (saved) R.string.system_log_saved else R.string.system_log_not_saved))
+        }
 }

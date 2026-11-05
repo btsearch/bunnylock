@@ -10,7 +10,7 @@
     <string name="bands_hint_mediatek">Zmiany idą komendami AT+EPBSE i AT+EPBSEH przez port %1$s.</string>
     <string name="bands_hint_mediatek_auto">Zmiany idą komendami AT+EPBSE i AT+EPBSEH przez automatycznie wykryty port AT.</string>
     <string name="bands_hint_pixel">Zmiany trafiają do pamięci NV modemu, a radio samo się restartuje, żeby je zastosować.</string>
-    <string name="bands_hint_android">Blokada idzie przez kanały wyboru systemu w HAL radia. Czy modem jej posłucha, zależy od producenta telefonu.</string>
+    <string name="bands_hint_android">Blokada idzie przez kanały wyboru systemu w radio HAL. Czy modem jej posłucha, zależy od producenta telefonu.</string>
     <string name="bands_summary">Wybrano %1$d z %2$d</string>
     <string name="bands_summary_pending">Wybrano %1$d z %2$d, zmiany jeszcze niezastosowane</string>
     <string name="bands_summary_locked">Wybrano %1$d z %2$d, blokada aktywna</string>

@@ -9,6 +9,8 @@
     <string name="tools_bands">Блокировка диапазонов</string>
     <string name="tools_exclusive_lock">Отключать сети без блокировки</string>
     <string name="tools_exclusive_lock_hint">Блокировка диапазонов отключает все сети, у которых нет собственной блокировки диапазонов. При разблокировке они включаются снова.</string>
+    <string name="tools_forget_needs_channels">Вернуться к блокировке только диапазонов</string>
+    <string name="tools_forget_needs_channels_hint">На этом телефоне в блокировку диапазонов добавляются видимые частоты, потому что блокировка только диапазонов здесь раньше не сработала. Нажмите, чтобы при следующей блокировке bunnylock сначала попробовал обойтись без частот.</string>
     <string name="tools_dynamic_color">Динамические цвета</string>
     <string name="tools_dynamic_color_hint">Использовать цвета обоев. Если выключено, используется стандартная синяя тема.</string>
 
@@ -61,6 +63,8 @@
     <string name="tools_absent">Нет</string>
 
     <string name="tools_log">Журнал</string>
+    <string name="tools_save_log">Сохранить</string>
+    <string name="tools_save_log_description">Сохранить журнал</string>
 
     <string name="tools_about">О приложении</string>
     <string name="tools_author">Автор: @ririxi (разработчик BTSearch.pl)</string>

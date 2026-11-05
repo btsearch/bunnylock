@@ -116,6 +116,9 @@ fun BunnyApp(vm: MainViewModel) {
                 title = { Wordmark() },
                 subtitle = { Text(topBarSubtitle(state)) },
                 actions = {
+                    if (state.modem.settling) {
+                        TextButton(onClick = vm::stopWaiting, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.shell_stop_waiting)) }
+                    }
                     if (state.modem.sims.size > 1) {
                         SimChip(state.modem.sims, state.modem.sim, enabled = !state.busy, onSelect = vm::setSim)
                     }

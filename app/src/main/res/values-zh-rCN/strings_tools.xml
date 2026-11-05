@@ -9,6 +9,8 @@
     <string name="tools_bands">频段锁定</string>
     <string name="tools_exclusive_lock">关闭未锁定的网络</string>
     <string name="tools_exclusive_lock_hint">锁定频段时，会关闭所有没有单独锁定频段的网络。解锁后会重新开启。</string>
+    <string name="tools_forget_needs_channels">改回只锁频段</string>
+    <string name="tools_forget_needs_channels_hint">之前在这台手机上只锁频段没有成功，因此锁频段时会附带可见频点。点击后，下次锁定时 bunnylock 会先尝试只锁频段。</string>
     <string name="tools_dynamic_color">动态取色</string>
     <string name="tools_dynamic_color_hint">跟随壁纸配色。关闭则使用默认蓝色主题。</string>
 
@@ -61,6 +63,8 @@
     <string name="tools_absent">无</string>
 
     <string name="tools_log">日志</string>
+    <string name="tools_save_log">保存</string>
+    <string name="tools_save_log_description">保存日志</string>
 
     <string name="tools_about">关于</string>
     <string name="tools_author">作者 @ririxi（BTSearch.pl 开发者）</string>
