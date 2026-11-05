@@ -16,6 +16,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -405,7 +406,7 @@ private fun Tag(
     content: Color,
 ) {
     Surface(color = container, contentColor = content, shape = RoundedCornerShape(8.dp)) {
-        Text(text, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp))
+        Text(text, style = MaterialTheme.typography.labelSmall, maxLines = 1, softWrap = false, modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp))
     }
 }
 
@@ -469,7 +470,11 @@ private fun RadioRow(
     val trailing: @Composable () -> Unit = { rsrp?.let { SignalPill(it, rat) } }
     val supporting: (@Composable () -> Unit)? = if (details.isEmpty()) null else ({ Text(details) })
     val content: @Composable () -> Unit = {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            itemVerticalAlignment = Alignment.CenterVertically,
+        ) {
             Text(title, style = MaterialTheme.typography.bodyLargeEmphasized)
             frequencyName?.let { Text(it, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant) }
             tag()
