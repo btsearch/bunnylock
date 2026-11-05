@@ -9,7 +9,7 @@
     <string name="system_notify_line_nr_cell">Komórka NR: %1$s</string>
     <string name="system_notify_line_legacy_cell">Komórka 2G/3G: %1$s</string>
 
-    <string name="system_helper_not_running">Proces pomocniczy nie działa, więc nic nie zmieniono. Łączenie ponownie…</string>
+    <string name="system_helper_not_running">Proces pomocniczy nie działa, więc nic nie zmieniono. Łączenie ponownie...</string>
     <string name="system_at_replied">Modem odpowiedział. Wynik jest poniżej.</string>
     <string name="system_qmi_replied">Wysłano komunikat 0x%1$04X. Odpowiedź modemu: %2$s.</string>
     <string name="system_clip_label_diagnostics">Dane diagnostyczne bunnylock</string>
@@ -17,9 +17,9 @@
     <string name="system_log_saved">Log zapisany.</string>
     <string name="system_log_not_saved">Nie udało się zapisać logu.</string>
 
-    <string name="system_shizuku_step_root">Prośba o dostęp roota…</string>
-    <string name="system_shizuku_step_looking">Szukanie Shizuku…</string>
-    <string name="system_shizuku_step_connecting">Łączenie z Shizuku. Jeśli pojawi się pytanie, zezwól na dostęp…</string>
+    <string name="system_shizuku_step_root">Prośba o dostęp roota...</string>
+    <string name="system_shizuku_step_looking">Szukanie Shizuku...</string>
+    <string name="system_shizuku_step_connecting">Łączenie z Shizuku. Jeśli pojawi się pytanie, zezwól na dostęp...</string>
 
     <string name="system_shizuku_root_failed">Brak dostępu roota: %1$s</string>
     <string name="system_shizuku_root_denied">Odmówiono dostępu roota.</string>

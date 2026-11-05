@@ -2,7 +2,7 @@
     <string name="modem_sentences">%1$s%2$s</string>
     <string name="modem_couldnt">无法%1$s。%2$s</string>
 
-    <string name="modem_connect_checking">正在检测本机基带支持哪些功能…</string>
+    <string name="modem_connect_checking">正在检测本机基带支持哪些功能...</string>
     <string name="modem_root_denied">Root 权限被拒绝。</string>
     <string name="modem_sim">SIM %1$d</string>
     <string name="modem_no_mtk_port">没有联发科 AT 端口响应。请在“工具”中手动选择一个。</string>

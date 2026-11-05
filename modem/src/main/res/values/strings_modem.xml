@@ -2,7 +2,7 @@
     <string name="modem_sentences">%1$s %2$s</string>
     <string name="modem_couldnt">Couldn\'t %1$s. %2$s</string>
 
-    <string name="modem_connect_checking">Checking what this phone\'s modem offers…</string>
+    <string name="modem_connect_checking">Checking what this phone\'s modem offers...</string>
     <string name="modem_root_denied">Root access was denied.</string>
     <string name="modem_sim">SIM %1$d</string>
     <string name="modem_no_mtk_port">No MediaTek AT port answered. Pick one in Tools.</string>

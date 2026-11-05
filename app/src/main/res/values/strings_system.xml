@@ -17,9 +17,9 @@
     <string name="system_log_saved">Log saved.</string>
     <string name="system_log_not_saved">Couldn\'t save the log.</string>
 
-    <string name="system_shizuku_step_root">Asking for root access…</string>
-    <string name="system_shizuku_step_looking">Looking for Shizuku…</string>
-    <string name="system_shizuku_step_connecting">Connecting to Shizuku. Allow bunnylock if it asks…</string>
+    <string name="system_shizuku_step_root">Asking for root access...</string>
+    <string name="system_shizuku_step_looking">Looking for Shizuku...</string>
+    <string name="system_shizuku_step_connecting">Connecting to Shizuku. Allow bunnylock if it asks...</string>
 
     <string name="system_shizuku_root_failed">No root access: %1$s</string>
     <string name="system_shizuku_root_denied">Root access was denied.</string>

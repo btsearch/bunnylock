@@ -9,7 +9,7 @@
     <string name="system_notify_line_nr_cell">NR 小区：%1$s</string>
     <string name="system_notify_line_legacy_cell">2G/3G 小区：%1$s</string>
 
-    <string name="system_helper_not_running">辅助进程未运行，没有做任何更改。正在重新连接…</string>
+    <string name="system_helper_not_running">辅助进程未运行，没有做任何更改。正在重新连接...</string>
     <string name="system_at_replied">基带已回复，结果见下方。</string>
     <string name="system_qmi_replied">已发送消息 0x%1$04X，基带回复：%2$s。</string>
     <string name="system_clip_label_diagnostics">bunnylock 诊断信息</string>
@@ -17,9 +17,9 @@
     <string name="system_log_saved">日志已保存。</string>
     <string name="system_log_not_saved">无法保存日志。</string>
 
-    <string name="system_shizuku_step_root">正在请求 Root 权限…</string>
-    <string name="system_shizuku_step_looking">正在查找 Shizuku…</string>
-    <string name="system_shizuku_step_connecting">正在连接 Shizuku，如有弹窗请允许 bunnylock…</string>
+    <string name="system_shizuku_step_root">正在请求 Root 权限...</string>
+    <string name="system_shizuku_step_looking">正在查找 Shizuku...</string>
+    <string name="system_shizuku_step_connecting">正在连接 Shizuku，如有弹窗请允许 bunnylock...</string>
 
     <string name="system_shizuku_root_failed">无法获取 Root 权限：%1$s</string>
     <string name="system_shizuku_root_denied">Root 权限被拒绝。</string>

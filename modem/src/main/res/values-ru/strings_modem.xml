@@ -2,7 +2,7 @@
     <string name="modem_sentences">%1$s %2$s</string>
     <string name="modem_couldnt">Не удалось %1$s. %2$s</string>
 
-    <string name="modem_connect_checking">Проверка возможностей модема этого телефона…</string>
+    <string name="modem_connect_checking">Проверка возможностей модема этого телефона...</string>
     <string name="modem_root_denied">В root-доступе отказано.</string>
     <string name="modem_sim">SIM %1$d</string>
     <string name="modem_no_mtk_port">Ни один порт AT MediaTek не ответил. Выберите его в разделе «Инструменты».</string>

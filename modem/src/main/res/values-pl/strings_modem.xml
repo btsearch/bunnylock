@@ -2,7 +2,7 @@
     <string name="modem_sentences">%1$s %2$s</string>
     <string name="modem_couldnt">Nie udało się %1$s. %2$s</string>
 
-    <string name="modem_connect_checking">Sprawdzanie, co potrafi modem tego telefonu…</string>
+    <string name="modem_connect_checking">Sprawdzanie, co potrafi modem tego telefonu...</string>
     <string name="modem_root_denied">Odmówiono dostępu roota.</string>
     <string name="modem_sim">SIM %1$d</string>
     <string name="modem_no_mtk_port">Żaden port AT MediaTeka nie odpowiedział. Wybierz go ręcznie w zakładce „Narzędzia”.</string>

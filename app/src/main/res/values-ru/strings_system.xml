@@ -9,7 +9,7 @@
     <string name="system_notify_line_nr_cell">Сота NR: %1$s</string>
     <string name="system_notify_line_legacy_cell">Сота 2G/3G: %1$s</string>
 
-    <string name="system_helper_not_running">Вспомогательный процесс не запущен, поэтому ничего не изменено. Повторное подключение…</string>
+    <string name="system_helper_not_running">Вспомогательный процесс не запущен, поэтому ничего не изменено. Повторное подключение...</string>
     <string name="system_at_replied">Модем ответил. Смотрите вывод ниже.</string>
     <string name="system_qmi_replied">Отправлено сообщение 0x%1$04X. Модем ответил: %2$s.</string>
     <string name="system_clip_label_diagnostics">диагностика bunnylock</string>
@@ -17,9 +17,9 @@
     <string name="system_log_saved">Журнал сохранён.</string>
     <string name="system_log_not_saved">Не удалось сохранить журнал.</string>
 
-    <string name="system_shizuku_step_root">Запрос root-доступа…</string>
-    <string name="system_shizuku_step_looking">Поиск Shizuku…</string>
-    <string name="system_shizuku_step_connecting">Подключение к Shizuku. Разрешите bunnylock, если появится запрос…</string>
+    <string name="system_shizuku_step_root">Запрос root-доступа...</string>
+    <string name="system_shizuku_step_looking">Поиск Shizuku...</string>
+    <string name="system_shizuku_step_connecting">Подключение к Shizuku. Разрешите bunnylock, если появится запрос...</string>
 
     <string name="system_shizuku_root_failed">Нет root-доступа: %1$s</string>
     <string name="system_shizuku_root_denied">В root-доступе отказано.</string>
