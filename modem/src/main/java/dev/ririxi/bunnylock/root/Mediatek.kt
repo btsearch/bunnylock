@@ -214,14 +214,14 @@ object Mediatek {
             else -> ERAT_PREFER_NONE
         }
 
-    /** A modem that already allows the same generations is left alone. */
+    /** A modem that already allows the same generations is left alone. One whose mode can't be read is set anyway. */
     fun setRat(
         node: String,
         mask: Long,
     ): JSONObject {
         val wanted = mask and GENERATIONS
-        val current = ratMask(node) ?: fail(R.string.mtk_no_network_mode)
-        if (current and GENERATIONS != wanted) {
+        val current = runCatching { ratMask(node) }.getOrNull()
+        if (current === null || current and GENERATIONS != wanted) {
             val rat = ERAT_MASKS.entries.firstOrNull { it.value == wanted }?.key ?: fail(R.string.mtk_erat_no_mode)
             At.ok(node, "AT+ERAT=$rat,${preferenceFor(wanted)}")
         }

@@ -4,7 +4,6 @@
     <string name="at_read_failed">Не удалось прочитать из %1$s (%2$s).</string>
     <string name="at_no_reply">Команда %1$s не получила ответа от %2$s.</string>
 
-    <string name="mtk_no_network_mode">Модем не сообщил свой режим сети.</string>
     <string name="mtk_erat_no_mode">Для такой комбинации в AT+ERAT нет режима.</string>
     <string name="mtk_ca_kept">Модем оставил прежнюю настройку.</string>
     <string name="mtk_epbse_unreadable">%1$s (%2$s ответил: %3$s).</string>
