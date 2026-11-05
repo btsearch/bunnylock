@@ -55,6 +55,7 @@ Without root, bunnylock runs through Shizuku. Some MediaTek phones allow AT comm
 | Samsung Galaxy S25 Ultra      |   16    | Root    | Qualcomm QMI      |  ✅  |  ✅   | ✅  | ✅  |                                                                                                           |
 | Samsung Galaxy S26 Ultra      |   17    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
 | Samsung Galaxy Z Fold 8 Ultra |   17    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
+| Samsung Galaxy Tab S10+ 5G    |   16    | Shizuku | Android radio HAL |  ❌  |  ❌   | ✅  | ❌  | Modem ignores everything except RAT                                                                       |
 | Sony Xperia 1 V               |   15    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
 | Sony Xperia 1 VII             |   16    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
 | Ulefone Note 6T               |   12    | Shizuku | MediaTek AT       |  ✅  |  ✅   | ✅  | ✅  |                                                                                                           |
