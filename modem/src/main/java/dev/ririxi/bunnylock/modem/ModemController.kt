@@ -1567,7 +1567,7 @@ class ModemController(
      * best answer; before one is saved, a multi-band mask is treated as that set. A one-band mask is normally an
      * earlier lock, so the captured RMX3511 default is used while bunnylock has nothing better.
      */
-    private fun unisocSupportedBands(current: List<Int>): List<Int> {
+    private fun unisocSupportedBands(currentBands: List<Int>): List<Int> {
         val saved =
             prefs.getString(unisocOriginalMaskKey(current.sim), null)
                 ?.let { UnisocLteMask.parse(it)?.bands() }
@@ -1575,7 +1575,7 @@ class ModemController(
         val bands =
             when {
                 saved.isNotEmpty() -> saved
-                current.size > 1 -> current
+                currentBands.size > 1 -> currentBands
                 else -> UNISOC_DEFAULT_LTE_MASK.bands()
             }
         return bands.filter { it in UNISOC_LTE_BANDS }.ifEmpty { UNISOC_LTE_BANDS }
