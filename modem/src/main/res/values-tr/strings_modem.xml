@@ -1,0 +1,133 @@
+<resources>
+    <string name="modem_sentences">%1$s %2$s</string>
+    <string name="modem_couldnt">%1$s yapılamadı. %2$s</string>
+
+    <string name="modem_connect_checking">Bu telefonun modeminin sunduğu özellikler kontrol ediliyor...</string>
+    <string name="modem_root_denied">Root erişimi reddedildi.</string>
+    <string name="modem_sim">SIM %1$d</string>
+    <string name="modem_no_mtk_port">Yanıt veren bir MediaTek AT portu bulunamadı. Araçlar bölümünden bir port seçin.</string>
+    <string name="modem_lock_unanswered">Radyo biriminden yanıt alınamadı. Bu nedenle Android'in radyo HAL'i üzerinden kilitleme desteği bulunmayabilir.</string>
+
+    <string name="modem_goal_refresh">yenilemek</string>
+    <string name="modem_goal_lock_bands">%1$s bantlarını kilitlemek</string>
+    <string name="modem_goal_unlock_bands">%1$s bantlarının kilidini açmak</string>
+    <string name="modem_goal_net_mode">şebeke modunu değiştirmek</string>
+    <string name="modem_goal_network_off">%1$s özelliğini kapatmak</string>
+    <string name="modem_goal_nr_mode">5G modunu %1$s olarak değiştirmek</string>
+    <string name="modem_goal_nr_dc_on">NSA'yı (EN-DC) etkinleştirmek</string>
+    <string name="modem_goal_nr_dc_off">NSA'yı (EN-DC) devre dışı bırakmak</string>
+    <string name="modem_goal_volte_on">VoLTE'yi etkinleştirmek</string>
+    <string name="modem_goal_volte_off">VoLTE'yi devre dışı bırakmak</string>
+    <string name="modem_goal_vowifi_on">VoWiFi'yi etkinleştirmek</string>
+    <string name="modem_goal_vowifi_off">VoWiFi'yi devre dışı bırakmak</string>
+    <string name="modem_goal_ca_on">Taşıyıcı birleştirmeyi etkinleştirmek</string>
+    <string name="modem_goal_ca_off">Taşıyıcı birleştirmeyi devre dışı bırakmak</string>
+    <string name="modem_goal_lock_cell">hücreyi kilitlemek</string>
+    <string name="modem_goal_unlock_cell">hücre kilidini kaldırmak</string>
+    <string name="modem_goal_lock_plmn">şebekeyi kilitlemek</string>
+    <string name="modem_goal_unlock_plmn">otomatik şebeke seçimine geri dönmek</string>
+    <string name="modem_goal_unlock_all">tüm kilitleri kaldırmak</string>
+    <string name="modem_goal_restart_radio">radyo birimini yeniden başlatmak</string>
+    <string name="modem_goal_reattach">SIM %1$d için şebekeye yeniden bağlanmak</string>
+    <string name="modem_goal_relock">SIM %1$d kilitlerini yeniden uygulamak</string>
+    <string name="modem_goal_reboot">modemi yeniden başlatmak</string>
+    <string name="modem_goal_samsung_menu">Samsung bant menüsünü açmak</string>
+    <string name="modem_goal_send_at">AT komutunu göndermek</string>
+    <string name="modem_goal_send_qmi">0x%1$04X QMI mesajını göndermek</string>
+
+    <string name="modem_bands_locked">%1$s bantları kilitlendi.</string>
+    <string name="modem_bands_unlocked">%1$s bantlarının kilidi açıldı.</string>
+    <string name="modem_net_mode_set">Şebeke modu artık \"%1$s\".</string>
+    <string name="modem_network_off">%1$s kapatıldı.</string>
+    <string name="modem_network_back_on">%1$s yeniden etkinleştirildi.</string>
+    <string name="modem_nr_mode_set">5G modu %1$s olarak değiştirildi.</string>
+    <string name="modem_nr_dc_on">NSA (EN-DC) etkin.</string>
+    <string name="modem_nr_dc_off">NSA (EN-DC) devre dışı.</string>
+    <string name="modem_volte_on">VoLTE etkin.</string>
+    <string name="modem_volte_off">VoLTE devre dışı.</string>
+    <string name="modem_vowifi_on">VoWiFi etkin.</string>
+    <string name="modem_vowifi_off">VoWiFi devre dışı.</string>
+    <string name="modem_ca_on">Taşıyıcı birleştirme etkin.</string>
+    <string name="modem_ca_off">Taşıyıcı birleştirme devre dışı.</string>
+    <string name="modem_ca_restart_failed">Modem yeniden başlatılamadı. Bu nedenle değişiklik, modem veya telefon bir sonraki kez yeniden başlatıldığında uygulanacak. %1$s</string>
+    <string name="modem_cell_locked">Hücre kilitlendi.</string>
+    <string name="modem_cell_unlocked">Hücre kilidi kaldırıldı.</string>
+    <string name="modem_plmn_locked">Şebeke kilitlendi.</string>
+    <string name="modem_plmn_locked_to">SIM %1$d, %2$s şebekesine kilitlendi.</string>
+    <string name="modem_plmn_unlocked">Otomatik şebeke seçimine geri dönüldü.</string>
+    <string name="modem_all_unlocked">Tüm kilitler kaldırıldı.</string>
+    <string name="modem_radio_restarted">Radyo birimi yeniden başlatıldı.</string>
+    <string name="modem_reattached">SIM %1$d şebekeye yeniden bağlandı.</string>
+    <string name="modem_relocked">SIM %1$d yeniden bir hücre seçti ve kilitleri tekrar uygulandı.</string>
+    <string name="modem_rebooting">Modem yeniden başlatılıyor.</string>
+    <string name="modem_samsung_menu_opened">Samsung bant menüsü açıldı.</string>
+
+    <string name="modem_note_radio_restarted">Değişikliğin uygulanması için radyo birimi yeniden başlatıldı.</string>
+    <string name="modem_note_radio_restart_failed">Radyo birimi yeniden başlatılamadı. %1$s Değişikliği uygulamak için uçak modunu açıp kapatın.</string>
+    <string name="modem_note_old_nr_bands">Telefon hâlâ eski 5G bantlarında kalıyorsa bunun yerine 5G'yi en fazla %1$d gerekli bantla kilitleyin. Bu işlem eski kilidin yerini alır.</string>
+    <string name="modem_note_kept_lock_refused">Telefon, kilit kaldırma işleminden sonra eski kilidi korudu ve bunnylock'un denediği tüm bant listelerini reddetti.</string>
+    <string name="modem_note_kept_lock_renamed">Telefon, kilit kaldırma işleminden sonra eski kilidi korudu. Bu nedenle bunnylock tüm bantları yeniden adlandırdı.</string>
+    <string name="modem_note_nr_bands_limit">Aynı anda yalnızca %1$d 5G bandı kullanılabiliyor. Şu anda etkin olan bantlar: %2$s.</string>
+    <string name="modem_note_legacy_back">2G ve 3G yeniden etkinleştirildi. Ancak bu telefonun radyo yazılımı GSM 1800 bandını tanımlayamadığından bu bant kapalı kalabilir.</string>
+    <string name="modem_note_qc_lte_off">Bu modem, LTE hücre kilidini yalnızca radyo birimi kapalıyken değiştirebiliyor. Bu nedenle uçak modu kısa süreliğine etkinleştirildi.</string>
+
+    <string name="modem_lock_unconfirmed">%1$s (modem tarafından doğrulanmadı)</string>
+    <string name="modem_lock_separator">"; "</string>
+    <string name="modem_lock_channel_pci">%1$s %2$s, PCI %3$s</string>
+    <string name="modem_lock_nr_pci">n%3$d bandında, %4$d kHz SCS ile ARFCN %1$d, PCI %2$d</string>
+    <string name="modem_lock_frequency_only">Yalnızca frekans</string>
+    <string name="modem_lock_channel_frequency_only">%1$s %2$s (yalnızca frekans)</string>
+    <string name="modem_lock_channel_several_pcis">%1$s %2$s, birden fazla PCI</string>
+    <string name="modem_lock_several_pcis">Birden fazla PCI</string>
+    <string name="modem_lock_type">Kilit türü %1$d</string>
+    <string name="modem_plmn_manual">Manuel seçim</string>
+
+    <string name="modem_pick_band">En az bir bant seçin.</string>
+    <string name="modem_last_network">En az bir şebeke açık kalmalıdır.</string>
+    <string name="modem_nr_list_too_long">Bu telefon tek bir kilitlemede en fazla %1$d 5G bandını destekliyor. Bu nedenle %1$d veya daha az bant seçin.</string>
+    <string name="modem_note_needs_channels">Bu telefon, seçilen bantlarla birlikte görünür frekanslara da ihtiyaç duyuyor. Bu nedenle frekanslar kilide eklendi.</string>
+    <string name="modem_no_gsm_1800">Bu telefonun radyo yazılımı GSM 1800'i tanımıyor. Bu nedenle yalnızca 1800 bandına yönelik 2G kilidini reddediyor.</string>
+    <string name="modem_note_fell_back">Telefon, yalnızca bantları içeren kilitleme işleminden sonra 2G veya 3G'ye geri döndü. Bu nedenle kilit, görünür frekanslar kullanılarak yeniden uygulandı. bunnylock bundan sonra bu telefonda aynı yöntemi kullanacak.</string>
+    <string name="modem_note_band_lock_ignored">Android %1$s kilidini kabul etti ancak telefon hâlâ %2$s üzerinde. Bu modem, bu yöntemle gönderilen bant kilitlerini uygulamıyor gibi görünüyor.</string>
+    <string name="modem_note_samsung_menu_hint">Bunun yerine Bantlar ekranındaki Samsung'a ait bant menüsü işe yarayabilir.</string>
+    <string name="modem_needs_visible_cell">Bu telefonun, bantları kilitleyebilmek için seçilen %1$s bantlarında görünür bir hücreye ihtiyacı var. Hücre listesini yenileyip tekrar deneyin.</string>
+    <string name="modem_blind_lock_reverted">Telefon seçilen bantlarda hiçbir hücre bulamadı. Bu nedenle bunnylock önceki bant ayarlarına geri döndü.</string>
+    <string name="modem_blind_lock_restore_failed">Telefon seçilen bantlarda hiçbir hücre bulamadı ve bunnylock önceki bant ayarlarına geri dönemedi. Şebeke bağlantısını yeniden sağlamak için Tüm kilitleri kaldır seçeneğini kullanın.</string>
+    <string name="modem_blind_lock_searching">Seçilen %1$s bantlarında görünür bir hücre yok. Telefonun bir hücre bulmak için arama yapması gerekiyor. Bu işlem bir veya iki dakika sürebilir.</string>
+
+    <string name="modem_note_set_by_at">Android işlemi reddetti. Bu nedenle bunnylock ayarı doğrudan modem üzerinden uyguladı. Bu ayar, telefon yeniden başlatılana kadar geçerlidir.</string>
+    <string name="modem_note_mode_airplane">Modem, modları yalnızca radyo birimi kapalıyken değiştirebiliyor. Bu nedenle uçak modu kısa süreliğine etkinleştirildi.</string>
+    <string name="modem_note_mode_reapplied">SIM %1$d eski şebekesinde kalmaya devam etti. Bu nedenle mod, uçak modu kısa süreliğine etkinleştirilerek yeniden ayarlandı.</string>
+    <string name="modem_note_mode_stayed">SIM %1$d eski şebekesinde kalmaya devam etti. Uçak modunu açıp kapatmak, yeni modun uygulanmasını sağlayabilir.</string>
+    <string name="modem_note_mode_held_back">%1$s Mod ayarı korunuyor ve bu durum değiştiğinde tamamen uygulanacak.</string>
+    <string name="modem_backend_no_nr_mode">%1$s arka ucu 5G modunu değiştiremiyor.</string>
+    <string name="modem_no_ca_control">Taşıyıcı birleştirmeyi yalnızca MediaTek arka ucu etkinleştirebilir veya devre dışı bırakabilir.</string>
+    <string name="modem_current_backend_no_nr_mode">Mevcut arka uç 5G modunu değiştiremiyor.</string>
+
+    <string name="modem_enter_earfcn">Önce LTE EARFCN değerini girin.</string>
+    <string name="modem_enter_nr_arfcn">Önce NR-ARFCN değerini girin.</string>
+    <string name="modem_qc_lte_needs_pci">Qualcomm LTE kilidi için en az bir PCI gerekir. Birden fazla sektörün kullanılabilmesi için birden fazla PCI girebilirsiniz.</string>
+    <string name="modem_lte_anchor_locked">LTE ankrajı kilitlendi. MediaTek aynı anda yalnızca tek bir kilidi koruyabildiğinden NR bağlantısı ankrajı takip eder.</string>
+    <string name="modem_note_mtk_one_pci">MediaTek yalnızca tek bir PCI'ye kilitlenebilir. Bu nedenle yalnızca PCI %1$d kullanıldı.</string>
+    <string name="modem_unknown_earfcn">EARFCN %1$d, bilinen hiçbir LTE bandında bulunmuyor.</string>
+    <string name="modem_unknown_nr_arfcn">ARFCN %1$d, bilinen hiçbir NR bandında bulunmuyor.</string>
+    <string name="modem_note_band_only">Bu telefonun radyo yazılımı kanal kilitlerini desteklemiyor. Bu nedenle yalnızca bant (%1$s) kilitlendi.</string>
+    <string name="modem_note_cell_lock_ignored">Android hücre kilidini kabul etti ancak telefon hâlâ %1$s üzerinde. Bu modem, bu yöntemle gönderilen frekans kilitlerini uygulamıyor gibi görünüyor.</string>
+    <string name="modem_note_frequency_only">Yalnızca frekansa kilitlendi. Radyo HAL'i PCI'ye göre kilitlemeyi desteklemiyor.</string>
+
+    <string name="modem_mcc_digits">MCC 3 haneli olmalıdır.</string>
+    <string name="modem_mnc_digits">MNC 2 veya 3 haneli olmalıdır.</string>
+
+    <string name="modem_note_reattach_radio">Modem şebekeye yeniden bağlanmadı. Bu nedenle SIM %1$d için radyo birimi yeniden başlatıldı. Neden: %2$s</string>
+    <string name="modem_note_reboot_radio">Radyo HAL'i modemi yeniden başlatamadı. Bu nedenle hücresel radyo birimi yeniden başlatıldı.</string>
+
+    <string name="modem_helper_start_failed">%1$s başlatılamadı.</string>
+    <string name="modem_helper_start_timed_out">%1$s zamanında başlatılamadı.</string>
+    <string name="modem_helper_stopped">%1$s beklenmedik şekilde durdu.</string>
+    <string name="modem_helper_not_running">%1$s çalışmıyor.</string>
+    <string name="modem_helper_no_answer">%1$s zamanında yanıt vermedi.</string>
+    <string name="modem_root_start_failed">Root erişimi reddedildi veya root yardımcısı başlatılamadı.</string>
+    <string name="modem_root_timed_out">Root erişimi zamanında verilmedi. Root yöneticinizi kontrol edip tekrar deneyin.</string>
+    <string name="modem_no_su">su bulunamadı. bunnylock için root erişimi gerekir (Magisk, KernelSU veya APatch).</string>
+    <string name="modem_root_wrong_uid">Root yardımcısı root yetkisiyle çalışmıyor (uid %1$d).</string>
+</resources>

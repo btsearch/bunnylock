@@ -1,0 +1,57 @@
+<resources>
+    <string name="tools_radio">Radyo</string>
+    <string name="tools_restart_radio">Radyoyu yeniden başlat</string>
+    <string name="tools_restart_radio_hint">Uçak modunu açıp tekrar kapatır.</string>
+    <string name="tools_reattach">Şebekeye yeniden bağlan</string>
+    <string name="tools_reattach_hint">Veri bağlantısını keser ve QMI üzerinden yeniden bağlanır.</string>
+    <string name="tools_reboot_modem">Modemi yeniden başlat</string>
+    <string name="tools_reboot_modem_hint">Bu işlem SIM'i de yeniden başlatır.</string>
+    <string name="tools_samsung_menu">Samsung bant menüsü</string>
+    <string name="tools_samsung_menu_hint">Samsung'un gizli bant ayarlarını açar.</string>
+
+    <string name="tools_at_console">AT konsolu</string>
+    <string name="tools_at_port">AT portu</string>
+    <string name="tools_at_command">Komut</string>
+    <string name="tools_at_ports_ril">ril:1 ve ril:2 (RIL üzerinden)</string>
+    <string name="tools_at_ports_none">AT portu bulunamadı.</string>
+    <string name="tools_at_ports_found">%1$s bulundu.</string>
+
+    <string name="tools_qmi_console">QMI konsolu</string>
+    <string name="tools_qmi_service">Servis</string>
+    <string name="tools_qmi_message">Mesaj (hex)</string>
+    <string name="tools_qmi_payload">TLV yükü (hex)</string>
+    <string name="tools_qmi_nas_hint">NAS (servis 3), seçili SIM ile iletişim kurar.</string>
+
+    <string name="tools_output">Çıktı</string>
+    <string name="tools_clear">Temizle</string>
+
+    <string name="tools_copy_diagnostics_hint">Cihaz bilgileri, komut iletim testi ve günlük kaydı</string>
+    <string name="tools_access">Erişim</string>
+    <string name="tools_passthrough">Modem komutlarının doğrudan iletimi</string>
+    <string name="tools_services_checked">Kontrol edilen servisler (%1$d)</string>
+    <string name="tools_collapse">Daralt</string>
+    <string name="tools_expand">Genişlet</string>
+    <string name="tools_qmi_over_qrtr">QRTR üzerinden QMI</string>
+    <string name="tools_yes">Evet</string>
+    <string name="tools_no">Hayır</string>
+    <string name="tools_hal_channel_lock">HAL kanal kilitleme API'si</string>
+    <string name="tools_present">Mevcut</string>
+    <string name="tools_absent">Mevcut değil</string>
+
+    <string name="tools_log">Günlük kaydı</string>
+    <string name="tools_save_log">Kaydet</string>
+    <string name="tools_save_log_description">Günlük kaydını kaydet</string>
+
+    <string name="tools_calling">Arama</string>
+    <string name="tools_calling_sim">SIM %1$d üzerinden arama</string>
+    <string name="tools_network">Şebeke</string>
+    <string name="tools_network_sim">SIM %1$d üzerindeki şebeke</string>
+    <string name="tools_ca">Taşıyıcı birleştirme (CA)</string>
+    <string name="tools_ca_hint">Daha yüksek hız için birden fazla LTE taşıyıcısını birleştirir. Bu özellik kapalıyken telefon aynı anda yalnızca bir taşıyıcı kullanır. Değişiklik yapıldığında modem yeniden başlatılır.</string>
+    <string name="tools_volte_hint">Aramalar, 2G veya 3G'ye geçiş yapmak yerine 4G üzerinden gerçekleştirilir.</string>
+    <string name="tools_vowifi_hint">Mobil sinyalin zayıf olduğu durumlarda aramalar Wi-Fi üzerinden gerçekleştirilir.</string>
+    <string name="tools_ims_unknown">Android bu SIM için bu ayarın durumunu bildirmiyor.</string>
+    <string name="tools_ims_not_offered">Bu SIM'in operatör ayarlarında bu özellik listelenmiyor; bu nedenle çalışmayabilir.</string>
+    <string name="tools_ims_locked">Bu SIM'in operatör ayarları bu özelliğin değiştirilmesine izin vermiyor; Android ayarı eski hâline getirebilir.</string>
+    <string name="tools_ims_error">Android bu ayarı okuyamadı: %1$s</string>
+</resources>

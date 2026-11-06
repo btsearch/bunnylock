@@ -1,0 +1,32 @@
+<resources>
+    <string name="cell_network_header">Şebeke (PLMN)</string>
+    <string name="cell_current_lock">Mevcut hücre kilidi</string>
+    <string name="cell_clear_lock">Hücre kilidini kaldır</string>
+    <string name="cell_lock_to">Şuna kilitle</string>
+    <string name="cell_visible">Görünür hücreler (alanları doldurmak için birine dokunun)</string>
+    <string name="cell_none_found">Hücre bulunamadı</string>
+    <string name="cell_none_found_hint">Hücre taraması için konum erişimi gerekir.</string>
+    <string name="cell_plmn_automatic">Otomatik</string>
+    <string name="cell_plmn_locked_to">%1$s ağına kilitli</string>
+    <string name="cell_not_registered">Herhangi bir şebekeye kayıtlı değil.</string>
+    <string name="cell_connected">%1$s ağına bağlı.</string>
+    <string name="cell_connected_named">%1$s (%2$s) ağına bağlı.</string>
+    <string name="cell_lock_ignored">Yok sayıldı</string>
+    <string name="cell_lock_locked">Kilitli</string>
+    <string name="cell_lock_none">Kilitli değil</string>
+    <string name="cell_lock_stray">Android kilidi kabul etti ancak telefon şu anda %1$s üzerinde.</string>
+    <string name="cell_lock_pinned">Modem belirli bir hücreye sabitlendi.</string>
+    <string name="cell_lock_free">Modem hücreleri kendi seçiyor.</string>
+    <string name="cell_plmn_hint_qualcomm">Öncelikle QMI üzerinden ayarlanır. Modem isteği reddederse Android şebeke seçimi kullanılır.</string>
+    <string name="cell_plmn_hint_android">Android'in manuel şebeke seçimini kullanır. Bu seçim yeniden başlatmadan sonra da korunur.</string>
+    <string name="cell_hint_qualcomm">LTE ve NR bağlantısını bir PCI'ye (SA PCell veya NSA SCG) kilitler. Yalnızca frekansa kilitlemek için NR PCI alanını boş bırakın. Birden fazla PCI'yi virgülle ayırarak girebilirsiniz.</string>
+    <string name="cell_hint_mtk_at">AT+EMMCHLCK komutunu kullanır ve aynı anda yalnızca tek bir kilide izin verir. PCI isteğe bağlıdır. Kilidin uygulanması için radyo birimi yeniden başlatılır.</string>
+    <string name="cell_hint_mtk_hal">Bu modem AT+EMMCHLCK komutunu desteklemediğinden frekans (ARFCN) kilidi radyo HAL'i üzerinden uygulanır. PCI'ye kilitleme yapılamaz ve bazı modemler bu isteği yok sayabilir.</string>
+    <string name="cell_hint_hal">Frekansı (ARFCN) radyo HAL'i üzerinden kilitler. Bu yöntem PCI'ye kilitlemeyi desteklemez. Bazı modemler (örneğin standart Qualcomm modemleri) yalnızca bandı uygular ve kanalı yok sayar.</string>
+    <string name="cell_lte_channel">%2$.1f MHz'de B%1$d</string>
+    <string name="cell_lte_anchor">LTE ana hücresi (Anchor)</string>
+    <string name="cell_nr_scg">NR ikincil hücresi (SCG)</string>
+    <string name="cell_pcis">PCI'ler</string>
+    <string name="cell_band">Band</string>
+    <string name="cell_scs">Alt taşıyıcı aralığı (kHz)</string>
+</resources>

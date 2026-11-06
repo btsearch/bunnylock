@@ -1,0 +1,16 @@
+<resources>
+    <string name="common_lock">Kilitle</string>
+    <string name="common_unlock">Kilidi aç</string>
+    <string name="common_unlock_all">Tüm kilitleri kaldır</string>
+    <string name="common_unknown">Bilinmiyor</string>
+    <string name="common_unknown_band">Bilinmeyen bant</string>
+    <string name="common_copy_diagnostics">Tanılama verilerini kopyala</string>
+    <string name="common_send">Gönder</string>
+    <string name="common_bands">Bantlar</string>
+    <string name="common_cell">Hücre</string>
+    <string name="common_network">Şebeke</string>
+    <string name="common_modem">Modem</string>
+    <string name="common_device">Cihaz</string>
+    <string name="common_platform">Platform</string>
+    <string name="common_baseband">Baseband</string>
+</resources>
