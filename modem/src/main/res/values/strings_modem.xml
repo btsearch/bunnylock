@@ -6,6 +6,11 @@
     <string name="modem_root_denied">Root access was denied.</string>
     <string name="modem_sim">SIM %1$d</string>
     <string name="modem_no_mtk_port">No MediaTek AT port answered. Pick one in Tools.</string>
+    <string name="unisoc_no_service">Unisoc\'s IRadioInteractor service (irit) isn\'t available.</string>
+    <string name="unisoc_at_refused">The Unisoc AT service refused %1$s.</string>
+    <string name="unisoc_at_no_reply">The Unisoc AT service gave no reply to %1$s (result %2$d).</string>
+    <string name="unisoc_at_bad_reply">The Unisoc modem returned an unexpected reply to %1$s: %2$s</string>
+    <string name="unisoc_at_not_accepted">The Unisoc modem didn\'t accept %1$s: %2$s</string>
     <string name="modem_lock_unanswered">The radio didn\'t answer, so it may not support locks through Android\'s radio HAL.</string>
 
     <string name="modem_goal_refresh">refresh</string>

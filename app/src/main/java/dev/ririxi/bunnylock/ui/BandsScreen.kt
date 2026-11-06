@@ -152,7 +152,12 @@ private fun backendHint(state: UiState): String =
         }
 
         Backend.PIXEL -> stringResource(R.string.bands_hint_pixel)
-        Backend.ANDROID, null -> stringResource(R.string.bands_hint_android)
+        Backend.ANDROID, null ->
+            if (state.modem.device?.vendor == "unisoc") {
+                stringResource(R.string.bands_hint_unisoc)
+            } else {
+                stringResource(R.string.bands_hint_android)
+            }
     }
 
 @Composable

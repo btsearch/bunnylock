@@ -11,6 +11,7 @@
     <string name="bands_hint_mediatek_auto">Changes are sent with AT+EPBSE and AT+EPBSEH on the AT port found automatically.</string>
     <string name="bands_hint_pixel">Changes are saved to the modem\'s NV memory, and the radio restarts by itself to apply them.</string>
     <string name="bands_hint_android">This uses the radio HAL\'s system selection channels. Whether the modem follows them depends on the phone maker.</string>
+    <string name="bands_hint_unisoc">This Unisoc modem rejects Android\'s channel lock, so bunnylock writes the mask with AT+SPLBAND and restarts the modem with AT+RESET=0.</string>
     <string name="bands_summary">%1$d of %2$d selected</string>
     <string name="bands_summary_pending">%1$d of %2$d selected, not applied yet</string>
     <string name="bands_summary_locked">%1$d of %2$d selected, locked</string>

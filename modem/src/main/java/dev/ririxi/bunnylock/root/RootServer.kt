@@ -226,6 +226,10 @@ object RootServer {
                 JSONObject().put("reply", At.send(request.getString("node"), request.getString("command"), timeoutMs))
             }
 
+            "unisoc.state" -> Unisoc.state(request.getInt("sim"))
+
+            "unisoc.setBands" -> Unisoc.setBands(request.getInt("sim"), request.getString("mask"))
+
             else -> fail(R.string.server_unknown_command, command)
         }
     }

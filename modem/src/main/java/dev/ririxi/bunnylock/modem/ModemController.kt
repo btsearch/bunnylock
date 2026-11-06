@@ -275,6 +275,9 @@ class ModemController(
                     else -> "Connected through Shizuku with ADB access, so only the Android radio HAL features are available."
                 }
             log("$accessSummary Using ${current.backend?.label?.let { englishContext.getString(it) }} (chipset: ${englishContext.getString(device.vendorLabel)}).")
+            if (device.vendor == "unisoc") {
+                log("Unisoc chipset detected: LTE band locks use AT+SPLBAND and AT+RESET=0 instead of the radio HAL.")
+            }
             started.note?.let(::log)
             loadSims()
             refreshNow()
@@ -312,6 +315,9 @@ class ModemController(
 
     private fun subId(): Int =
         current.sims.firstOrNull { it.slot == current.sim - 1 }?.subId ?: SubscriptionManager.getDefaultSubscriptionId()
+
+    /** Unisoc's radio HAL refuses setSystemSelectionChannels, so LTE bands go through irit's AT passthrough. */
+    private val isUnisoc get() = current.device?.vendor == "unisoc"
 
     fun setSim(sim: Int) {
         prefs.edit().putInt("sim", sim).apply()
@@ -1166,8 +1172,16 @@ class ModemController(
         aospState: JSONObject?,
     ): BackendReadout {
         val specs = channelSpecs(aospState, sim)
+        val unisocState =
+            if (isUnisoc) {
+                runSuspendCatching { helper.call("unisoc.state", 15.seconds) { put("sim", sim) } }.getOrNull()
+            } else {
+                null
+            }
+        val lteBands = unisocState?.intList("bands") ?: channelBands(specs, Ran.EUTRAN)
+        val lteSupported = if (isUnisoc) unisocSupportedBands(lteBands.orEmpty()) else null
         val nrBands = channelBands(specs, Ran.NGRAN)
-        val groups = mutableListOf(bandGroupState(Group.LTE, supportedBands = null, currentBands = channelBands(specs, Ran.EUTRAN)))
+        val groups = mutableListOf(bandGroupState(Group.LTE, supportedBands = lteSupported, currentBands = lteBands))
         if (has5g(aospState) || nrBands !== null) groups += bandGroupState(Group.NR, supportedBands = null, currentBands = nrBands)
         val wcdmaBands = channelBands(specs, Ran.UTRAN)
         if (supportsNetwork(aospState, Masks.G3) || wcdmaBands !== null) groups += bandGroupState(Group.WCDMA, supportedBands = HAL_WCDMA_BANDS, currentBands = wcdmaBands)
@@ -1492,10 +1506,82 @@ class ModemController(
             }
 
             Backend.ANDROID, null -> {
+                if (group == Group.LTE && isUnisoc) {
+                    try {
+                        return setBandsThroughUnisoc(bandsToSend)
+                    } catch (e: RootException) {
+                        log("The Unisoc AT band lock failed (${englishReason(e).asClause()}), so the radio HAL is tried instead.")
+                    }
+                }
                 setBandsThroughHal(group, bands, allBandsSelected)
             }
         }
     }
+
+    /**
+     * Unisoc's radio HAL rejects setSystemSelectionChannels, but its IRadioInteractor service accepts the modem's
+     * own `AT+SPLBAND` command. Unlike the HAL path, this does not wait for a matching visible cell or run the
+     * "no cell found" revert, because the modem resets and chooses a cell after the mask is written.
+     */
+    private suspend fun setBandsThroughUnisoc(bands: List<Int>): Text? {
+        val locking = bands.isNotEmpty()
+        val commandMask =
+            if (locking) {
+                rememberUnisocOriginalMask()
+                UnisocLteMask.from(bands).command
+            } else {
+                unisocRestoreMask()
+            }
+        val result =
+            helper.call("unisoc.setBands", 60.seconds) {
+                put("sim", current.sim)
+                put("mask", commandMask)
+            }
+        log(
+            "Unisoc AT band lock: AT+SPLBAND=1,$commandMask; AT+RESET=0 (phoneId ${result.optInt("phoneId")}).",
+        )
+        return null
+    }
+
+    /** Saves the first real mask bunnylock sees, so "unlock" can put the phone's own bands back. */
+    private suspend fun rememberUnisocOriginalMask() {
+        val key = unisocOriginalMaskKey(current.sim)
+        if (prefs.contains(key)) return
+        val state =
+            runSuspendCatching { helper.call("unisoc.state", 15.seconds) { put("sim", current.sim) } }.getOrNull()
+                ?: return
+        val mask = state.optString("mask").takeIf { it.isNotBlank() } ?: return
+        val bands = state.optJSONArray("bands")?.toIntList().orEmpty()
+        // A one-band mask is more likely an earlier lock than the phone's factory default.
+        if (bands.size <= 1) return
+        prefs.edit().putString(key, mask).apply()
+    }
+
+    private fun unisocRestoreMask(): String {
+        val saved = prefs.getString(unisocOriginalMaskKey(current.sim), null)
+        return saved?.let { UnisocLteMask.parse(it)?.command } ?: UNISOC_DEFAULT_LTE_MASK.command
+    }
+
+    /**
+     * A mask has no "all bands" sentinel: the phone's own mask is the set it supports. The saved original is the
+     * best answer; before one is saved, a multi-band mask is treated as that set. A one-band mask is normally an
+     * earlier lock, so the captured RMX3511 default is used while bunnylock has nothing better.
+     */
+    private fun unisocSupportedBands(current: List<Int>): List<Int> {
+        val saved =
+            prefs.getString(unisocOriginalMaskKey(current.sim), null)
+                ?.let { UnisocLteMask.parse(it)?.bands() }
+                .orEmpty()
+        val bands =
+            when {
+                saved.isNotEmpty() -> saved
+                current.size > 1 -> current
+                else -> UNISOC_DEFAULT_LTE_MASK.bands()
+            }
+        return bands.filter { it in UNISOC_LTE_BANDS }.ifEmpty { UNISOC_LTE_BANDS }
+    }
+
+    private fun unisocOriginalMaskKey(sim: Int) = "unisocOriginalMask.sim$sim"
 
     private fun bandsDone(
         group: Group,
@@ -2176,6 +2262,11 @@ class ModemController(
             }
 
             Backend.ANDROID, null -> {
+                if (isUnisoc) {
+                    setBandsThroughUnisoc(emptyList())
+                    if (savedChannelSpecs().isNotEmpty()) runSuspendCatching { setChannels(JSONArray()) }
+                    return null
+                }
                 val held = savedChannelSpecs()
                 replaceSavedBands(held.map { it.optInt("ran") } + Ran.EUTRAN)
                 setChannels(JSONArray())
