@@ -17,6 +17,7 @@
     <string name="settings_language_system_hint">Follows your phone\'s language.</string>
     <string name="settings_language_helper_english">A few messages from the root helper may still show up in English.</string>
     <string name="settings_language_en" translatable="false">English</string>
+    <string name="settings_language_tr" translatable="false">Türkçe</string>
     <string name="settings_language_pl" translatable="false">Polski</string>
     <string name="settings_language_ru" translatable="false">Русский</string>
     <string name="settings_language_uk" translatable="false">Українська</string>

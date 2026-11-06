@@ -239,6 +239,7 @@ private fun languageName(tag: String): String =
     when (tag) {
         "" -> stringResource(R.string.settings_language_system)
         "en" -> stringResource(R.string.settings_language_en)
+        "tr" -> stringResource(R.string.settings_language_tr)
         "pl" -> stringResource(R.string.settings_language_pl)
         "ru" -> stringResource(R.string.settings_language_ru)
         "uk" -> stringResource(R.string.settings_language_uk)
