@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="aosp_sentences">%1$s %2$s</string>
+    <string name="aosp_with_details">%1$s (%2$s)</string>
+    <string name="aosp_unknown_error">خطأ غير معروف</string>
+    <string name="aosp_no_method">لا يوفّر إصدار أندرويد هذا ITelephony.%1$s.</string>
+    <string name="aosp_held_back">يُبقي أندرويد %1$s متوقفًا حاليًا: %2$s.</string>
+    <string name="aosp_held_back_power">وضع توفير الطاقة (موفّر البطارية أو الاتصال التكيفي) مفعّل</string>
+    <string name="aosp_held_back_carrier">إعدادات المشغّل تستثني %1$s</string>
+    <string name="aosp_held_back_2g">إعداد «السماح بـ 2G» متوقف</string>
+    <string name="aosp_plmn_not_registered">تعذّر التسجيل على %1$s %2$s. قد تكون الشبكة خارج النطاق، أو قد لا تسمح بهذه الشريحة.</string>
+    <string name="aosp_mode_refused">رفض الراديو وضع الشبكة هذا.</string>
+    <string name="aosp_mode_refused_restored">رفض الراديو وضع الشبكة هذا. أُعيد وضع الشبكة السابق.</string>
+    <string name="aosp_mode_refused_radio_off">رفض الراديو وضع الشبكة والراديو متوقف.</string>
+    <string name="aosp_nr_dc_unavailable">الراديو غير متاح حاليًا.</string>
+    <string name="aosp_nr_dc_error">أعاد الراديو خطأ. وقد لا يدعم تبديل EN-DC.</string>
+    <string name="aosp_nr_dc_refused">لم يقبل الراديو حالة EN-DC هذه.</string>
+    <string name="aosp_nr_dc_code">أعاد الراديو الخطأ %1$d.</string>
+    <string name="aosp_ims_kept">أبقى أندرويد الإعداد السابق. قد لا تسمح إعدادات المشغّل لهذه الشريحة بهذا التغيير.</string>
+    <string name="aosp_no_subscription">ليس لدى أندرويد اشتراك نشط لهذه الشريحة، فلا يوجد ما يُرسل إليه القفل. تأكد من أن الشريحة مُدخلة ومفعّلة، وأن bunnylock يملك إذن الهاتف.</string>
+    <string name="aosp_channels_rejected">رفضت خدمة الراديو في أندرويد قفل القنوات.</string>
+    <string name="aosp_channels_rejected_fewer">رفضت خدمة الراديو في أندرويد قفل القنوات. قد ينجح اختيار %1$d نطاقات أو أقل على هذا الهاتف.</string>
+    <string name="aosp_channels_rejected_split">رفضت خدمة الراديو في أندرويد قفل القنوات، حتى مع تقسيم النطاقات إلى مجموعات من %1$d. قد ينجح اختيار %1$d نطاقات أو أقل على هذا الهاتف.</string>
+    <string name="aosp_channels_not_started">تعذّر على خدمة الراديو في أندرويد بدء قفل القنوات.</string>
+    <string name="aosp_reboot_refused">رفض radio HAL إعادة تشغيل المودم.</string>
+    <string name="aosp_no_sim_radio_restart">لا يستطيع إصدار أندرويد هذا إعادة تشغيل راديو شريحة واحدة.</string>
+    <string name="aosp_sim_radio_off">راديو هذه الشريحة متوقف.</string>
+    <string name="aosp_radio_not_on">رفض الراديو العودة إلى التشغيل: %1$s.</string>
+    <string name="aosp_radio_not_off">رفض الراديو الإيقاف: %1$s.</string>
+    <string name="sys_samsung_menu_denied">لا تسمح سامسونج إلا لتطبيقاتها بفتح قائمة النطاقات.</string>
+    <string name="sys_samsung_menu_missing">تعذّر العثور على قائمة النطاقات في سامسونج على هذا الهاتف.</string>
+    <string name="samsung_no_nr_mode">لا يملك هذا الهاتف التحكم في وضع 5G الخاص بسامسونج.</string>
+    <string name="samsung_nr_mode_refused">لم تقبل خدمة الاتصالات في سامسونج وضع 5G هذا.</string>
+    <string name="samsung_nr_mode_data_sim_only">في هذا الهاتف لا يمكن تغيير وضع 5G الخاص بسامسونج إلا على شريحة بيانات الجوال. حوّل بيانات الجوال إلى هذه الشريحة أولًا.</string>
+    <string name="server_unknown_subscription">اشتراك هذه الشريحة غير معروف.</string>
+    <string name="server_unknown_command">أمر غير معروف: %1$s.</string>
+    <string name="cell_hint_hal">يقفل التردد (ARFCN) عبر radio HAL. لا تستطيع هذه الواجهة القفل على PCI، وبعض المودمات (مثل كوالكوم الأصلي) تطبّق النطاق فقط وتتجاهل القناة.</string>
+    <string name="cell_plmn_hint_android">يستخدم الاختيار اليدوي للشبكة في أندرويد، وهو يبقى بعد إعادة التشغيل.</string>
+</resources>

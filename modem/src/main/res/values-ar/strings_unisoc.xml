@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unisoc_reply_unreadable">لم يُعد المودم نطاقاته لـ %1$s. وكان رده: %2$s</string>
+    <string name="unisoc_bands_unsettable">لا يمكن لقفل النطاقات في هذا المودم أن يتضمن %1$s.</string>
+    <string name="unisoc_bands_kept">قبِل المودم النطاقات الجديدة لكنه ما زال يستخدم القديمة بعد إعادة تشغيل الراديو.</string>
+</resources>

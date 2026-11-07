@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_connection">الاتصال</string>
+    <string name="home_no_serving_cell">لا توجد خلية خدمة</string>
+    <plurals name="home_carriers_header">
+        <item quantity="zero">الحاملات</item>
+        <item quantity="one">الحاملة</item>
+        <item quantity="two">الحاملتان</item>
+        <item quantity="few">الحاملات</item>
+        <item quantity="many">الحاملات</item>
+        <item quantity="other">الحاملات</item>
+    </plurals>
+    <string name="home_chipset">الشريحة</string>
+    <string name="home_state_ignored">متجاهَل</string>
+    <string name="home_state_locked">مقفل</string>
+    <string name="home_state_free">حر</string>
+    <string name="home_relock">إعادة القفل واختيار خلية من جديد</string>
+    <string name="home_stray_band">الهاتف على %1$s، خارج النطاقات المقفلة.</string>
+    <string name="home_stray_channel">الهاتف على %1$s، خارج التردد المقفل.</string>
+    <string name="home_pinned_nothing">لا شيء مثبَّت.</string>
+    <string name="home_pinned_bands">النطاقات مثبَّتة.</string>
+    <string name="home_pinned_cell">الخلية مثبَّتة.</string>
+    <string name="home_pinned_network">الشبكة مثبَّتة.</string>
+    <string name="home_pinned_bands_cell">النطاقات والخلية مثبَّتة.</string>
+    <string name="home_pinned_bands_network">النطاقات والشبكة مثبَّتة.</string>
+    <string name="home_pinned_cell_network">الخلية والشبكة مثبَّتة.</string>
+    <string name="home_pinned_all">النطاقات والخلية والشبكة مثبَّتة.</string>
+    <string name="home_row_lte_cell">خلية LTE</string>
+    <string name="home_row_nr_cell">خلية NR</string>
+    <string name="home_row_legacy_cell">خلية 2G/3G</string>
+    <plurals name="home_carrier_count">
+        <item quantity="zero">لا حاملات</item>
+        <item quantity="one">حاملة واحدة</item>
+        <item quantity="two">حاملتان</item>
+        <item quantity="few">%d حاملات</item>
+        <item quantity="many">%d حاملة</item>
+        <item quantity="other">%d حاملة</item>
+    </plurals>
+    <string name="home_tech_summary">%1$s، %2$s</string>
+    <string name="home_unknown_network">شبكة غير معروفة</string>
+    <string name="home_total_bandwidth">إجمالي عرض النطاق</string>
+    <string name="home_tag_primary">أساسية</string>
+    <string name="home_tag_secondary">ثانوية</string>
+    <string name="home_tag_serving">خدمة</string>
+    <string name="home_feature_on">%1$s مفعّل</string>
+    <string name="home_feature_off">%1$s معطّل</string>
+    <string name="home_unlock_all_title">فك كل الأقفال؟</string>
+    <string name="home_unlock_all_message">تُزال كل أقفال النطاقات والخلايا والشبكات، ويعود الهاتف إلى اختيار الشبكة تلقائيًا.</string>
+</resources>

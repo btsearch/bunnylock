@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bands_network_mode">وضع الشبكة</string>
+    <string name="bands_5g_mode">وضع 5G</string>
+    <string name="bands_nsa_on">NSA مفعّل</string>
+    <string name="bands_nsa_off">NSA معطّل</string>
+    <string name="bands_samsung_menu">فتح قائمة النطاقات في سامسونج</string>
+    <string name="bands_samsung_menu_hint">قفل النطاقات الخاص بسامسونج والمدمج في الهاتف.</string>
+    <string name="bands_summary">تم تحديد %1$d من %2$d</string>
+    <string name="bands_summary_pending">تم تحديد %1$d من %2$d، لم يُطبَّق بعد</string>
+    <string name="bands_summary_locked">تم تحديد %1$d من %2$d، مقفل</string>
+    <string name="bands_summary_locked_pending">تم تحديد %1$d من %2$d، مقفل، لم يُطبَّق بعد</string>
+    <string name="bands_summary_stray">تم تحديد %1$d من %2$d، مقفل لكن الهاتف على %3$s</string>
+    <string name="bands_summary_stray_pending">تم تحديد %1$d من %2$d، مقفل لكن الهاتف على %3$s، لم يُطبَّق بعد</string>
+    <string name="bands_summary_off">متوقف</string>
+    <string name="bands_summary_off_pending">تم تحديد %1$d من %2$d، متوقف، لم يُطبَّق بعد</string>
+    <string name="bands_pick_favorites">اختيار النطاقات المفضلة</string>
+    <string name="bands_pick_favorites_hint">اضغط على النطاقات التي تريد إبقاءها ظاهرة.</string>
+    <string name="bands_show_favorites">عرض المفضلة فقط</string>
+    <plurals name="bands_show_all">
+        <item quantity="zero">عرض كل %d نطاق</item>
+        <item quantity="one">عرض نطاق واحد (%d)</item>
+        <item quantity="two">عرض النطاقين (%d)</item>
+        <item quantity="few">عرض كل %d نطاقات</item>
+        <item quantity="many">عرض كل %d نطاقًا</item>
+        <item quantity="other">عرض كل %d نطاق</item>
+    </plurals>
+    <string name="bands_done">تم</string>
+    <string name="bands_all">الكل</string>
+    <string name="bands_none">لا شيء</string>
+    <plurals name="bands_pending">
+        <item quantity="zero">لا نطاقات تغيّرت</item>
+        <item quantity="one">تغيّر نطاق واحد</item>
+        <item quantity="two">تغيّر نطاقان</item>
+        <item quantity="few">تغيّرت %d نطاقات</item>
+        <item quantity="many">تغيّر %d نطاقًا</item>
+        <item quantity="other">تغيّر %d نطاق</item>
+    </plurals>
+    <string name="bands_discard">تجاهل</string>
+    <string name="bands_lock_changes">تطبيق تغييرات النطاقات</string>
+</resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="system_notify_channel_name">الأقفال النشطة</string>
+    <string name="system_notify_channel_description">يعرض النطاقات أو الخلايا أو الشبكات التي قفلها bunnylock.</string>
+    <string name="system_notify_title">bunnylock: مقفل</string>
+    <string name="system_notify_line_separator">"، "</string>
+    <string name="system_notify_line_bands">%1$s: %2$s</string>
+    <string name="system_notify_line_network">الشبكة: %1$s</string>
+    <string name="system_notify_line_lte_cell">خلية LTE: %1$s</string>
+    <string name="system_notify_line_nr_cell">خلية NR: %1$s</string>
+    <string name="system_notify_line_legacy_cell">خلية 2G/3G: %1$s</string>
+    <string name="system_helper_not_running">المساعِد لا يعمل، لذا لم يتغير شيء. جارٍ إعادة الاتصال.</string>
+    <string name="system_at_replied">ردّ المودم. انظر المخرجات أدناه.</string>
+    <string name="system_qmi_replied">أُرسلت الرسالة 0x%1$04X. ردّ المودم: %2$s.</string>
+    <string name="system_clip_label_diagnostics">تشخيصات bunnylock</string>
+    <string name="system_diagnostics_copied">تم نسخ التشخيصات إلى الحافظة.</string>
+    <string name="system_log_saved">تم حفظ السجل.</string>
+    <string name="system_log_not_saved">تعذّر حفظ السجل.</string>
+    <string name="system_shizuku_step_root">جارٍ طلب صلاحية الروت...</string>
+    <string name="system_shizuku_step_looking">جارٍ البحث عن Shizuku...</string>
+    <string name="system_shizuku_step_connecting">جارٍ الاتصال بـ Shizuku. اسمح لـ bunnylock إن طلب ذلك...</string>
+    <string name="system_shizuku_root_failed">لا توجد صلاحية روت: %1$s</string>
+    <string name="system_shizuku_root_denied">رُفضت صلاحية الروت.</string>
+    <string name="system_shizuku_not_installed">Shizuku غير مثبَّت أيضًا. امنح صلاحية الروت، أو ثبّت Shizuku وشغّله ثم أعد المحاولة.</string>
+    <string name="system_shizuku_not_running">Shizuku مثبَّت لكنه لم يتصل بـ bunnylock، فالأرجح أنه لا يعمل. افتح Shizuku للتحقق ثم أعد المحاولة.</string>
+    <string name="system_shizuku_failed">لم يعمل Shizuku أيضًا: %1$s</string>
+    <string name="system_shizuku_failed_no_reason">لم يعمل Shizuku أيضًا (دون ذكر السبب).</string>
+    <string name="system_shizuku_lost">توقفت خدمة Shizuku. أعد المحاولة لإعادة تشغيلها.</string>
+    <string name="system_shizuku_too_old">إصدار Shizuku هذا قديم جدًا. حدّث Shizuku ثم أعد المحاولة.</string>
+    <string name="system_shizuku_stopped">توقف Shizuku.</string>
+    <string name="system_shizuku_no_shell">تعذّر على Shizuku فتح صدفة الأوامر (%1$s).</string>
+    <string name="system_shizuku_denied_earlier">رُفض الوصول إلى Shizuku سابقًا. اسمح لـ bunnylock في تطبيق Shizuku ثم أعد المحاولة.</string>
+    <string name="system_shizuku_denied">رُفض الوصول إلى Shizuku.</string>
+    <string name="system_shizuku_prompt_unanswered">لم يُجَب على نافذة إذن Shizuku. إن لم تظهر أصلًا، فاسمح لـ bunnylock في تطبيق Shizuku ثم عُد.</string>
+    <string name="system_shizuku_service_no_response">بدأت خدمة Shizuku لكنها لم تستجب.</string>
+    <string name="system_shizuku_service_start_timeout">لم تبدأ خدمة Shizuku في الوقت المناسب.</string>
+    <string name="system_shizuku_service_not_running">خدمة Shizuku لا تعمل.</string>
+    <string name="system_shizuku_service_timeout">لم تردّ خدمة Shizuku في الوقت المناسب.</string>
+    <string name="system_shizuku_service_died">توقفت خدمة Shizuku بشكل غير متوقع.</string>
+</resources>

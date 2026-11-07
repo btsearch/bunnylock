@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="shell_tab_home">الرئيسية</string>
+    <string name="shell_tab_bands">النطاقات</string>
+    <string name="shell_tab_cell">قفل الخلية</string>
+    <string name="shell_tab_tools">الأدوات</string>
+    <string name="shell_tab_settings">الإعدادات</string>
+    <string name="shell_refresh">تحديث</string>
+    <string name="shell_stop_waiting">إيقاف الانتظار</string>
+    <string name="shell_denied_title">يلزم الروت أو Shizuku</string>
+    <string name="shell_try_again">إعادة المحاولة</string>
+    <string name="shell_subtitle_default">قفل النطاقات والخلايا</string>
+    <string name="shell_subtitle_shizuku">%1$s (Shizuku)</string>
+    <string name="shell_sim_chip_description">الشريحة %1$d، %2$s. تبديل الشريحة</string>
+    <string name="shell_sim_menu_item">الشريحة %1$d: %2$s</string>
+    <string name="shell_sim_selected">محدَّدة</string>
+    <string name="shell_update_title">يتوفر تحديث</string>
+    <string name="shell_update_message">صدر الإصدار %1$s.</string>
+    <string name="shell_update_download">تنزيل</string>
+    <string name="shell_update_skip">تخطي هذا الإصدار</string>
+    <string name="shell_update_later">لاحقًا</string>
+    <string name="shell_lock_badge_ignored">القفل متجاهَل</string>
+    <string name="shell_lock_badge_locked">مقفل</string>
+    <string name="shell_lock_badge_unlocked">غير مقفل</string>
+</resources>

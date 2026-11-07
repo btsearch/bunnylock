@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="common_lock">قفل</string>
+    <string name="common_unlock">فك القفل</string>
+    <string name="common_unlock_all">فك كل الأقفال</string>
+    <string name="common_unknown">غير معروف</string>
+    <string name="common_unknown_band">نطاق غير معروف</string>
+    <string name="common_copy_diagnostics">نسخ التشخيصات</string>
+    <string name="common_send">إرسال</string>
+    <string name="common_bands">النطاقات</string>
+    <string name="common_cell">الخلية</string>
+    <string name="common_network">الشبكة</string>
+    <string name="common_modem">المودم</string>
+    <string name="common_device">الجهاز</string>
+    <string name="common_platform">المنصة</string>
+    <string name="common_baseband">برنامج المودم (Baseband)</string>
+    <string name="common_cancel">إلغاء</string>
+</resources>

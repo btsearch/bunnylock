@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="at_open_failed">تعذّر فتح %1$s (%2$s).</string>
+    <string name="at_not_accepted">لم يقبل المودم الأمر %1$s. وكان رده: %2$s</string>
+    <string name="at_read_failed">تعذّرت القراءة من %1$s (%2$s).</string>
+    <string name="at_no_reply">لم يصل أي رد على الأمر %1$s من %2$s.</string>
+    <string name="mtk_erat_no_mode">لا يوجد في AT+ERAT وضع لهذه التوليفة.</string>
+    <string name="mtk_ca_kept">أبقى المودم الإعداد السابق.</string>
+    <string name="mtk_epbse_unreadable">%1$s (ردّ %2$s: %3$s).</string>
+    <string name="mtk_no_band_lock">منفذ AT %1$s لا يدعم قفل النطاقات</string>
+    <string name="mtk_current_bands_unreadable">تعذّرت قراءة النطاقات الحالية من %1$s</string>
+    <string name="mtk_no_epbseh">هذا المودم لا يدعم AT+EPBSEH، فقد لا يدعم 5G.</string>
+    <string name="oem_working_through">جارٍ العمل عبر %1$s.</string>
+    <string name="oem_no_passthrough">لم يردّ أي تمرير لطلبات OEM على هذا الهاتف.</string>
+    <string name="oem_no_ril_passthrough">لا يتوفر تمرير عبر RIL على هذا الهاتف.</string>
+    <string name="oem_no_raw_route">لا يملك هذا الهاتف مسارًا لطلبات OEM لتجربته.</string>
+    <string name="oem_no_callback_reply">لم يصل ردّ عبر الاستدعاء العكسي على %1$s.</string>
+    <string name="oem_timeout">لم يردّ المودم على %1$s في الوقت المناسب.</string>
+    <string name="oem_service_refused">رفضت الخدمة %1$s (%2$s).</string>
+    <string name="oem_probe_failed">فشل %1$s: %2$s</string>
+    <string name="oem_probe_replied">ردّ %1$s: %2$s</string>
+    <string name="oem_probe_silent">لم يردّ %1$s.</string>
+    <string name="cell_hint_mtk_at">يستخدم AT+EMMCHLCK، ولا يحمل إلا قفلًا واحدًا في كل مرة. قيمة PCI اختيارية، ويعيد الراديو تشغيل نفسه لتطبيق القفل.</string>
+    <string name="cell_hint_mtk_hal">هذا المودم لا يقبل AT+EMMCHLCK، لذا يُقفل التردد (ARFCN) عبر radio HAL بدلًا منه. ولا يمكن بذلك القفل على PCI، وبعض المودمات تتجاهله.</string>
+</resources>
