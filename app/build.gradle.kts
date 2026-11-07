@@ -50,7 +50,7 @@ android {
         minSdk = 30
         targetSdk = 37
         versionCode = 1
-        versionName = "2.0.0-rc.1"
+        versionName = "2.0.0"
         ndk {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
         }
@@ -93,7 +93,6 @@ android {
         generateLocaleConfig = true
     }
 
-    // The in-app picker offers every language, so an app bundle mustn't split them off.
     bundle {
         language {
             enableSplit = false
@@ -106,7 +105,6 @@ android {
     }
 }
 
-// The Gradle daemon may run on GraalVM, whose jlink breaks AGP's JDK image step, so compiling sticks to Temurin.
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
