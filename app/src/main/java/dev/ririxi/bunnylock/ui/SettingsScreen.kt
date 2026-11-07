@@ -2,8 +2,9 @@
 
 package dev.ririxi.bunnylock.ui
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -22,20 +23,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.ririxi.bunnylock.R
-import dev.ririxi.bunnylock.data.AppLanguage
-import dev.ririxi.bunnylock.modem.Backend
 import dev.ririxi.bunnylock.ui.theme.dynamicColorAvailable
 
 @Composable
@@ -48,9 +45,11 @@ fun SettingsScreen(
         item {
             SectionHeader(stringResource(R.string.settings_backend))
             Segmented {
-                Backend.entries.forEach { backend ->
+                state.modem.offeredBackends.forEach { backend ->
                     val selected = state.modem.backend == backend
-                    val needsRoot = !state.modem.allows(backend)
+                    val unavailable = !state.modem.allows(backend)
+                    // With root, an unavailable backend lacks something on the phone itself, so root wouldn't help.
+                    val needsRoot = unavailable && (state.modem.limited || state.modem.device === null)
                     item { shapes ->
                         val hint =
                             when {
@@ -61,7 +60,7 @@ fun SettingsScreen(
                         SegmentedListItem(
                             selected = selected,
                             onClick = { vm.setBackend(backend) },
-                            enabled = !needsRoot,
+                            enabled = !unavailable,
                             shapes = shapes,
                             colors = segmentColors(),
                             supportingContent = if (hint !== null) ({ Text(hint) }) else null,
@@ -69,7 +68,7 @@ fun SettingsScreen(
                         ) { Text(stringResource(backend.label)) }
                     }
                 }
-                if (state.modem.backend == Backend.QUALCOMM) {
+                if (state.modem.features.persistSwitch) {
                     item {
                         SwitchItem(
                             it,
@@ -95,7 +94,7 @@ fun SettingsScreen(
                         onCheckedChange = vm::setExclusiveBandLock,
                     )
                 }
-                if (state.modem.halNeedsChannels && state.modem.backend == Backend.ANDROID) {
+                if (state.modem.features.forgetNeedsChannels) {
                     item {
                         ActionItem(
                             it,
@@ -185,7 +184,11 @@ private fun About() {
                 }
             }
         }
-        AnimatedVisibility(visible = fact !== null) {
+        val motion = MaterialTheme.motionScheme
+        AnimatedVisibility(
+            visible = fact !== null,
+            enter = expandVertically(motion.defaultSpatialSpec()) + fadeIn(motion.defaultEffectsSpec()),
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Icon(BunnyIcons.Bunny, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
                 Text(
@@ -198,51 +201,3 @@ private fun About() {
         }
     }
 }
-
-@Composable
-private fun LanguageSection() {
-    val activity = LocalActivity.current
-    val context = LocalContext.current
-    var language by remember { mutableStateOf(AppLanguage.current(context)) }
-    val shownInEnglish = LocalConfiguration.current.locales[0].language == "en"
-    SectionHeader(stringResource(R.string.settings_language))
-    Segmented {
-        (listOf("") + AppLanguage.tags).forEach { tag ->
-            item { shapes ->
-                val selected = language == tag
-                val hint =
-                    when {
-                        selected && !shownInEnglish -> stringResource(R.string.settings_language_helper_english)
-                        tag.isEmpty() -> stringResource(R.string.settings_language_system_hint)
-                        else -> null
-                    }
-                SegmentedListItem(
-                    selected = selected,
-                    onClick = {
-                        if (!selected) {
-                            language = tag
-                            activity?.let { AppLanguage.set(it, tag) }
-                        }
-                    },
-                    shapes = shapes,
-                    colors = segmentColors(),
-                    supportingContent = if (hint !== null) ({ Text(hint) }) else null,
-                    trailingContent = if (selected) ({ Icon(Icons.Rounded.Check, contentDescription = null) }) else null,
-                ) { Text(languageName(tag)) }
-            }
-        }
-    }
-}
-
-@Composable
-private fun languageName(tag: String): String =
-    when (tag) {
-        "" -> stringResource(R.string.settings_language_system)
-        "en" -> stringResource(R.string.settings_language_en)
-        "tr" -> stringResource(R.string.settings_language_tr)
-        "pl" -> stringResource(R.string.settings_language_pl)
-        "ru" -> stringResource(R.string.settings_language_ru)
-        "uk" -> stringResource(R.string.settings_language_uk)
-        "zh-CN" -> stringResource(R.string.settings_language_zh_cn)
-        else -> tag
-    }

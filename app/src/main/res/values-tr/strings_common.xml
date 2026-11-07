@@ -13,4 +13,5 @@
     <string name="common_device">Cihaz</string>
     <string name="common_platform">Platform</string>
     <string name="common_baseband">Baseband</string>
+    <string name="common_cancel">İptal</string>
 </resources>

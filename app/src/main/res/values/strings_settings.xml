@@ -14,14 +14,12 @@
     <string name="settings_dynamic_color_hint">Use your wallpaper colors. Off uses the default blue theme.</string>
     <string name="settings_language">Language</string>
     <string name="settings_language_system">System default</string>
-    <string name="settings_language_system_hint">Follows your phone\'s language.</string>
+    <string name="settings_language_system_hint">Follows your phone. Right now that\'s %1$s.</string>
     <string name="settings_language_helper_english">A few messages from the root helper may still show up in English.</string>
-    <string name="settings_language_en" translatable="false">English</string>
-    <string name="settings_language_tr" translatable="false">Türkçe</string>
-    <string name="settings_language_pl" translatable="false">Polski</string>
-    <string name="settings_language_ru" translatable="false">Русский</string>
-    <string name="settings_language_uk" translatable="false">Українська</string>
-    <string name="settings_language_zh_cn" translatable="false">简体中文</string>
+    <!-- The name of this language, written in this language. For example Polski, not Polish. -->
+    <string name="settings_language_name">English</string>
+    <string name="settings_language_suggested">Suggested</string>
+    <string name="settings_language_all">All languages</string>
     <string name="settings_updates">Updates</string>
     <string name="settings_check_updates">Check for updates</string>
     <string name="settings_check_updates_hint">Looks for a new release on GitHub when the app starts.</string>

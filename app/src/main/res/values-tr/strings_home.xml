@@ -35,4 +35,6 @@
     <string name="home_tag_serving">Hizmet veren</string>
     <string name="home_feature_on">%1$s açık</string>
     <string name="home_feature_off">%1$s kapalı</string>
+    <string name="home_unlock_all_title">Tüm kilitler kaldırılsın mı?</string>
+    <string name="home_unlock_all_message">Tüm bant, hücre ve şebeke kilitleri kaldırılır ve telefon yeniden şebekeyi kendi seçer.</string>
 </resources>

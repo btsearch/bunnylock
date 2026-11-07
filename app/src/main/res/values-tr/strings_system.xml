@@ -19,22 +19,22 @@
 
     <string name="system_shizuku_step_root">Root erişimi isteniyor...</string>
     <string name="system_shizuku_step_looking">Shizuku aranıyor...</string>
-    <string name="system_shizuku_step_connecting">Shizuku'ya bağlanılıyor. İstenirse bunnylock'a izin verin...</string>
+    <string name="system_shizuku_step_connecting">Shizuku\'ya bağlanılıyor. İstenirse bunnylock\'a izin verin...</string>
 
     <string name="system_shizuku_root_failed">Root erişimi alınamadı: %1$s</string>
     <string name="system_shizuku_root_denied">Root erişimi reddedildi.</string>
-    <string name="system_shizuku_not_installed">Shizuku da yüklü değil. Root erişimi verin veya Shizuku'yu yükleyip başlatın, ardından tekrar deneyin.</string>
-    <string name="system_shizuku_not_running">Shizuku yüklü ancak bunnylock'a bağlanmadı; bu nedenle muhtemelen çalışmıyor. Kontrol etmek için Shizuku'yu açın, ardından tekrar deneyin.</string>
+    <string name="system_shizuku_not_installed">Shizuku da yüklü değil. Root erişimi verin veya Shizuku\'yu yükleyip başlatın, ardından tekrar deneyin.</string>
+    <string name="system_shizuku_not_running">Shizuku yüklü ancak bunnylock\'a bağlanmadı; bu nedenle muhtemelen çalışmıyor. Kontrol etmek için Shizuku\'yu açın, ardından tekrar deneyin.</string>
     <string name="system_shizuku_failed">Shizuku da çalışmadı: %1$s</string>
     <string name="system_shizuku_failed_no_reason">Shizuku da çalışmadı (herhangi bir neden belirtilmedi).</string>
 
     <string name="system_shizuku_lost">Shizuku hizmeti durdu. Yeniden başlatmak için tekrar deneyin.</string>
-    <string name="system_shizuku_too_old">Bu Shizuku sürümü çok eski. Shizuku'yu güncelleyin ve tekrar deneyin.</string>
+    <string name="system_shizuku_too_old">Bu Shizuku sürümü çok eski. Shizuku\'yu güncelleyin ve tekrar deneyin.</string>
     <string name="system_shizuku_stopped">Shizuku durdu.</string>
     <string name="system_shizuku_no_shell">Shizuku bir kabuk oturumu açamadı (%1$s).</string>
-    <string name="system_shizuku_denied_earlier">Shizuku erişimi daha önce reddedildi. Shizuku uygulamasından bunnylock'a izin verin ve tekrar deneyin.</string>
+    <string name="system_shizuku_denied_earlier">Shizuku erişimi daha önce reddedildi. Shizuku uygulamasından bunnylock\'a izin verin ve tekrar deneyin.</string>
     <string name="system_shizuku_denied">Shizuku erişimi reddedildi.</string>
-    <string name="system_shizuku_prompt_unanswered">Shizuku'nun izin isteği yanıtlanmadı. İstek hiç görünmediyse Shizuku uygulamasından bunnylock'a izin verip geri dönün.</string>
+    <string name="system_shizuku_prompt_unanswered">Shizuku\'nun izin isteği yanıtlanmadı. İstek hiç görünmediyse Shizuku uygulamasından bunnylock\'a izin verip geri dönün.</string>
     <string name="system_shizuku_service_no_response">Shizuku hizmeti başlatıldı ancak yanıt vermedi.</string>
     <string name="system_shizuku_service_start_timeout">Shizuku hizmeti zamanında başlatılamadı.</string>
     <string name="system_shizuku_service_not_running">Shizuku hizmeti çalışmıyor.</string>

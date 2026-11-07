@@ -10,7 +10,7 @@
     <string name="shell_try_again">Tekrar dene</string>
     <string name="shell_subtitle_default">Bant ve hücre kilitleme</string>
     <string name="shell_subtitle_shizuku">%1$s (Shizuku)</string>
-    <string name="shell_sim_chip_description">SIM %1$d, %2$s. SIM'i değiştir</string>
+    <string name="shell_sim_chip_description">SIM %1$d, %2$s. SIM\'i değiştir</string>
     <string name="shell_sim_menu_item">SIM %1$d: %2$s</string>
     <string name="shell_sim_selected">Seçili</string>
     <string name="shell_update_title">Güncelleme mevcut</string>

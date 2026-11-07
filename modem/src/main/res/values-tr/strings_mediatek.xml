@@ -22,4 +22,6 @@
     <string name="oem_probe_failed">%1$s başarısız oldu: %2$s</string>
     <string name="oem_probe_replied">%1$s yanıt verdi: %2$s</string>
     <string name="oem_probe_silent">%1$s yanıt vermedi.</string>
+    <string name="cell_hint_mtk_at">Tek seferde yalnızca bir kilit uygulayan AT+EMMCHLCK komutunu kullanır. PCI belirtmek isteğe bağlıdır ve kilidin uygulanması için radyo birimi yeniden başlatılır.</string>
+    <string name="cell_hint_mtk_hal">Bu modem AT+EMMCHLCK komutunu desteklemediğinden frekans (ARFCN) bunun yerine radyo HAL\'i üzerinden kilitlenir. Bu yöntem PCI kilitlemesi yapamaz ve bazı modemler bu kilidi yok sayar.</string>
 </resources>

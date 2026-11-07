@@ -51,7 +51,7 @@
     <string name="qc_op_data_detach">veri bağlantısının kesilmesi</string>
     <string name="qc_op_data_attach">veri bağlantısının kurulması</string>
 
-    <string name="qc_sim_switch_failed">Modem SIM %1$d'ye geçemedi: %2$s.</string>
+    <string name="qc_sim_switch_failed">Modem SIM %1$d\'ye geçemedi: %2$s.</string>
     <string name="qc_lte_lock_too_many_pcis">Modem %1$s isteğini reddetti: Daha az sayıda PCI kabul ediyor. Eski modemler en fazla %2$d PCI kabul eder.</string>
     <string name="qc_note_nr_bands_combined">Bu modem %1$s bantlarını tek başına ayarlayamıyor. Bu nedenle bantlar hem SA hem de NSA için uygulandı.</string>
     <string name="qc_invalid_scs">%1$d kHz geçerli bir alt taşıyıcı aralığı değil.</string>
@@ -69,4 +69,6 @@
     <string name="qrtr_timeout">Modem, QMI isteğine zamanında yanıt vermedi.</string>
     <string name="qrtr_wait">QMI yanıtı beklenemedi.</string>
     <string name="qrtr_recv">QMI yanıtı okunamadı.</string>
+    <string name="cell_hint_qualcomm">LTE ve NR\'yi bir PCI\'ye (SA PCell veya NSA SCG) kilitler. Yalnızca frekansı kilitlemek için NR PCI alanını boş bırakın. Birden fazla PCI girmek için aralarına virgül koyun.</string>
+    <string name="cell_plmn_hint_qualcomm">Önce QMI üzerinden ayarlanır. Modem işlemi reddederse bunun yerine Android şebeke seçimi kullanılır.</string>
 </resources>
