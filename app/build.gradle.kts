@@ -16,19 +16,46 @@ val releaseSigning = providers.fileContents(rootProject.layout.projectDirectory.
     .asText.orNull
     ?.let { Properties().apply { load(it.reader()) } }
 
+val defaultLocale: String = providers.fileContents(layout.projectDirectory.file("src/main/res/resources.properties"))
+    .asText.get()
+    .let { Properties().apply { load(it.reader()) } }
+    .getProperty("unqualifiedResLocale")
+
+val localeQualifier = Regex("""[a-z]{2,3}(-r[A-Z]{2})?|b\+[A-Za-z0-9+]+""")
+
+fun translations(res: File): Set<String> =
+    res.listFiles().orEmpty()
+        .filter { dir -> dir.name.startsWith("values-") && dir.listFiles().orEmpty().any { it.name.startsWith("strings") } }
+        .map { it.name.removePrefix("values-") }
+        .filter(localeQualifier::matches)
+        .toSet()
+
+fun languageTag(qualifier: String): String =
+    if (qualifier.startsWith("b+")) qualifier.removePrefix("b+").replace('+', '-') else qualifier.replace("-r", "-")
+
+val appTranslations = translations(file("src/main/res"))
+val modemTranslations = translations(rootProject.file("modem/src/main/res"))
+check(appTranslations == modemTranslations) {
+    "Each language needs strings in both app and modem, but app has ${appTranslations.sorted()} and modem has ${modemTranslations.sorted()}."
+}
+val appLocales = listOf(defaultLocale) + appTranslations.map(::languageTag).sorted()
+
 android {
     namespace = "dev.ririxi.bunnylock"
     compileSdk = 37
+    ndkVersion = libs.versions.ndk.get()
 
     defaultConfig {
         applicationId = "dev.ririxi.bunnylock"
         minSdk = 30
         targetSdk = 37
         versionCode = 1
-        versionName = "1.5.2"
+        versionName = "2.0.0"
         ndk {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
         }
+        buildConfigField("String", "DEFAULT_LOCALE", "\"$defaultLocale\"")
+        buildConfigField("String[]", "LOCALES", appLocales.joinToString(prefix = "{", postfix = "}") { "\"$it\"" })
     }
 
     signingConfigs {
@@ -58,15 +85,30 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     androidResources {
-        localeFilters += listOf("en", "pl", "ru", "uk", "zh-rCN")
+        localeFilters += listOf(defaultLocale) + appTranslations
+        generateLocaleConfig = true
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 
     packaging {
         // The root helper System.load() libbunnyqrtr.so from nativeLibraryDir, so it must be extracted.
         jniLibs.useLegacyPackaging = true
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+        vendor = JvmVendorSpec.ADOPTIUM
     }
 }
 

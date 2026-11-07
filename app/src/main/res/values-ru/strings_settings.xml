@@ -14,8 +14,11 @@
     <string name="settings_dynamic_color_hint">Использовать цвета обоев. Если выключено, используется стандартная синяя тема.</string>
     <string name="settings_language">Язык</string>
     <string name="settings_language_system">Системный</string>
-    <string name="settings_language_system_hint">Как в настройках телефона.</string>
+    <string name="settings_language_system_hint">Как в настройках телефона. Сейчас: %1$s.</string>
     <string name="settings_language_helper_english">Некоторые сообщения вспомогательного root-процесса могут по-прежнему отображаться на английском.</string>
+    <string name="settings_language_name">Русский</string>
+    <string name="settings_language_suggested">Рекомендуемые</string>
+    <string name="settings_language_all">Все языки</string>
     <string name="settings_updates">Обновления</string>
     <string name="settings_check_updates">Проверять обновления</string>
     <string name="settings_check_updates_hint">Ищет новый выпуск на GitHub при запуске приложения.</string>

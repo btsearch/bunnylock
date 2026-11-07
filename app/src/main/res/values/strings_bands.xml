@@ -5,12 +5,6 @@
     <string name="bands_nsa_off">NSA off</string>
     <string name="bands_samsung_menu">Open Samsung band menu</string>
     <string name="bands_samsung_menu_hint">Samsung\'s own band lock, built into the phone.</string>
-    <string name="bands_hint_qualcomm_persist">Changes apply right away over QMI. Locks stay after a reboot (you can change that in Tools).</string>
-    <string name="bands_hint_qualcomm_volatile">Changes apply right away over QMI. Locks are cleared when you reboot.</string>
-    <string name="bands_hint_mediatek">Changes are sent with AT+EPBSE and AT+EPBSEH on %1$s.</string>
-    <string name="bands_hint_mediatek_auto">Changes are sent with AT+EPBSE and AT+EPBSEH on the AT port found automatically.</string>
-    <string name="bands_hint_pixel">Changes are saved to the modem\'s NV memory, and the radio restarts by itself to apply them.</string>
-    <string name="bands_hint_android">This uses the radio HAL\'s system selection channels. Whether the modem follows them depends on the phone maker.</string>
     <string name="bands_summary">%1$d of %2$d selected</string>
     <string name="bands_summary_pending">%1$d of %2$d selected, not applied yet</string>
     <string name="bands_summary_locked">%1$d of %2$d selected, locked</string>
@@ -29,4 +23,10 @@
     <string name="bands_done">Done</string>
     <string name="bands_all">All</string>
     <string name="bands_none">None</string>
+    <plurals name="bands_pending">
+        <item quantity="one">%d band changed</item>
+        <item quantity="other">%d bands changed</item>
+    </plurals>
+    <string name="bands_discard">Discard</string>
+    <string name="bands_lock_changes">Apply band changes</string>
 </resources>

@@ -13,6 +13,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonGroup
+import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.ButtonGroupScope
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemShapes
@@ -43,7 +49,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -100,7 +109,7 @@ fun HomeScreen(
 
         item {
             val device = state.modem.device
-            val chipset = device?.let { stringResource(it.vendorLabel) }.orEmpty()
+            val chipset = device?.let { stringResource(it.chipset.label) }.orEmpty()
             val deviceName = "${device?.manufacturer.orEmpty()} ${device?.model.orEmpty()}".trim()
             val platform =
                 listOfNotNull(
@@ -118,6 +127,7 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun Hero(
     state: UiState,
@@ -138,8 +148,26 @@ private fun Hero(
         } else {
             MaterialTheme.colorScheme.surfaceContainerHigh
         },
+        MaterialTheme.motionScheme.defaultEffectsSpec(),
         label = "hero",
     )
+    val unlockLabel = stringResource(R.string.common_unlock_all)
+    val relockLabel = stringResource(R.string.home_relock)
+    val bandsLabel = stringResource(R.string.common_bands)
+    val cellLabel = stringResource(R.string.common_cell)
+    var confirmUnlock by rememberSaveable { mutableStateOf(false) }
+    val askToUnlock = { confirmUnlock = true }
+    val idle = !state.busy
+    if (confirmUnlock) {
+        ConfirmDialog(
+            title = stringResource(R.string.home_unlock_all_title),
+            message = stringResource(R.string.home_unlock_all_message),
+            confirmLabel = unlockLabel,
+            icon = BunnyIcons.LockOpen,
+            onConfirm = onUnlock,
+            onDismiss = { confirmUnlock = false },
+        )
+    }
     Surface(color = containerColor, shape = RoundedCornerShape(36.dp), modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -184,54 +212,89 @@ private fun Hero(
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 val buttonHeight = ButtonDefaults.MediumContainerHeight
                 if (locked) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Button(
-                            onClick = onUnlock,
-                            enabled = !state.busy,
-                            shapes = ButtonDefaults.shapes(),
-                            modifier = Modifier.weight(1f).height(buttonHeight),
-                            contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
-                            colors =
-                                ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.error,
-                                    contentColor = MaterialTheme.colorScheme.onError,
-                                ),
-                        ) {
-                            Icon(
-                                BunnyIcons.LockOpen,
-                                contentDescription = null,
-                                modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
-                            )
-                            Spacer(Modifier.width(10.dp))
-                            Text(stringResource(R.string.common_unlock_all), style = ButtonDefaults.textStyleFor(buttonHeight), maxLines = 1)
+                    ButtonGroup(overflowIndicator = { ButtonGroupDefaults.OverflowIndicator(it) }) {
+                        groupItem(unlockLabel, enabled = idle, onClick = askToUnlock) { modifier, interactionSource ->
+                            Button(
+                                onClick = askToUnlock,
+                                enabled = idle,
+                                shapes = ButtonDefaults.shapes(),
+                                interactionSource = interactionSource,
+                                modifier = modifier.height(buttonHeight),
+                                contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
+                                colors =
+                                    ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.error,
+                                        contentColor = MaterialTheme.colorScheme.onError,
+                                    ),
+                            ) {
+                                Icon(
+                                    BunnyIcons.LockOpen,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
+                                )
+                                Spacer(Modifier.width(10.dp))
+                                Text(unlockLabel, style = ButtonDefaults.textStyleFor(buttonHeight), maxLines = 1)
+                            }
                         }
-                        FilledTonalButton(
-                            onClick = onRelock,
-                            enabled = !state.busy,
-                            shapes = ButtonDefaults.shapes(),
-                            modifier = Modifier.height(buttonHeight),
-                            contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
-                        ) {
-                            Icon(
-                                Icons.Rounded.Refresh,
-                                contentDescription = stringResource(R.string.home_relock),
-                                modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
-                            )
+                        groupItem(relockLabel, enabled = idle, onClick = onRelock, weight = null) { modifier, interactionSource ->
+                            FilledTonalButton(
+                                onClick = onRelock,
+                                enabled = idle,
+                                shapes = ButtonDefaults.shapes(),
+                                interactionSource = interactionSource,
+                                modifier = modifier.height(buttonHeight),
+                                contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
+                            ) {
+                                Icon(
+                                    Icons.Rounded.Refresh,
+                                    contentDescription = relockLabel,
+                                    modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
+                                )
+                            }
                         }
                     }
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    FilledTonalButton(onClick = onBands, shapes = ButtonDefaults.shapes(), modifier = Modifier.weight(1f)) {
-                        Text(stringResource(R.string.common_bands))
+                ButtonGroup(overflowIndicator = { ButtonGroupDefaults.OverflowIndicator(it) }) {
+                    groupItem(bandsLabel, onClick = onBands) { modifier, interactionSource ->
+                        FilledTonalButton(onClick = onBands, shapes = ButtonDefaults.shapes(), interactionSource = interactionSource, modifier = modifier) {
+                            Text(bandsLabel)
+                        }
                     }
-                    FilledTonalButton(onClick = onCell, shapes = ButtonDefaults.shapes(), modifier = Modifier.weight(1f)) {
-                        Text(stringResource(R.string.common_cell))
+                    groupItem(cellLabel, onClick = onCell) { modifier, interactionSource ->
+                        FilledTonalButton(onClick = onCell, shapes = ButtonDefaults.shapes(), interactionSource = interactionSource, modifier = modifier) {
+                            Text(cellLabel)
+                        }
                     }
                 }
             }
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+private fun ButtonGroupScope.groupItem(
+    label: String,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    weight: Float? = 1f,
+    button: @Composable (Modifier, MutableInteractionSource) -> Unit,
+) = customItem(
+    buttonGroupContent = {
+        val interactionSource = remember { MutableInteractionSource() }
+        val sized = if (weight !== null) Modifier.weight(weight) else Modifier
+        button(sized.animateWidth(interactionSource), interactionSource)
+    },
+    menuContent = { menu ->
+        DropdownMenuItem(
+            text = { Text(label) },
+            enabled = enabled,
+            onClick = {
+                menu.dismiss()
+                onClick()
+            },
+        )
+    },
+)
 
 @StringRes
 private fun pinnedSummary(state: UiState): Int {
@@ -328,7 +391,8 @@ private fun ConnectionCard(modem: ModemState) {
     val network = modem.registeredName ?: modem.registeredPlmn?.let(::formatPlmn) ?: stringResource(R.string.home_unknown_network)
     val primaryRat = carriers.first().rat
     val signals = modem.signals.filter { it.rsrp !== null || it.rsrq !== null || it.sinr !== null }.sortedBy { it.rat != primaryRat }
-    Panel(Modifier.animateContentSize(), padding = PaddingValues(20.dp)) {
+    val motion = MaterialTheme.motionScheme
+    Panel(Modifier.animateContentSize(motion.defaultSpatialSpec()), padding = PaddingValues(20.dp)) {
         Row {
             Column(Modifier.weight(1f)) {
                 Text(network, style = MaterialTheme.typography.titleMediumEmphasized)
@@ -338,7 +402,10 @@ private fun ConnectionCard(modem: ModemState) {
                 Column(horizontalAlignment = Alignment.End) {
                     AnimatedContent(
                         targetState = total,
-                        transitionSpec = { (slideInVertically { it / 2 } + fadeIn()) togetherWith (slideOutVertically { -it / 2 } + fadeOut()) },
+                        transitionSpec = {
+                            (slideInVertically(motion.defaultSpatialSpec()) { it / 2 } + fadeIn(motion.defaultEffectsSpec())) togetherWith
+                                (slideOutVertically(motion.defaultSpatialSpec()) { -it / 2 } + fadeOut(motion.fastEffectsSpec()))
+                        },
                         label = "total bandwidth",
                     ) { shown -> Text(shown, style = MaterialTheme.typography.headlineSmallEmphasized) }
                     Text(

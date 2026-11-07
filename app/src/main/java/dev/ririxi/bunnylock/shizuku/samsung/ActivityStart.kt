@@ -1,6 +1,7 @@
 package dev.ririxi.bunnylock.shizuku.samsung
 
 import android.content.Intent
+import dev.ririxi.bunnylock.backend.samsung.Samsung
 import dev.ririxi.bunnylock.shizuku.HiddenApi
 import dev.ririxi.bunnylock.shizuku.invokeUnwrapped
 
@@ -35,7 +36,7 @@ internal object ActivityStart {
             startActivity.invokeUnwrapped(activityManager, null, SHELL_PACKAGE, null, intent, null, null, null, 0, 0, null, null) as Int
         if (result in START_SUCCESS..LAST_START_SUCCESS_CODE) return
         throw when (result) {
-            START_PERMISSION_DENIED -> SecurityException("$PERMISSION_DENIAL: start returned $result")
+            START_PERMISSION_DENIED -> SecurityException("${Samsung.PERMISSION_DENIAL}: start returned $result")
             START_CLASS_NOT_FOUND -> IllegalStateException("The activity class does not exist ($result)")
             START_INTENT_NOT_RESOLVED -> IllegalStateException("Nothing to start for the intent ($result)")
             else -> IllegalStateException("Start returned $result")

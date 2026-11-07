@@ -2,7 +2,7 @@
   <img src=".github/banner-readme.png" alt="bunnylock">
 </p>
 
-bunnylock is an Android app for band, RAT, and cell locking. It talks to the modem through root or Shizuku and picks the best backend available on the phone.
+bunnylock locks bands, RATs and cells on Android phones. It works through root or [Shizuku](https://shizuku.rikka.app/) and picks the right way to talk to your phone's modem.
 
 Modems are weird, and vendors rarely implement the same controls in the same way. Something working on one phone does not guarantee that it will work on every phone with the same chipset or Android version.
 
@@ -22,90 +22,54 @@ Modems are weird, and vendors rarely implement the same controls in the same way
 </table>
 
 > [!CAUTION]
-> bunnylock changes low-level modem settings. Some of them stay after a reboot, and modems don't always react the way you'd expect. **You use it at your own risk.**
+> bunnylock changes low-level modem settings, and some of them stay after a reboot. A wrong lock can leave you without service, emergency calls included. **Use it at your own risk.** The author isn't responsible for any damage it causes, such as lost service, lost data or a phone that stops working properly. It comes without any warranty. See the [license](LICENSE).
 >
-> The author isn't responsible for any issues or damage it causes. That includes losing service or messages (emergency calls too), lost data, or a phone that stops working properly. Before you experiment, make sure you know how to undo a change: **Unlock all**, or a network settings reset in your phone's settings.
->
-> bunnylock is provided "as is", without any warranty. See the [license](LICENSE) for the full terms.
+> **Unlock all** on the Home screen tries to undo bunnylock's locks, even without service, but the modem doesn't always go along with it. Before you experiment, find out how else your phone can get back to normal, such as a network settings reset or its engineering menu.
 
 ## Features
 
-Depending on the phone and backend, bunnylock can:
+Depending on your phone, bunnylock can:
 
-- lock 2G, 3G, 4G, and 5G bands
+- lock 2G, 3G, 4G and 5G bands
 - force a RAT, such as 4G only or 5G only
-- lock LTE and NR frequencies using EARFCN or ARFCN
-- lock one or more PCIs on supported modems
-- select 5G SA, NSA, or both
-- lock to a mobile network (PLMN)
-- re-attach, restart the radio, or reboot the modem
-- clear active locks with **Unlock all**
+- lock 4G and 5G cells by EARFCN, ARFCN or PCI
+- choose 5G SA, NSA or both
+- lock to one mobile network
+- turn VoLTE, Wi-Fi calling and carrier aggregation on or off
+- restart the radio or reboot the modem
+- open the built-in band menu on supported Samsung phones
 
-See [Tested devices](TESTED_DEVICES.md) for combinations that have been tried on real phones.
+See [Tested devices](TESTED_DEVICES.md) for what has been tried on real phones.
 
-## Access
+## Supported phones
 
-bunnylock needs either root or [Shizuku](https://shizuku.rikka.app/). It tries root first and falls back to Shizuku when root is unavailable or denied.
+bunnylock tries root first, then Shizuku. Shizuku started through ADB can do less, though some MediaTek and Unisoc phones can still lock bands with it.
 
-- **Root or Shizuku running as root** gives bunnylock full access to the available modem backend.
-- **Shizuku started through ADB** can use Android's telephony APIs without root.
-- Some **MediaTek** phones expose an AT-command passthrough through Shizuku, allowing real band and cell locking without root.
+It picks a backend for your chipset, and you can change it in **Settings**:
 
-## Backends
+- **Qualcomm**: QMI
+- **MediaTek**: AT commands
+- **Pixel (Tensor)**: the modem's NV settings
+- **Unisoc**: AT commands
+- **Anything else**: Android's radio HAL
 
-bunnylock detects the phone automatically. You can override the backend in **Tools** if the automatic choice is wrong.
-
-- **Qualcomm** - talks to the modem over QMI.
-- **MediaTek** - uses the same AT commands as MediaTek EngineerMode.
-- **Pixel Tensor** - uses Shannon modem settings exposed by Pixel firmware.
-- **Samsung Exynos and other devices** - uses Android's radio HAL. On supported Samsung phones, bunnylock can also open the built-in Samsung band menu.
-
-Available features still depend on what the modem and firmware accept. In particular, Android's radio HAL controls are vendor-dependent.
-
-## Using it
-
-1. Grant root access, or start Shizuku and allow bunnylock to use it.
-2. Pick the SIM you want to control.
-3. Use **Bands** to select bands, or **Cell lock** to enter an EARFCN, ARFCN, or PCI.
-4. Use **Unlock all** on the Home screen to return to the default configuration.
-
-Locking a band or cell that your carrier does not use can leave the phone without service. **Unlock all** works offline, so keep it in mind while experimenting.
-
-If something fails, copy the diagnostics from **Tools**. They include the detected chipset, backend, available interfaces, and recent operation log.
+If something doesn't work, copy the diagnostics from **Tools** and include them in your report.
 
 ## Building
 
-You need:
-
-- JDK 17 or newer
-- Android SDK
-- Android NDK `29.0.14206865`
-- CMake `3.22.1`
-
-On Windows:
-
-```powershell
-.\gradlew.bat assembleRelease
-```
-
-On Linux or macOS:
+You need the Android SDK, the NDK version set in `gradle/libs.versions.toml` and CMake `3.22.1`. Gradle runs on Java 25 and compiles with Temurin 17, and it downloads either one if it's missing, so the first build needs a network connection.
 
 ```sh
 ./gradlew assembleRelease
 ```
 
-The APK is written to `app/build/outputs/apk/release/app-release.apk`
+The APK ends up in `app/build/outputs/apk/release/`. It's signed with your debug key unless you add a `keystore.properties` in the project root with `storeFile`, `storePassword`, `keyAlias`, `keyPassword` and, optionally, a `lineageFile` from `apksigner rotate`.
 
-### Signing
+## Translating
 
-By default, release builds are signed with your machine's debug key. To use your own key, create `keystore.properties` in the project root.
+The strings live in `app/src/main/res/values` and `modem/src/main/res/values`. To add a language:
 
-```properties
-storeFile=C:/keys/release.jks
-storePassword=...
-keyAlias=...
-keyPassword=...
-lineageFile=C:/keys/lineage.bin
-```
+1. In both `app/src/main/res` and `modem/src/main/res`, make a `values-<code>` folder, for example `values-de`, `values-pt-rBR` or `values-b+sr+Latn`, and copy only the `strings_*.xml` files from `values` into it.
+2. Translate every string and delete the ones marked `translatable="false"`. Set `settings_language_name` to the language's own name, like `Deutsch`.
 
-`lineageFile` is optional. It points to a lineage made with `apksigner rotate`, which lets builds signed with the new key update installs signed with an older one.
+The build finds the new folders by itself and adds the language to the app's picker and to Android's per-app language settings. It fails if a language has strings in only one of the two modules.

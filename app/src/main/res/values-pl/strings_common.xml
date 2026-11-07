@@ -13,4 +13,5 @@
     <string name="common_device">Urządzenie</string>
     <string name="common_platform">Platforma</string>
     <string name="common_baseband">Wersja pasma podstawowego</string>
+    <string name="common_cancel">Anuluj</string>
 </resources>

@@ -13,4 +13,5 @@
     <string name="common_device">设备</string>
     <string name="common_platform">平台</string>
     <string name="common_baseband">基带版本</string>
+    <string name="common_cancel">取消</string>
 </resources>

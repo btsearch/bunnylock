@@ -45,6 +45,7 @@ data class UiState(
     val toolOutput: String = "",
     val update: Release? = null,
     val favoriteBands: Map<String, Set<Int>> = emptyMap(),
+    val showAllBands: Set<Group> = emptySet(),
 ) {
     fun favoritesOf(group: Group): Set<Int> = favoriteBands[group.favoritesKey].orEmpty()
 
@@ -56,5 +57,35 @@ data class UiState(
 
     fun appliedBands(groupState: BandGroupState): Set<Int> = if (isOff(groupState.group)) emptySet() else groupState.allowed
 
-    fun selectedBands(groupState: BandGroupState): Set<Int> = bandSelections[groupState.group] ?: appliedBands(groupState)
+    // Locked bands and picks outside the favorites stay visible, so a checked band is never hidden from Lock.
+    fun visibleBands(groupState: BandGroupState): List<Int> {
+        if (!showsFavorites(groupState)) return groupState.supported
+        val favorites = favoritesOf(groupState.group)
+        val lockedBands = if (groupState.locked) appliedBands(groupState) else emptySet()
+        val keptVisible = bandSelections[groupState.group].orEmpty() + lockedBands
+        return groupState.supported.filter { it in favorites || it in keptVisible }
+    }
+
+    fun startingBands(groupState: BandGroupState): Set<Int> {
+        val applied = appliedBands(groupState)
+        return if (showsFavorites(groupState) && !groupState.locked) applied intersect favoritesOf(groupState.group) else applied
+    }
+
+    fun selectedBands(groupState: BandGroupState): Set<Int> = bandSelections[groupState.group] ?: startingBands(groupState)
+
+    fun isPending(groupState: BandGroupState): Boolean = selectedBands(groupState) != startingBands(groupState)
+
+    val pendingGroups: List<Group> get() = modem.groups.filter(::isPending).map { it.group }
+
+    val changedBandCount: Int
+        get() =
+            modem.groups.sumOf { groupState ->
+                val selected = selectedBands(groupState)
+                val starting = startingBands(groupState)
+                (selected - starting).size + (starting - selected).size
+            }
+
+    fun hasFavorites(groupState: BandGroupState): Boolean = groupState.supported.any { it in favoritesOf(groupState.group) }
+
+    private fun showsFavorites(groupState: BandGroupState): Boolean = groupState.group !in showAllBands && hasFavorites(groupState)
 }

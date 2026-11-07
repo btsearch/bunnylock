@@ -14,8 +14,11 @@
     <string name="settings_dynamic_color_hint">Використовувати кольори шпалер. Коли вимкнено, використовується стандартна синя тема.</string>
     <string name="settings_language">Мова</string>
     <string name="settings_language_system">Системна</string>
-    <string name="settings_language_system_hint">Як у налаштуваннях телефона.</string>
+    <string name="settings_language_system_hint">Як у налаштуваннях телефона. Зараз: %1$s.</string>
     <string name="settings_language_helper_english">Деякі повідомлення root-помічника можуть і далі відображатися англійською.</string>
+    <string name="settings_language_name">Українська</string>
+    <string name="settings_language_suggested">Рекомендовані</string>
+    <string name="settings_language_all">Усі мови</string>
     <string name="settings_updates">Оновлення</string>
     <string name="settings_check_updates">Перевіряти оновлення</string>
     <string name="settings_check_updates_hint">Шукає новий випуск на GitHub під час запуску застосунку.</string>

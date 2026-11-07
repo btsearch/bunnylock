@@ -1,6 +1,6 @@
 # modem
 
-The library handling modem stuff for bunnylock. It does band, cell and PLMN locks, network and 5G modes, and diagnostics on Qualcomm, MediaTek, Pixel and the plain Android radio HAL.
+The library handling modem stuff for bunnylock. It does band, cell and PLMN locks, network and 5G modes, and diagnostics on Qualcomm, MediaTek, Pixel, Unisoc and the plain Android radio HAL.
 
 It doesn't care how you get root. Hand it a helper started with `RootClient` (su), or with your own Shizuku setup. bunnylock's `ShizukuClient` is a good starting point.
 
@@ -35,3 +35,27 @@ modem.refreshNow()
 Actions don't refresh the state on their own, so call `refreshNow()` after them.
 
 The module keeps its state in the `bunnylock` shared prefs, including the radio HAL locks it holds. Don't wipe that file.
+
+## Layout
+
+The module has two halves, which run in two processes. The app side is `ModemController`, and the root helper (`root.RootServer`) runs under su or Shizuku and answers one JSON command per line. Each backend keeps both halves in one package under `backend/`:
+
+- `XBackend.kt` is the app side. It extends `ModemBackend`, and its companion `BackendProfile` says which chipset it's made for, when it suits a phone, when it works there, and what the screens may offer (`BackendFeatures`).
+- The helper object (`Qualcomm.kt`, `Mediatek.kt`, ...) talks to the modem.
+- `XCommands.kt` is the helper's command table for that backend.
+
+The Android backend is the exception: its helper half is `root/Aosp.kt` and `root/AndroidCommands.kt`. `backend/samsung/` isn't a backend. It adds Samsung's 5G mode and band menu to the others.
+
+Shared code lives outside those packages:
+
+- `backend/` holds `ModemSession` (helper, prefs, state, log) and `HalLocks`, the radio HAL lock engine that backends fall back to.
+- `root/` holds the helper's own plumbing: `Request`, `At`, `OemHook` and `Detect`.
+- `modem/` holds `ModemController`, its state types and `Backends.kt`. `data/` and `core/` hold the helper clients, cells, carriers and band tables.
+
+To add a backend:
+
+1. Add a `Backend` entry in `modem/Model.kt`, in preference order. The first one that suits the phone is picked.
+2. Write `backend/<name>/`.
+3. Register it in `modem/Backends.kt` and in `RootServer`'s command list.
+4. Report any facts it needs from `root/Detect.kt`.
+5. Put its strings in its own `strings_<name>.xml` and its label as `backend_<name>` in `strings_model.xml`, in every locale.

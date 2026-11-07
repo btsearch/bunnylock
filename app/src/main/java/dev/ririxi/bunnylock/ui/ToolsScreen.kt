@@ -25,6 +25,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedListItem
@@ -45,7 +46,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import dev.ririxi.bunnylock.R
-import dev.ririxi.bunnylock.modem.Backend
 import dev.ririxi.bunnylock.modem.DeviceInfo
 import dev.ririxi.bunnylock.modem.ImsBlock
 import dev.ririxi.bunnylock.modem.ImsFeature
@@ -55,7 +55,7 @@ import dev.ririxi.bunnylock.modem.string
 
 private const val LOG_MIME_TYPE = "text/x-log"
 
-private val AT_COMMAND_PRESETS = listOf("ATI", "AT+EPBSE?", "AT+EPBSEH?", "AT+EMMCHLCK?", "AT+GOOGGETNV=\"NR.CONFIG.MODE\"")
+private val AT_COMMAND_PRESETS = listOf("ATI", "AT+EPBSE?", "AT+EPBSEH?", "AT+EMMCHLCK?", "AT+SPLBAND=0", "AT+GOOGGETNV=\"NR.CONFIG.MODE\"")
 
 @Composable
 fun ToolsScreen(
@@ -69,10 +69,22 @@ fun ToolsScreen(
     var qmiMessage by rememberSaveable { mutableStateOf("004D") }
     var qmiPayload by rememberSaveable { mutableStateOf("") }
     var checkedServicesOpen by rememberSaveable { mutableStateOf(false) }
-    val arrowAngle by animateFloatAsState(if (checkedServicesOpen) 180f else 0f, label = "arrow")
+    val arrowAngle by animateFloatAsState(if (checkedServicesOpen) 180f else 0f, MaterialTheme.motionScheme.defaultSpatialSpec(), label = "arrow")
     val saveLog = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(LOG_MIME_TYPE)) { uri -> uri?.let(vm::saveLog) }
+    var confirmReboot by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { vm.refreshIms() }
+
+    if (confirmReboot) {
+        ConfirmDialog(
+            title = stringResource(R.string.tools_reboot_modem_title),
+            message = stringResource(R.string.tools_reboot_modem_message),
+            confirmLabel = stringResource(R.string.tools_reboot),
+            icon = Icons.Rounded.Warning,
+            onConfirm = vm::rebootModem,
+            onDismiss = { confirmReboot = false },
+        )
+    }
 
     LazyColumn(contentPadding = contentPadding.withScreenMargins(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         val carrierAggregation = state.modem.carrierAggregation
@@ -109,7 +121,7 @@ fun ToolsScreen(
                         onClick = vm::radioCycle,
                     )
                 }
-                if (state.modem.backend == Backend.QUALCOMM) {
+                if (state.modem.features.reattach) {
                     item {
                         ActionItem(
                             it,
@@ -128,7 +140,7 @@ fun ToolsScreen(
                         stringResource(R.string.tools_reboot_modem_hint),
                         Icons.Rounded.Warning,
                         enabled = !state.busy,
-                        onClick = vm::rebootModem,
+                        onClick = { confirmReboot = true },
                     )
                 }
                 if (state.modem.device?.samsungMenu == true) {
@@ -166,6 +178,7 @@ fun ToolsScreen(
                     trailingIcon = {
                         IconButton(
                             onClick = { if (atCommand.isNotBlank()) vm.sendAt(atCommand.trim()) },
+                            shapes = IconButtonDefaults.shapes(),
                             enabled = !state.busy && state.modem.atNode.isNotBlank(),
                         ) { Icon(Icons.AutoMirrored.Rounded.Send, contentDescription = stringResource(R.string.common_send)) }
                     },
@@ -178,7 +191,7 @@ fun ToolsScreen(
             }
         }
 
-        if (state.modem.backend == Backend.QUALCOMM) {
+        if (state.modem.features.qmiConsole) {
             item {
                 SectionHeader(stringResource(R.string.tools_qmi_console))
                 Panel {
@@ -212,6 +225,7 @@ fun ToolsScreen(
                                     val message = qmiMessage.toIntOrNull(16)
                                     if (service !== null && message !== null) vm.sendQmi(service, message, qmiPayload)
                                 },
+                                shapes = IconButtonDefaults.shapes(),
                                 enabled = !state.busy,
                             ) { Icon(Icons.AutoMirrored.Rounded.Send, contentDescription = stringResource(R.string.common_send)) }
                         },
@@ -224,7 +238,7 @@ fun ToolsScreen(
             item {
                 Row(Modifier.fillMaxWidth()) {
                     SectionHeader(stringResource(R.string.tools_output), Modifier.weight(1f))
-                    TextButton(onClick = vm::clearOutput) { Text(stringResource(R.string.tools_clear)) }
+                    TextButton(onClick = vm::clearOutput, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.tools_clear)) }
                 }
                 MonospacePanel(state.toolOutput)
             }
@@ -247,14 +261,13 @@ fun ToolsScreen(
                 item { InfoItem(it, stringResource(R.string.tools_access), state.modem.access?.label.orEmpty()) }
                 if (device !== null) {
                     item {
-                        val status = device.mtkOemHookStatus?.let { text -> LocalContext.current.string(text) }
-                        InfoItem(it, stringResource(R.string.tools_passthrough), status.orEmpty())
+                        InfoItem(it, stringResource(R.string.tools_passthrough), textOf(device.rilPassthroughStatus))
                     }
-                    if (device.mtkOemHookChecked.isNotEmpty()) {
+                    if (device.rilPassthroughChecked.isNotEmpty()) {
                         item { shapes ->
                             val checkedServicesText: @Composable () -> Unit = {
                                 val context = LocalContext.current
-                                Text(device.mtkOemHookChecked.joinToString("\n") { context.string(it) }, style = MaterialTheme.typography.bodySmall)
+                                Text(device.rilPassthroughChecked.joinToString("\n") { context.string(it) }, style = MaterialTheme.typography.bodySmall)
                             }
                             SegmentedListItem(
                                 onClick = { checkedServicesOpen = !checkedServicesOpen },
@@ -271,7 +284,7 @@ fun ToolsScreen(
                                 },
                             ) {
                                 Text(
-                                    stringResource(R.string.tools_services_checked, device.mtkOemHookChecked.size),
+                                    stringResource(R.string.tools_services_checked, device.rilPassthroughChecked.size),
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             }
@@ -279,8 +292,8 @@ fun ToolsScreen(
                     }
                 }
                 item {
-                    val vendor = device?.vendorLabel?.let { label -> stringResource(label) }
-                    InfoItem(it, stringResource(R.string.common_modem), vendor.orEmpty())
+                    val chipset = device?.let { info -> stringResource(info.chipset.label) }.orEmpty()
+                    InfoItem(it, stringResource(R.string.common_modem), chipset)
                 }
                 item { InfoItem(it, "SoC", device?.socModel.orEmpty()) }
                 item { InfoItem(it, stringResource(R.string.common_platform), device?.platform.orEmpty()) }
@@ -311,6 +324,7 @@ fun ToolsScreen(
                     val saveLogDescription = stringResource(R.string.tools_save_log_description)
                     TextButton(
                         onClick = { saveLog.launch(vm.logFileName()) },
+                        shapes = ButtonDefaults.shapes(),
                         modifier = Modifier.semantics { contentDescription = saveLogDescription },
                     ) { Text(stringResource(R.string.tools_save_log)) }
                 }
@@ -366,7 +380,7 @@ private fun imsHint(
 
 @Composable
 private fun atNodesHint(device: DeviceInfo?): String {
-    val rilPorts = if (device?.mtkOemHook == true) listOf(stringResource(R.string.tools_at_ports_ril)) else emptyList()
+    val rilPorts = if (device?.rilPassthrough == true) listOf(stringResource(R.string.tools_at_ports_ril)) else emptyList()
     val nodes = device?.atNodes.orEmpty() + rilPorts
     return if (nodes.isEmpty()) {
         stringResource(R.string.tools_at_ports_none)

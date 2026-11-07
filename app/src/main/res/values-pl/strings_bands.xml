@@ -5,12 +5,6 @@
     <string name="bands_nsa_off">NSA wyłączone</string>
     <string name="bands_samsung_menu">Otwórz menu pasm Samsunga</string>
     <string name="bands_samsung_menu_hint">Wbudowana w telefon blokada pasm od Samsunga.</string>
-    <string name="bands_hint_qualcomm_persist">Zmiany przez QMI działają od razu. Blokady zostają po restarcie (możesz to zmienić w zakładce „Narzędzia”).</string>
-    <string name="bands_hint_qualcomm_volatile">Zmiany przez QMI działają od razu. Restart telefonu zdejmuje blokady.</string>
-    <string name="bands_hint_mediatek">Zmiany idą komendami AT+EPBSE i AT+EPBSEH przez port %1$s.</string>
-    <string name="bands_hint_mediatek_auto">Zmiany idą komendami AT+EPBSE i AT+EPBSEH przez automatycznie wykryty port AT.</string>
-    <string name="bands_hint_pixel">Zmiany trafiają do pamięci NV modemu, a radio samo się restartuje, żeby je zastosować.</string>
-    <string name="bands_hint_android">Blokada idzie przez kanały wyboru systemu w radio HAL. Czy modem jej posłucha, zależy od producenta telefonu.</string>
     <string name="bands_summary">Wybrano %1$d z %2$d</string>
     <string name="bands_summary_pending">Wybrano %1$d z %2$d, zmiany jeszcze niezastosowane</string>
     <string name="bands_summary_locked">Wybrano %1$d z %2$d, blokada aktywna</string>
@@ -31,4 +25,12 @@
     <string name="bands_done">Gotowe</string>
     <string name="bands_all">Wszystkie</string>
     <string name="bands_none">Żadne</string>
+    <plurals name="bands_pending">
+        <item quantity="one">Zmieniono %d pasmo</item>
+        <item quantity="few">Zmieniono %d pasma</item>
+        <item quantity="many">Zmieniono %d pasm</item>
+        <item quantity="other">Zmieniono %d pasma</item>
+    </plurals>
+    <string name="bands_discard">Odrzuć</string>
+    <string name="bands_lock_changes">Zastosuj zmiany w pasmach</string>
 </resources>
