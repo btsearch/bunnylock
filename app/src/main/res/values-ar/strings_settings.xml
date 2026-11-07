@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_backend">الواجهة الخلفية (Backend)</string>
+    <string name="settings_backend_needs_root">يتطلب روت</string>
+    <string name="settings_backend_detected">تم اكتشافها لهذا الجهاز</string>
+    <string name="settings_persist">إبقاء أقفال النطاقات بعد إعادة التشغيل</string>
+    <string name="settings_persist_hint">عند إيقاف هذا الخيار تُزال الأقفال عند إعادة التشغيل.</string>
+    <string name="settings_appearance">المظهر</string>
+    <string name="settings_bands">أقفال النطاقات</string>
+    <string name="settings_exclusive_lock">إيقاف الشبكات غير المقفلة</string>
+    <string name="settings_exclusive_lock_hint">يؤدي قفل النطاقات إلى إيقاف كل شبكة ليس لها قفل نطاقات خاص بها. ويعيد فك القفل تشغيلها.</string>
+    <string name="settings_forget_needs_channels">العودة إلى الأقفال بالنطاقات فقط</string>
+    <string name="settings_forget_needs_channels_hint">تتضمن أقفال النطاقات في هذا الهاتف الترددات الظاهرة، لأن القفل بالنطاقات وحدها لم ينجح هنا سابقًا. اضغط لتجربة النطاقات وحدها أولًا عند القفل التالي.</string>
+    <string name="settings_dynamic_color">الألوان الديناميكية</string>
+    <string name="settings_dynamic_color_hint">استخدام ألوان خلفية الشاشة. وعند الإيقاف يُستخدم السمت الأزرق الافتراضي.</string>
+    <string name="settings_language">اللغة</string>
+    <string name="settings_language_system">افتراضي النظام</string>
+    <string name="settings_language_system_hint">يتبع لغة هاتفك. حاليًا: %1$s.</string>
+    <string name="settings_language_helper_english">قد تظهر بعض الرسائل الصادرة من المساعِد (root helper) بالإنجليزية.</string>
+    <string name="settings_language_name">العربية</string>
+    <string name="settings_language_suggested">المقترحة</string>
+    <string name="settings_language_all">كل اللغات</string>
+    <string name="settings_updates">التحديثات</string>
+    <string name="settings_check_updates">التحقق من التحديثات</string>
+    <string name="settings_check_updates_hint">يبحث عن إصدار جديد على GitHub عند تشغيل التطبيق.</string>
+    <string name="settings_about">حول</string>
+    <string name="settings_author">بواسطة @ririxi (مطوّر BTSearch.pl)</string>
+    <string name="settings_version">الإصدار %1$s</string>
+    <string name="settings_bunny_fact">معلومة عن الأرانب: %1$s</string>
+    <string-array name="bunny_facts">
+        <item>أسنان الأرنب لا تتوقف عن النمو، لذا عليه أن يواصل المضغ ليبريها.</item>
+        <item>الأرنب السعيد يقوم بـ«بينكي»: قفزة مع التواء في الهواء.</item>
+        <item>يستطيع الأرنب أن يرى ما حوله تقريبًا في كل الاتجاهات، عدا بقعة عمياء صغيرة أمام أنفه مباشرة.</item>
+        <item>لا تستطيع الأرانب التقيؤ، لذا فأكل شيء فاسد أشد خطورة عليها.</item>
+        <item>الأرنب المرتاح «يخرخر» بطحن أسنانه برفق.</item>
+        <item>تُسمّى صغار الأرانب «كِتس» (kits).</item>
+        <item>تكون الأرانب أنشط ما يكون عند الفجر والغسق.</item>
+        <item>تعمل تلك الأذنان الكبيرتان كمشعّات تساعد الأرنب على التبرّد.</item>
+        <item>يُطلق أحيانًا على مجموعة من الأرانب اسم «فلافل» (fluffle).</item>
+        <item>الأرنب الذي يضرب الأرض برجله يحذّر كل من حوله من أن شيئًا ما يبدو غير طبيعي.</item>
+    </string-array>
+</resources>

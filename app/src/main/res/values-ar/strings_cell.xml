@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cell_network_header">الشبكة (PLMN)</string>
+    <string name="cell_current_lock">قفل الخلية الحالي</string>
+    <string name="cell_clear_lock">إزالة قفل الخلية</string>
+    <string name="cell_lock_to">القفل على</string>
+    <string name="cell_visible">الخلايا الظاهرة (اضغط على واحدة للتعبئة)</string>
+    <string name="cell_none_found">لم يُعثر على خلايا</string>
+    <string name="cell_none_found_hint">يتطلب البحث عن الخلايا صلاحية الموقع.</string>
+    <string name="cell_plmn_automatic">تلقائي</string>
+    <string name="cell_plmn_locked_to">مقفل على %1$s</string>
+    <string name="cell_not_registered">غير مسجَّل على شبكة.</string>
+    <string name="cell_connected">متصل بـ %1$s.</string>
+    <string name="cell_connected_named">متصل بـ %1$s (%2$s).</string>
+    <string name="cell_lock_ignored">متجاهَل</string>
+    <string name="cell_lock_locked">مقفل</string>
+    <string name="cell_lock_none">غير مقفل</string>
+    <string name="cell_lock_stray">قبِل أندرويد القفل، لكن الهاتف على %1$s.</string>
+    <string name="cell_lock_pinned">المودم مثبَّت على خلية محددة.</string>
+    <string name="cell_lock_free">المودم يختار الخلايا بنفسه.</string>
+    <string name="cell_lte_channel">B%1$d عند %2$.1f ميغاهرتز</string>
+    <string name="cell_lte_anchor">مرساة LTE</string>
+    <string name="cell_nr_scg">NR الثانوية (SCG)</string>
+    <string name="cell_pcis">قيم PCI</string>
+    <string name="cell_band">النطاق</string>
+    <string name="cell_scs">تباعد الحاملات الفرعية (كيلوهرتز)</string>
+    <string name="cell_clear_lock_title">إزالة قفل الخلية؟</string>
+    <string name="cell_clear_lock_message">سيستطيع المودم اختيار أي خلية من جديد. وللقفل على الخلية نفسها لاحقًا ستحتاج إلى قناتها وقيمة PCI الخاصة بها.</string>
+</resources>
