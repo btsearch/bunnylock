@@ -23,4 +23,6 @@
     <string name="cell_pcis">PCI</string>
     <string name="cell_band">Pasmo</string>
     <string name="cell_scs">Odstęp podnośnych (kHz)</string>
+    <string name="cell_clear_lock_title">Zdjąć blokadę komórki?</string>
+    <string name="cell_clear_lock_message">Modem znów będzie mógł wybrać dowolną komórkę. Żeby wrócić do tej, trzeba będzie podać jej kanał i PCI.</string>
 </resources>

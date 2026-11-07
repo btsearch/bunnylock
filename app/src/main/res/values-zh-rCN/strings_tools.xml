@@ -54,4 +54,7 @@
     <string name="tools_ims_not_offered">此 SIM 的运营商配置未列出该功能，可能无法使用。</string>
     <string name="tools_ims_locked">此 SIM 的运营商配置不允许更改此项，Android 可能会将其改回。</string>
     <string name="tools_ims_error">Android 无法读取此设置：%1$s</string>
+    <string name="tools_reboot_modem_title">要重启基带吗？</string>
+    <string name="tools_reboot_modem_message">信号最多会中断一分钟。SIM 卡也会一起重启。</string>
+    <string name="tools_reboot">重启</string>
 </resources>

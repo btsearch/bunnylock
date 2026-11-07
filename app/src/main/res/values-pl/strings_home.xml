@@ -39,4 +39,6 @@
     <string name="home_tag_serving">Obsługująca</string>
     <string name="home_feature_on">%1$s wł.</string>
     <string name="home_feature_off">%1$s wył.</string>
+    <string name="home_unlock_all_title">Odblokować wszystko?</string>
+    <string name="home_unlock_all_message">Wszystkie blokady pasm, komórek i sieci zostaną zdjęte, a telefon znów sam wybierze sieć.</string>
 </resources>

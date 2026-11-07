@@ -54,4 +54,7 @@
     <string name="tools_ims_not_offered">В настройках оператора для этой SIM этой функции нет, поэтому она может не работать.</string>
     <string name="tools_ims_locked">Настройки оператора для этой SIM не позволяют это менять, поэтому Android может вернуть прежнее значение.</string>
     <string name="tools_ims_error">Android не смог прочитать эту настройку: %1$s</string>
+    <string name="tools_reboot_modem_title">Перезагрузить модем?</string>
+    <string name="tools_reboot_modem_message">Связь пропадёт максимум на минуту. SIM тоже перезапустится.</string>
+    <string name="tools_reboot">Перезагрузить</string>
 </resources>

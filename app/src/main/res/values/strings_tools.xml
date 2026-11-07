@@ -54,4 +54,7 @@
     <string name="tools_ims_not_offered">The carrier settings for this SIM don\'t list it, so it may not work.</string>
     <string name="tools_ims_locked">The carrier settings for this SIM don\'t allow changing it, so Android may switch it back.</string>
     <string name="tools_ims_error">Android couldn\'t read this setting: %1$s</string>
+    <string name="tools_reboot_modem_title">Reboot the modem?</string>
+    <string name="tools_reboot_modem_message">The signal drops for up to a minute. The SIM restarts too.</string>
+    <string name="tools_reboot">Reboot</string>
 </resources>

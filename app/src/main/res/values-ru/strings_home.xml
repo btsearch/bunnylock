@@ -39,4 +39,6 @@
     <string name="home_tag_serving">Обслуживающая</string>
     <string name="home_feature_on">%1$s вкл.</string>
     <string name="home_feature_off">%1$s выкл.</string>
+    <string name="home_unlock_all_title">Снять все блокировки?</string>
+    <string name="home_unlock_all_message">Все блокировки диапазонов, сот и сети будут сняты, и телефон снова сам выберет сеть.</string>
 </resources>

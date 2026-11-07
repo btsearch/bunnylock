@@ -54,4 +54,7 @@
     <string name="tools_ims_not_offered">Ustawienia operatora dla tej karty SIM nie przewidują tej funkcji, więc może nie działać.</string>
     <string name="tools_ims_locked">Ustawienia operatora dla tej karty SIM nie pozwalają tego zmienić, więc Android może to cofnąć.</string>
     <string name="tools_ims_error">Android nie odczytał tego ustawienia: %1$s</string>
+    <string name="tools_reboot_modem_title">Zrestartować modem?</string>
+    <string name="tools_reboot_modem_message">Zasięg zniknie maksymalnie na minutę. Karta SIM też się zrestartuje.</string>
+    <string name="tools_reboot">Zrestartuj</string>
 </resources>

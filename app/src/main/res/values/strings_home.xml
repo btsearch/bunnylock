@@ -35,4 +35,6 @@
     <string name="home_tag_serving">Serving</string>
     <string name="home_feature_on">%1$s on</string>
     <string name="home_feature_off">%1$s off</string>
+    <string name="home_unlock_all_title">Unlock everything?</string>
+    <string name="home_unlock_all_message">Every band, cell and network lock comes off, and the phone picks a network on its own again.</string>
 </resources>

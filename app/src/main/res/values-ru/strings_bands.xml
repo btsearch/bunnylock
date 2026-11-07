@@ -25,4 +25,12 @@
     <string name="bands_done">Готово</string>
     <string name="bands_all">Все</string>
     <string name="bands_none">Ничего</string>
+    <plurals name="bands_pending">
+        <item quantity="one">Изменён %d диапазон</item>
+        <item quantity="few">Изменено %d диапазона</item>
+        <item quantity="many">Изменено %d диапазонов</item>
+        <item quantity="other">Изменено %d диапазона</item>
+    </plurals>
+    <string name="bands_discard">Сбросить</string>
+    <string name="bands_lock_changes">Применить изменения диапазонов</string>
 </resources>

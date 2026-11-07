@@ -23,4 +23,10 @@
     <string name="bands_done">Done</string>
     <string name="bands_all">All</string>
     <string name="bands_none">None</string>
+    <plurals name="bands_pending">
+        <item quantity="one">%d band changed</item>
+        <item quantity="other">%d bands changed</item>
+    </plurals>
+    <string name="bands_discard">Discard</string>
+    <string name="bands_lock_changes">Apply band changes</string>
 </resources>

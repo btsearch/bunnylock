@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -23,6 +24,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -35,8 +41,11 @@ import dev.ririxi.bunnylock.data.Rat
 import dev.ririxi.bunnylock.modem.Group
 import dev.ririxi.bunnylock.modem.LockRat
 import dev.ririxi.bunnylock.modem.formatPlmn
+import kotlinx.coroutines.launch
 
 private val NumberKeyboard = KeyboardOptions(keyboardType = KeyboardType.Number)
+
+private const val LOCK_FORM_ITEM = 2
 
 @Composable
 fun CellScreen(
@@ -44,7 +53,20 @@ fun CellScreen(
     vm: MainViewModel,
     contentPadding: PaddingValues,
 ) {
-    LazyColumn(contentPadding = contentPadding.withScreenMargins(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    var confirmClear by rememberSaveable { mutableStateOf(false) }
+    if (confirmClear) {
+        ConfirmDialog(
+            title = stringResource(R.string.cell_clear_lock_title),
+            message = stringResource(R.string.cell_clear_lock_message),
+            confirmLabel = stringResource(R.string.cell_clear_lock),
+            icon = BunnyIcons.LockOpen,
+            onConfirm = vm::unlockCells,
+            onDismiss = { confirmClear = false },
+        )
+    }
+    LazyColumn(state = listState, contentPadding = contentPadding.withScreenMargins(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
             SectionHeader(stringResource(R.string.cell_network_header))
             Segmented {
@@ -78,7 +100,7 @@ fun CellScreen(
                 if (state.modem.anyCellLock) {
                     item { shapes ->
                         SegmentedListItem(
-                            onClick = vm::unlockCells,
+                            onClick = { confirmClear = true },
                             enabled = !state.busy,
                             shapes = shapes,
                             colors = segmentColors(),
@@ -105,7 +127,16 @@ fun CellScreen(
             if (lockableCells.isEmpty()) {
                 Panel { SleepyBunny(stringResource(R.string.cell_none_found), stringResource(R.string.cell_none_found_hint)) }
             } else {
-                Segmented { lockableCells.forEach { cell -> item { shapes -> CellItem(shapes, cell) { vm.fillFrom(cell) } } } }
+                Segmented {
+                    lockableCells.forEach { cell ->
+                        item { shapes ->
+                            CellItem(shapes, cell) {
+                                vm.fillFrom(cell)
+                                scope.launch { listState.animateScrollToItem(LOCK_FORM_ITEM) }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -191,6 +222,7 @@ private fun PlmnForm(
             label = { (plmn, name) -> "${formatPlmn(plmn)} $name" },
             onToggle = { (plmn, _) -> vm.pickPlmn(plmn) },
             columns = 2,
+            singleChoice = true,
         )
     }
     Text(
@@ -337,6 +369,7 @@ private fun NrLockFields(
             onToggle = { band -> vm.updateForm { copy(nrBand = band, nrScs = Bands.nrDefaultScs(band), nrScsPicked = false) } },
             columns = 4,
             detail = { Group.NR.frequencyName(it) },
+            singleChoice = true,
         )
     }
     if (state.modem.features.nrSubcarrierSpacing) {

@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dev.ririxi.bunnylock.R
@@ -28,6 +29,7 @@ import dev.ririxi.bunnylock.modem.Text
 import dev.ririxi.bunnylock.modem.asSentence
 import dev.ririxi.bunnylock.modem.reason
 import dev.ririxi.bunnylock.modem.string
+import dev.ririxi.bunnylock.modem.R as ModemR
 import dev.ririxi.bunnylock.shizuku.RootOrShizuku
 import dev.ririxi.bunnylock.shizuku.ShizukuClient
 import dev.ririxi.bunnylock.shizuku.samsung.SamsungBandMenu
@@ -67,6 +69,8 @@ class MainViewModel(
 
     private val ui get() = _ui.value
 
+    private val latest: UiState get() = ui.copy(modem = modem.state.value)
+
     private inline fun updateState(transform: UiState.() -> UiState) = _ui.update(transform)
 
     private val _events = MutableSharedFlow<String>(extraBufferCapacity = 8)
@@ -88,7 +92,7 @@ class MainViewModel(
 
     val state =
         combine(modem.state, _ui) { modemState, uiState -> uiState.copy(modem = modemState) }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, ui.copy(modem = modem.state.value))
+            .stateIn(viewModelScope, SharingStarted.Eagerly, latest)
 
     val events = merge(_events, modem.events)
 
@@ -171,8 +175,6 @@ class MainViewModel(
         updateNotification(modemState)
     }
 
-    private fun clearBandSelections() = updateState { copy(bandSelections = emptyMap()) }
-
     private fun updateNotification(modemState: ModemState) {
         val lines =
             buildList {
@@ -205,12 +207,12 @@ class MainViewModel(
     fun loadSims() = modem.loadSims()
 
     fun setSim(sim: Int) {
-        clearBandSelections()
+        discardPendingBands()
         modem.setSim(sim)
     }
 
     fun setBackend(backend: Backend) {
-        clearBandSelections()
+        discardPendingBands()
         modem.setBackend(backend)
     }
 
@@ -234,7 +236,7 @@ class MainViewModel(
 
     private fun launchAction(
         refreshAfter: Boolean = true,
-        block: suspend () -> String,
+        block: suspend () -> String?,
     ) = viewModelScope.launch {
         if (!modem.helperRunning) {
             _events.emit(app.getString(R.string.system_helper_not_running))
@@ -243,7 +245,7 @@ class MainViewModel(
         }
         updateState { copy(busy = true) }
         try {
-            _events.emit(block())
+            block()?.let { _events.emit(it) }
             if (refreshAfter) modem.refreshNow()
         } catch (e: CancellationException) {
             throw e
@@ -258,16 +260,27 @@ class MainViewModel(
 
     private fun updateSelection(
         group: Group,
-        transform: BandGroupState.(selected: Set<Int>) -> Set<Int>,
+        pick: UiState.(groupState: BandGroupState, selected: Set<Int>) -> Set<Int>,
     ) {
         val groupState = groupState(group) ?: return
-        updateState { copy(bandSelections = bandSelections + (group to groupState.transform(selectedBands(groupState)))) }
+        val modemState = modem.state.value
+        updateState {
+            val current = copy(modem = modemState)
+            val picked = current.pick(groupState, current.selectedBands(groupState))
+            val untouched = picked == current.startingBands(groupState)
+            copy(bandSelections = if (untouched) bandSelections - group else bandSelections + (group to picked))
+        }
     }
+
+    fun setShowAllBands(
+        group: Group,
+        shown: Boolean,
+    ) = updateState { copy(showAllBands = if (shown) showAllBands + group else showAllBands - group) }
 
     fun toggleBand(
         group: Group,
         band: Int,
-    ) = updateSelection(group) { selected ->
+    ) = updateSelection(group) { _, selected ->
         if (band in selected) selected - band else selected + band
     }
 
@@ -290,24 +303,62 @@ class MainViewModel(
     fun selectAll(
         group: Group,
         all: Boolean,
-    ) = updateSelection(group) {
-        if (all) supported.toSet() else emptySet()
+    ) = updateSelection(group) { groupState, _ ->
+        if (all) visibleBands(groupState).toSet() else emptySet()
     }
 
     fun applyGroup(
         group: Group,
         unlock: Boolean = false,
-    ) = launchAction {
-        val exclusive = ui.exclusiveBandLock
-        val selected = groupState(group)?.let(ui::selectedBands).orEmpty()
+    ) = launchAction(refreshAfter = false) { sendGroup(group, unlock) }
+
+    fun applyPendingGroups() =
+        launchAction(refreshAfter = false) {
+            val current = latest
+            val pending = current.pendingGroups
+            val empty =
+                pending.firstOrNull { group ->
+                    !current.canTurnOff(group) && groupState(group)?.let(current::selectedBands).isNullOrEmpty()
+                }
+            if (empty !== null) {
+                val goal = Text(ModemR.string.modem_goal_lock_bands, empty.label)
+                return@launchAction app.string(Text(ModemR.string.modem_couldnt, goal, Text(ModemR.string.modem_pick_band)))
+            }
+            val outcomes = mutableListOf<String>()
+            for (group in pending) {
+                try {
+                    sendGroup(group)?.let(outcomes::add)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    outcomes += app.reason(e)
+                    break
+                }
+            }
+            outcomes.joinToString("\n").ifEmpty { null }
+        }
+
+    fun discardPendingBands() = updateState { copy(bandSelections = emptyMap()) }
+
+    private suspend fun sendGroup(
+        group: Group,
+        unlock: Boolean = false,
+    ): String? {
+        val groupState = groupState(group) ?: return null
+        val current = latest
+        val sent = current.bandSelections[group]
+        val selected = current.selectedBands(groupState)
+        val exclusive = current.exclusiveBandLock
         val outcome =
             when {
                 unlock -> modem.unlockBands(group, exclusive)
-                selected.isEmpty() && ui.canTurnOff(group) -> modem.turnOff(group)
+                selected.isEmpty() && current.canTurnOff(group) -> modem.turnOff(group)
                 else -> modem.lockBands(group, selected, exclusive)
             }
-        updateState { copy(bandSelections = bandSelections - group) }
-        outcome
+        modem.refreshNow()
+        // Picks made while the lock ran are newer than what was sent, so they stay.
+        updateState { if (bandSelections[group] == sent) copy(bandSelections = bandSelections - group) else this }
+        return outcome
     }
 
     fun setNetMode(mode: NetMode) = launchAction { modem.setNetMode(mode) }
@@ -363,7 +414,7 @@ class MainViewModel(
             val form = ui.form
             val request =
                 CellLockRequest(
-                    rat = state.value.lockRat,
+                    rat = latest.lockRat,
                     earfcn = form.lteEarfcn.toLongOrNull(),
                     ltePcis = parseInts(form.ltePcis),
                     nrArfcn = form.nrArfcn.toLongOrNull(),
@@ -389,7 +440,10 @@ class MainViewModel(
 
     fun unlockPlmn() = launchAction { modem.unlockPlmn() }
 
-    fun unlockEverything() = launchAction { modem.unlockEverything(ui.exclusiveBandLock) }
+    fun unlockEverything() =
+        launchAction {
+            modem.unlockEverything(ui.exclusiveBandLock).also { discardPendingBands() }
+        }
 
     fun radioCycle() = launchAction { modem.radioCycle() }
 
@@ -432,7 +486,8 @@ class MainViewModel(
         // Kotlin sees primaryClip as read-only because its getter is nullable and its setter isn't.
         @Suppress("UsePropertyAccessSyntax")
         clipboard.setPrimaryClip(ClipData.newPlainText(app.getString(R.string.system_clip_label_diagnostics), diagnostics()))
-        _events.tryEmit(app.getString(R.string.system_diagnostics_copied))
+        // Android 13 and later confirm a copy on their own.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) _events.tryEmit(app.getString(R.string.system_diagnostics_copied))
     }
 
     fun logFileName(): String = "bunnylock-${SimpleDateFormat("yyyy-MM-dd-HHmmss", Locale.US).format(Date())}.log"

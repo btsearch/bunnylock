@@ -14,8 +14,11 @@
     <string name="settings_dynamic_color_hint">Kolory z tapety. Po wyłączeniu aplikacja używa domyślnego niebieskiego motywu.</string>
     <string name="settings_language">Język</string>
     <string name="settings_language_system">Język systemu</string>
-    <string name="settings_language_system_hint">Tak jak w ustawieniach telefonu.</string>
+    <string name="settings_language_system_hint">Tak jak w ustawieniach telefonu. Teraz: %1$s.</string>
     <string name="settings_language_helper_english">Niektóre komunikaty procesu pomocniczego mogą nadal pojawiać się po angielsku.</string>
+    <string name="settings_language_name">Polski</string>
+    <string name="settings_language_suggested">Sugerowane</string>
+    <string name="settings_language_all">Wszystkie języki</string>
     <string name="settings_updates">Aktualizacje</string>
     <string name="settings_check_updates">Sprawdzaj aktualizacje</string>
     <string name="settings_check_updates_hint">Przy starcie aplikacji szuka nowej wersji na GitHubie.</string>

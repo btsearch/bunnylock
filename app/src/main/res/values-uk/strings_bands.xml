@@ -25,4 +25,12 @@
     <string name="bands_done">Готово</string>
     <string name="bands_all">Усі</string>
     <string name="bands_none">Жодного</string>
+    <plurals name="bands_pending">
+        <item quantity="one">Змінено %d діапазон</item>
+        <item quantity="few">Змінено %d діапазони</item>
+        <item quantity="many">Змінено %d діапазонів</item>
+        <item quantity="other">Змінено %d діапазону</item>
+    </plurals>
+    <string name="bands_discard">Скинути</string>
+    <string name="bands_lock_changes">Застосувати зміни діапазонів</string>
 </resources>

@@ -4,8 +4,10 @@ package dev.ririxi.bunnylock.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MotionScheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -15,6 +17,12 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
+import androidx.compose.ui.text.font.FontWeight
+import dev.ririxi.bunnylock.R
 
 private val LightColors =
     lightColorScheme(
@@ -100,6 +108,40 @@ val LocalSignalScale = staticCompositionLocalOf { SignalScaleOnLight }
 
 val dynamicColorAvailable: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
+internal val GoogleSansFlex =
+    FontFamily(
+        listOf(FontWeight.Normal, FontWeight.Medium, FontWeight.Bold, FontWeight.ExtraBold).map { weight ->
+            Font(R.font.google_sans_flex_rounded, weight, variationSettings = FontVariation.Settings(FontVariation.weight(weight.weight)))
+        },
+    )
+
+private fun TextStyle.withGoogleSansFlex() = copy(fontFamily = GoogleSansFlex)
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+private val BunnyTypography =
+    Typography().run {
+        copy(
+            displayLarge = displayLarge.withGoogleSansFlex(),
+            displayMedium = displayMedium.withGoogleSansFlex(),
+            displaySmall = displaySmall.withGoogleSansFlex(),
+            headlineLarge = headlineLarge.withGoogleSansFlex(),
+            headlineMedium = headlineMedium.withGoogleSansFlex(),
+            headlineSmall = headlineSmall.withGoogleSansFlex(),
+            titleLarge = titleLarge.withGoogleSansFlex(),
+            titleMedium = titleMedium.withGoogleSansFlex(),
+            titleSmall = titleSmall.withGoogleSansFlex(),
+            displayLargeEmphasized = displayLargeEmphasized.withGoogleSansFlex(),
+            displayMediumEmphasized = displayMediumEmphasized.withGoogleSansFlex(),
+            displaySmallEmphasized = displaySmallEmphasized.withGoogleSansFlex(),
+            headlineLargeEmphasized = headlineLargeEmphasized.withGoogleSansFlex(),
+            headlineMediumEmphasized = headlineMediumEmphasized.withGoogleSansFlex(),
+            headlineSmallEmphasized = headlineSmallEmphasized.withGoogleSansFlex(),
+            titleLargeEmphasized = titleLargeEmphasized.withGoogleSansFlex(),
+            titleMediumEmphasized = titleMediumEmphasized.withGoogleSansFlex(),
+            titleSmallEmphasized = titleSmallEmphasized.withGoogleSansFlex(),
+        )
+    }
+
 @Composable
 fun BunnyTheme(
     dynamicColor: Boolean = true,
@@ -121,6 +163,7 @@ fun BunnyTheme(
         MaterialExpressiveTheme(
             colorScheme = scheme,
             motionScheme = MotionScheme.expressive(),
+            typography = BunnyTypography,
             content = content,
         )
     }

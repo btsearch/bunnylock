@@ -23,4 +23,6 @@
     <string name="cell_pcis">PCIs</string>
     <string name="cell_band">Band</string>
     <string name="cell_scs">Subcarrier spacing (kHz)</string>
+    <string name="cell_clear_lock_title">Clear the cell lock?</string>
+    <string name="cell_clear_lock_message">The modem can pick any cell again. To lock the same cell later, you\'ll need its channel and PCI.</string>
 </resources>

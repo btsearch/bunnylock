@@ -57,10 +57,19 @@ If something doesn't work, copy the diagnostics from **Tools** and include them 
 
 ## Building
 
-You need JDK 17 or newer, the Android SDK, NDK `29.0.14206865` and CMake `3.22.1`.
+You need the Android SDK, the NDK version set in `gradle/libs.versions.toml` and CMake `3.22.1`. Gradle runs on Java 25 and compiles with Temurin 17, and it downloads either one if it's missing, so the first build needs a network connection.
 
 ```sh
 ./gradlew assembleRelease
 ```
 
 The APK ends up in `app/build/outputs/apk/release/`. It's signed with your debug key unless you add a `keystore.properties` in the project root with `storeFile`, `storePassword`, `keyAlias`, `keyPassword` and, optionally, a `lineageFile` from `apksigner rotate`.
+
+## Translating
+
+The strings live in `app/src/main/res/values` and `modem/src/main/res/values`. To add a language:
+
+1. In both `app/src/main/res` and `modem/src/main/res`, make a `values-<code>` folder, for example `values-de`, `values-pt-rBR` or `values-b+sr+Latn`, and copy only the `strings_*.xml` files from `values` into it.
+2. Translate every string and delete the ones marked `translatable="false"`. Set `settings_language_name` to the language's own name, like `Deutsch`.
+
+The build finds the new folders by itself and adds the language to the app's picker and to Android's per-app language settings. It fails if a language has strings in only one of the two modules.

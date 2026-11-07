@@ -23,4 +23,6 @@
     <string name="cell_pcis">PCI</string>
     <string name="cell_band">频段</string>
     <string name="cell_scs">子载波间隔（kHz）</string>
+    <string name="cell_clear_lock_title">要解除锁小区吗？</string>
+    <string name="cell_clear_lock_message">基带将重新自动选择小区。若要回到这个小区，需要再次填写它的频点和 PCI。</string>
 </resources>

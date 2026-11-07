@@ -144,25 +144,73 @@ class ModemController(
 
     private fun showConnectStep(text: String) = session.update { copy(connectStep = text) }
 
+    private var simLookup = ""
+
     @SuppressLint("MissingPermission")
     fun loadSims() {
-        val sims = ArrayList<SimInfo>()
-        if (context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            runCatching {
-                context.getSystemService(SubscriptionManager::class.java).activeSubscriptionInfoList?.forEach { subscription ->
-                    val name = subscription.displayName?.toString() ?: context.getString(R.string.modem_sim, subscription.simSlotIndex + 1)
-                    sims += SimInfo(subscription.simSlotIndex, subscription.subscriptionId, name)
-                }
+        val subscriptions = context.getSystemService(SubscriptionManager::class.java)
+        val listed = ArrayList<SimInfo>()
+        val listing =
+            if (context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                "not read"
+            } else {
+                runCatching {
+                    subscriptions.activeSubscriptionInfoList.orEmpty().mapTo(listed) { subscription ->
+                        val name = subscription.displayName?.toString() ?: context.getString(R.string.modem_sim, subscription.simSlotIndex + 1)
+                        SimInfo(subscription.simSlotIndex, subscription.subscriptionId, name)
+                    }
+                    "${listed.size}"
+                }.getOrElse { "failed with $it" }
             }
-        }
-        if (sims.isEmpty()) sims += SimInfo(0, SubscriptionManager.getDefaultSubscriptionId(), context.getString(R.string.modem_sim, 1))
-        sims.sortBy { it.slot }
+        val telephony = context.getSystemService(TelephonyManager::class.java)
+        val modems = telephony.activeModemCount
+        // Looking up a slot needs no permission, so it also finds a SIM that the subscription list leaves out.
+        val foundBySlot =
+            (0 until modems)
+                .filter { slot -> listed.none { it.slot == slot } }
+                .mapNotNull { slot -> subIdInSlot(subscriptions, slot)?.let { SimInfo(slot, it, context.getString(R.string.modem_sim, slot + 1)) } }
+        val cards = (0 until modems).joinToString { slot -> "SIM ${slot + 1} ${simStateName(telephony.getSimState(slot))}" }
+        simLookup = "Listed subscriptions: $listing. Cards: $cards. Found by slot: ${foundBySlot.joinToString { "SIM ${it.slot + 1}" }.ifEmpty { "none" }}."
+        val sims =
+            (listed + foundBySlot)
+                .sortedBy { it.slot }
+                .ifEmpty { listOf(SimInfo(0, SubscriptionManager.getDefaultSubscriptionId(), context.getString(R.string.modem_sim, 1))) }
         val savedSim = prefs.getInt("sim", 1)
         session.update {
             val selected = listOf(savedSim, sim).firstOrNull { wanted -> sims.any { it.slot == wanted - 1 } } ?: (sims.first().slot + 1)
             copy(sims = sims, sim = selected)
         }
     }
+
+    private fun subIdInSlot(
+        subscriptions: SubscriptionManager,
+        slot: Int,
+    ): Int? {
+        val subId =
+            runCatching {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    SubscriptionManager.getSubscriptionId(slot)
+                } else {
+                    @Suppress("DEPRECATION")
+                    subscriptions.getSubscriptionIds(slot)?.firstOrNull()
+                }
+            }.getOrNull()
+        return subId?.takeIf(SubscriptionManager::isValidSubscriptionId)
+    }
+
+    private fun simStateName(state: Int): String =
+        when (state) {
+            TelephonyManager.SIM_STATE_ABSENT -> "absent"
+            TelephonyManager.SIM_STATE_READY -> "ready"
+            TelephonyManager.SIM_STATE_NOT_READY -> "not ready"
+            TelephonyManager.SIM_STATE_PIN_REQUIRED -> "PIN required"
+            TelephonyManager.SIM_STATE_PUK_REQUIRED -> "PUK required"
+            TelephonyManager.SIM_STATE_NETWORK_LOCKED -> "network locked"
+            TelephonyManager.SIM_STATE_PERM_DISABLED -> "disabled"
+            TelephonyManager.SIM_STATE_CARD_IO_ERROR -> "card error"
+            TelephonyManager.SIM_STATE_CARD_RESTRICTED -> "restricted"
+            else -> "unknown"
+        }
 
     fun setSim(sim: Int) {
         prefs.edit().putInt("sim", sim).apply()
@@ -192,6 +240,15 @@ class ModemController(
         success: Text,
         block: suspend () -> Text?,
     ): String = session.logAndLocalize(attempt(goal) { block() ?: success })
+
+    private suspend fun quietChange(
+        goal: Text,
+        success: Text,
+        block: suspend () -> Text?,
+    ): String? {
+        val result = attempt(goal, block) ?: success
+        return session.logAndLocalize(result).takeUnless { result === success }
+    }
 
     private suspend fun <T> attempt(
         goal: Text,
@@ -413,9 +470,9 @@ class ModemController(
         unlock: Boolean,
     ) = Text(if (unlock) R.string.modem_bands_unlocked else R.string.modem_bands_locked, group.label)
 
-    suspend fun setNetMode(mode: NetMode): String {
+    suspend fun setNetMode(mode: NetMode): String? {
         val done = Text(R.string.modem_net_mode_set, Text(mode.label))
-        return change(Text(R.string.modem_goal_net_mode), done) {
+        return quietChange(Text(R.string.modem_goal_net_mode), done) {
             // A mode picked by hand replaces the one an unlock would bring back.
             setAllowedMask(mode.mask, done).also { maskBeforeLock = null }
         }
@@ -478,13 +535,13 @@ class ModemController(
         }
 
     suspend fun setNrMode(mode: NrMode) =
-        change(Text(R.string.modem_goal_nr_mode, Text(mode.label)), Text(R.string.modem_nr_mode_set, Text(mode.label))) {
+        quietChange(Text(R.string.modem_goal_nr_mode, Text(mode.label)), Text(R.string.modem_nr_mode_set, Text(mode.label))) {
             backend.setNrMode(mode)
             null
         }
 
     suspend fun setNrDc(enabled: Boolean) =
-        change(
+        quietChange(
             Text(if (enabled) R.string.modem_goal_nr_dc_on else R.string.modem_goal_nr_dc_off),
             Text(if (enabled) R.string.modem_nr_dc_on else R.string.modem_nr_dc_off),
         ) {
@@ -495,7 +552,7 @@ class ModemController(
     suspend fun setIms(
         feature: ImsFeature,
         enabled: Boolean,
-    ): String {
+    ): String? {
         val (goal, success) =
             when (feature) {
                 ImsFeature.VOLTE ->
@@ -503,7 +560,7 @@ class ModemController(
                 ImsFeature.VOWIFI ->
                     if (enabled) R.string.modem_goal_vowifi_on to R.string.modem_vowifi_on else R.string.modem_goal_vowifi_off to R.string.modem_vowifi_off
             }
-        return change(Text(goal), Text(success)) {
+        return quietChange(Text(goal), Text(success)) {
             val subscriptionId = session.subId()
             val result =
                 session.call("aosp.setIms") {
@@ -515,9 +572,9 @@ class ModemController(
         }
     }
 
-    suspend fun setCarrierAggregation(enabled: Boolean): String {
+    suspend fun setCarrierAggregation(enabled: Boolean): String? {
         val done = Text(if (enabled) R.string.modem_ca_on else R.string.modem_ca_off)
-        return change(Text(if (enabled) R.string.modem_goal_ca_on else R.string.modem_goal_ca_off), done) {
+        return quietChange(Text(if (enabled) R.string.modem_goal_ca_on else R.string.modem_goal_ca_off), done) {
             backend.setCarrierAggregation(enabled, done)
         }
     }
@@ -633,7 +690,7 @@ class ModemController(
     private fun simDiagnostics(): String {
         val phonePermission = context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
         val sims = current.sims.joinToString(", ") { "SIM ${it.slot + 1} (subscription ${it.subId})" }
-        return "SIMs: $sims. Selected: SIM ${current.sim}. Phone permission: ${if (phonePermission) "granted" else "denied"}."
+        return "SIMs: $sims. Selected: SIM ${current.sim}. Phone permission: ${if (phonePermission) "granted" else "denied"}. $simLookup"
     }
 
     fun diagnostics(

@@ -25,4 +25,12 @@
     <string name="bands_done">Gotowe</string>
     <string name="bands_all">Wszystkie</string>
     <string name="bands_none">Żadne</string>
+    <plurals name="bands_pending">
+        <item quantity="one">Zmieniono %d pasmo</item>
+        <item quantity="few">Zmieniono %d pasma</item>
+        <item quantity="many">Zmieniono %d pasm</item>
+        <item quantity="other">Zmieniono %d pasma</item>
+    </plurals>
+    <string name="bands_discard">Odrzuć</string>
+    <string name="bands_lock_changes">Zastosuj zmiany w pasmach</string>
 </resources>

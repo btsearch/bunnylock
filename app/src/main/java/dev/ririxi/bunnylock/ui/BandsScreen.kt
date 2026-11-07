@@ -2,41 +2,60 @@
 
 package dev.ririxi.bunnylock.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SegmentedListItem
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.modem.BandGroupState
 import dev.ririxi.bunnylock.modem.NrMode
+
+internal val PENDING_TOOLBAR_SPACE = 64.dp
 
 @Composable
 fun BandsScreen(
@@ -44,7 +63,73 @@ fun BandsScreen(
     vm: MainViewModel,
     contentPadding: PaddingValues,
 ) {
-    LazyColumn(contentPadding = contentPadding.withScreenMargins(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    val changed = state.changedBandCount
+    Box(Modifier.fillMaxSize()) {
+        BandList(state, vm, contentPadding.withScreenMargins(extraBottom = if (changed > 0) PENDING_TOOLBAR_SPACE else 0.dp))
+        PendingChangesToolbar(
+            changed = changed,
+            busy = state.busy,
+            onDiscard = vm::discardPendingBands,
+            onLock = vm::applyPendingGroups,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = contentPadding.calculateBottomPadding() + 8.dp),
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun PendingChangesToolbar(
+    changed: Int,
+    busy: Boolean,
+    onDiscard: () -> Unit,
+    onLock: () -> Unit,
+    modifier: Modifier,
+) {
+    var lastChanged by remember { mutableIntStateOf(0) }
+    SideEffect { if (changed > 0) lastChanged = changed }
+    val shownCount = if (changed > 0) changed else lastChanged
+    val motion = MaterialTheme.motionScheme
+    val lockDescription = stringResource(R.string.bands_lock_changes)
+    AnimatedVisibility(
+        visible = changed > 0,
+        modifier = modifier,
+        enter = slideInVertically(motion.defaultSpatialSpec()) { it } + fadeIn(motion.defaultEffectsSpec()),
+        exit = slideOutVertically(motion.fastSpatialSpec()) { it } + fadeOut(motion.fastEffectsSpec()),
+    ) {
+        Surface(
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            shadowElevation = 3.dp,
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 20.dp, end = 4.dp, top = 4.dp, bottom = 4.dp)) {
+                Text(pluralStringResource(R.plurals.bands_pending, shownCount, shownCount), style = MaterialTheme.typography.labelLarge)
+                TextButton(
+                    onClick = onDiscard,
+                    enabled = !busy,
+                    shapes = ButtonDefaults.shapes(),
+                    colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                    modifier = Modifier.padding(start = 4.dp),
+                ) { Text(stringResource(R.string.bands_discard)) }
+                FilledIconButton(
+                    onClick = { if (!busy) onLock() },
+                    shapes = IconButtonDefaults.shapes(),
+                    modifier = Modifier.semantics { contentDescription = lockDescription },
+                ) {
+                    if (busy) LoadingIndicator(Modifier.size(24.dp), color = LocalContentColor.current) else Icon(BunnyIcons.Lock, contentDescription = null)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BandList(
+    state: UiState,
+    vm: MainViewModel,
+    contentPadding: PaddingValues,
+) {
+    LazyColumn(contentPadding = contentPadding, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
             SectionHeader(stringResource(R.string.bands_network_mode))
             val currentMode = state.modem.netMode
@@ -56,6 +141,7 @@ fun BandsScreen(
                     onToggle = vm::setNetMode,
                     columns = if (state.modem.supports5g) 3 else 2,
                     enabled = !state.busy,
+                    singleChoice = true,
                 )
                 state.modem.netModeHeldBack?.let { heldBack ->
                     Text(
@@ -117,11 +203,15 @@ fun BandsScreen(
             BandGroup(
                 bandGroup,
                 selected = state.selectedBands(bandGroup),
-                applied = state.appliedBands(bandGroup),
+                pending = state.isPending(bandGroup),
+                visible = state.visibleBands(bandGroup),
+                showAll = bandGroup.group in state.showAllBands,
+                hasFavorites = state.hasFavorites(bandGroup),
                 off = state.isOff(bandGroup.group),
                 canTurnOff = state.canTurnOff(bandGroup.group),
                 favorites = state.favoritesOf(bandGroup.group),
                 busy = state.busy,
+                onShowAll = { vm.setShowAllBands(bandGroup.group, it) },
                 onToggle = { vm.toggleBand(bandGroup.group, it) },
                 onToggleFavorite = { vm.toggleFavorite(bandGroup.group, it) },
                 onSelectAll = { vm.selectAll(bandGroup.group, it) },
@@ -136,12 +226,11 @@ fun BandsScreen(
 private fun selectionSummary(
     bandGroup: BandGroupState,
     selected: Set<Int>,
-    applied: Set<Int>,
+    pending: Boolean,
     off: Boolean,
 ): String {
     val count = selected.size
     val total = bandGroup.supported.size
-    val pending = selected != applied
     val stray = bandGroup.stray
     return when {
         off && pending -> stringResource(R.string.bands_summary_off_pending, count, total)
@@ -161,11 +250,15 @@ private fun selectionSummary(
 private fun BandGroup(
     bandGroup: BandGroupState,
     selected: Set<Int>,
-    applied: Set<Int>,
+    pending: Boolean,
+    visible: List<Int>,
+    showAll: Boolean,
+    hasFavorites: Boolean,
     off: Boolean,
     canTurnOff: Boolean,
     favorites: Set<Int>,
     busy: Boolean,
+    onShowAll: (Boolean) -> Unit,
     onToggle: (Int) -> Unit,
     onToggleFavorite: (Int) -> Unit,
     onSelectAll: (Boolean) -> Unit,
@@ -173,14 +266,12 @@ private fun BandGroup(
     onUnlock: () -> Unit,
 ) {
     var pickingFavorites by rememberSaveable { mutableStateOf(false) }
-    var showAll by rememberSaveable { mutableStateOf(false) }
-    val supportedFavorites = bandGroup.supported.filter { it in favorites }
-    val canFilter = supportedFavorites.isNotEmpty() && !pickingFavorites
-    val shownBands = if (canFilter && !showAll) supportedFavorites else bandGroup.supported
+    val canFilter = hasFavorites && !pickingFavorites
+    val shownBands = if (pickingFavorites) bandGroup.supported else visible
 
     fun pickFavorites(picking: Boolean) {
         pickingFavorites = picking
-        showAll = false
+        onShowAll(false)
     }
 
     Segmented(Modifier.padding(top = 8.dp)) {
@@ -189,11 +280,11 @@ private fun BandGroup(
                 shapes = shapes,
                 colors = segmentColors(),
                 supportingContent = {
-                    Text(if (pickingFavorites) stringResource(R.string.bands_pick_favorites_hint) else selectionSummary(bandGroup, selected, applied, off))
+                    Text(if (pickingFavorites) stringResource(R.string.bands_pick_favorites_hint) else selectionSummary(bandGroup, selected, pending, off))
                 },
                 trailingContent = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        IconToggleButton(checked = pickingFavorites, onCheckedChange = ::pickFavorites) {
+                        IconToggleButton(checked = pickingFavorites, onCheckedChange = ::pickFavorites, shapes = IconButtonDefaults.toggleableShapes()) {
                             Icon(Icons.Rounded.Star, contentDescription = stringResource(R.string.bands_pick_favorites))
                         }
                         LockBadge(bandGroup.locked && bandGroup.stray === null, size = 40.dp, ignored = bandGroup.stray !== null)
@@ -216,7 +307,7 @@ private fun BandGroup(
                 )
                 if (canFilter) {
                     TextButton(
-                        onClick = { showAll = !showAll },
+                        onClick = { onShowAll(!showAll) },
                         shapes = ButtonDefaults.shapes(),
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                     ) {

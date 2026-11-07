@@ -58,8 +58,37 @@ object Updates {
             val difference = newNumbers.getOrElse(index) { 0 } - installedNumbers.getOrElse(index) { 0 }
             if (difference != 0) return difference > 0
         }
-        return false
+        val newLabel = prereleaseOf(version)
+        val installedLabel = prereleaseOf(installed)
+        return when {
+            newLabel.isEmpty() -> installedLabel.isNotEmpty()
+            installedLabel.isEmpty() -> false
+            else -> comparePrereleases(newLabel, installedLabel) > 0
+        }
     }
 
-    private fun numbersOf(version: String): List<Int> = version.split('.').map { part -> part.takeWhile(Char::isDigit).toIntOrNull() ?: 0 }
+    private fun numbersOf(version: String): List<Int> =
+        version.substringBefore('+').substringBefore('-').split('.').map { part -> part.takeWhile(Char::isDigit).toIntOrNull() ?: 0 }
+
+    private fun prereleaseOf(version: String): List<String> =
+        version.substringBefore('+').substringAfter('-', "").split('.').filter(String::isNotEmpty)
+
+    private fun comparePrereleases(
+        first: List<String>,
+        second: List<String>,
+    ): Int {
+        for ((a, b) in first.zip(second)) {
+            val aNumeric = a.all(Char::isDigit)
+            val bNumeric = b.all(Char::isDigit)
+            val order =
+                when {
+                    aNumeric && bNumeric -> a.toBigInteger().compareTo(b.toBigInteger())
+                    aNumeric -> -1
+                    bNumeric -> 1
+                    else -> a.compareTo(b)
+                }
+            if (order != 0) return order
+        }
+        return first.size.compareTo(second.size)
+    }
 }

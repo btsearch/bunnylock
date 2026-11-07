@@ -13,4 +13,5 @@
     <string name="common_device">Пристрій</string>
     <string name="common_platform">Платформа</string>
     <string name="common_baseband">Версія модема</string>
+    <string name="common_cancel">Скасувати</string>
 </resources>

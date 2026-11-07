@@ -4,6 +4,7 @@ package dev.ririxi.bunnylock.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -22,7 +23,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -37,16 +41,25 @@ import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
+import androidx.compose.material3.toPath
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Matrix
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
@@ -57,35 +70,28 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.graphics.shapes.Morph
 import androidx.graphics.shapes.RoundedPolygon
 import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.data.Rat
 import dev.ririxi.bunnylock.modem.Text as ModemText
 import dev.ririxi.bunnylock.modem.string
+import dev.ririxi.bunnylock.ui.theme.GoogleSansFlex
 import dev.ririxi.bunnylock.ui.theme.LocalLockGreen
-
-private val WordmarkFont =
-    FontFamily(
-        Font(
-            resId = R.font.google_sans_flex_rounded,
-            weight = FontWeight.ExtraBold,
-            variationSettings = FontVariation.Settings(FontVariation.weight(FontWeight.ExtraBold.weight)),
-        ),
-    )
 
 /** Inherits the surrounding text style so it scales with the flexible app bar. */
 @Composable
@@ -100,7 +106,7 @@ fun Wordmark(
             withStyle(SpanStyle(color = green)) { append("lock") }
         },
         modifier = modifier,
-        style = style.copy(fontFamily = WordmarkFont, fontWeight = FontWeight.ExtraBold, letterSpacing = (-0.5).sp),
+        style = style.copy(fontFamily = GoogleSansFlex, fontWeight = FontWeight.ExtraBold, letterSpacing = (-0.5).sp),
     )
 }
 
@@ -114,7 +120,7 @@ fun SectionHeader(
 ) {
     Text(
         text,
-        modifier = modifier.padding(start = 20.dp, top = 12.dp, bottom = 2.dp),
+        modifier = modifier.semantics { heading() }.padding(start = 20.dp, top = 12.dp, bottom = 2.dp),
         style = MaterialTheme.typography.titleSmallEmphasized,
         color = MaterialTheme.colorScheme.primary,
     )
@@ -205,6 +211,36 @@ fun ActionItem(
 }
 
 @Composable
+fun ConfirmDialog(
+    title: String,
+    message: String,
+    confirmLabel: String,
+    icon: ImageVector,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = { Icon(icon, contentDescription = null) },
+        title = { Text(title) },
+        text = { Text(message) },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onDismiss()
+                    onConfirm()
+                },
+                shapes = ButtonDefaults.shapes(),
+                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
+            ) { Text(confirmLabel) }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.common_cancel)) }
+        },
+    )
+}
+
+@Composable
 fun SwitchItem(
     shapes: ListItemShapes,
     title: String,
@@ -264,7 +300,10 @@ fun <T> ToggleGrid(
     enabled: Boolean = true,
     detail: (T) -> String? = { null },
     accent: Boolean = false,
+    singleChoice: Boolean = false,
 ) {
+    val choiceRole = if (singleChoice) Modifier.semantics { role = Role.RadioButton } else Modifier
+    val choiceGroup = if (singleChoice) Modifier.selectableGroup() else Modifier
     val scheme = MaterialTheme.colorScheme
     val colors =
         if (accent) {
@@ -276,17 +315,17 @@ fun <T> ToggleGrid(
         } else {
             ToggleButtonDefaults.colors(containerColor = scheme.surfaceContainerHighest)
         }
-    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(modifier.fillMaxWidth().then(choiceGroup), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         options.chunked(columns).forEach { row ->
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 row.forEach { option ->
                     ToggleButton(
                         checked = isChecked(option),
-                        onCheckedChange = { onToggle(option) },
+                        onCheckedChange = { if (!singleChoice || !isChecked(option)) onToggle(option) },
                         enabled = enabled,
                         colors = colors,
                         contentPadding = PaddingValues(horizontal = 4.dp),
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).then(choiceRole),
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(label(option), maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -327,7 +366,8 @@ fun LockBadge(
             locked -> LockBadgeStyle(MaterialShapes.Cookie9Sided, green.copy(alpha = 0.22f), green, BunnyIcons.Lock, R.string.shell_lock_badge_locked)
             else -> LockBadgeStyle(MaterialShapes.Cookie6Sided, colors.surfaceContainerHighest, colors.onSurfaceVariant, BunnyIcons.LockOpen, R.string.shell_lock_badge_unlocked)
         }
-    val containerColor by animateColorAsState(style.container, label = "badge")
+    val containerColor by animateColorAsState(style.container, MaterialTheme.motionScheme.defaultEffectsSpec(), label = "badge")
+    val shape = rememberMorphShape(style.shape)
     val angle =
         when {
             !spin -> {
@@ -363,10 +403,43 @@ fun LockBadge(
             Modifier
                 .size(size)
                 .rotate(angle)
-                .clip(style.shape.toShape())
+                .clip(shape)
                 .background(containerColor),
         )
         Icon(style.icon, contentDescription = stringResource(style.description), tint = style.content, modifier = Modifier.size(size * 0.45f))
+    }
+}
+
+@Composable
+private fun rememberMorphShape(target: RoundedPolygon): Shape {
+    val spec = MaterialTheme.motionScheme.defaultSpatialSpec<Float>()
+    var from by remember { mutableStateOf(target) }
+    var to by remember { mutableStateOf(target) }
+    val progress = remember { Animatable(1f) }
+    LaunchedEffect(target) {
+        if (target === to) return@LaunchedEffect
+        from = to
+        to = target
+        progress.snapTo(0f)
+        progress.animateTo(1f, spec)
+    }
+    val morph = remember(from, to) { Morph(from, to) }
+    return MorphShape(morph, progress.value)
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+private data class MorphShape(
+    private val morph: Morph,
+    private val progress: Float,
+) : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density,
+    ): Outline {
+        val path = morph.toPath(progress)
+        path.transform(Matrix().apply { scale(size.width, size.height) })
+        return Outline.Generic(path)
     }
 }
 

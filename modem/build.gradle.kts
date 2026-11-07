@@ -5,7 +5,7 @@ plugins {
 android {
     namespace = "dev.ririxi.bunnylock.modem"
     compileSdk = 37
-    ndkVersion = "29.0.14206865"
+    ndkVersion = libs.versions.ndk.get()
 
     defaultConfig {
         minSdk = 30
@@ -25,6 +25,13 @@ android {
             path = file("src/main/cpp/CMakeLists.txt")
             version = "3.22.1"
         }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+        vendor = JvmVendorSpec.ADOPTIUM
     }
 }
 
