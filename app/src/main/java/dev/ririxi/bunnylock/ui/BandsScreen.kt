@@ -35,7 +35,6 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.ririxi.bunnylock.R
-import dev.ririxi.bunnylock.modem.Backend
 import dev.ririxi.bunnylock.modem.BandGroupState
 import dev.ririxi.bunnylock.modem.NrMode
 
@@ -114,15 +113,6 @@ fun BandsScreen(
             }
         }
 
-        item {
-            Text(
-                backendHint(state),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 8.dp),
-            )
-        }
-
         items(state.modem.groups, key = { it.group.name }) { bandGroup ->
             BandGroup(
                 bandGroup,
@@ -141,19 +131,6 @@ fun BandsScreen(
         }
     }
 }
-
-@Composable
-private fun backendHint(state: UiState): String =
-    when (state.modem.backend) {
-        Backend.QUALCOMM -> stringResource(if (state.modem.persist) R.string.bands_hint_qualcomm_persist else R.string.bands_hint_qualcomm_volatile)
-        Backend.MEDIATEK -> {
-            val atNode = state.modem.atNode
-            if (atNode.isEmpty()) stringResource(R.string.bands_hint_mediatek_auto) else stringResource(R.string.bands_hint_mediatek, atNode)
-        }
-
-        Backend.PIXEL -> stringResource(R.string.bands_hint_pixel)
-        Backend.ANDROID, null -> stringResource(R.string.bands_hint_android)
-    }
 
 @Composable
 private fun selectionSummary(

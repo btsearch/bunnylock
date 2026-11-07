@@ -22,4 +22,6 @@
     <string name="oem_probe_failed">%1$s failed: %2$s</string>
     <string name="oem_probe_replied">%1$s replied: %2$s</string>
     <string name="oem_probe_silent">%1$s didn\'t reply.</string>
+    <string name="cell_hint_mtk_at">Uses AT+EMMCHLCK, which holds one lock at a time. The PCI is optional, and the radio restarts to apply the lock.</string>
+    <string name="cell_hint_mtk_hal">This modem doesn\'t take AT+EMMCHLCK, so the frequency (ARFCN) is locked through the radio HAL instead. That can\'t lock to a PCI, and some modems ignore it.</string>
 </resources>

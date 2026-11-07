@@ -26,7 +26,6 @@ import dev.ririxi.bunnylock.modem.NrMode
 import dev.ririxi.bunnylock.modem.RootState
 import dev.ririxi.bunnylock.modem.Text
 import dev.ririxi.bunnylock.modem.asSentence
-import dev.ririxi.bunnylock.modem.optText
 import dev.ririxi.bunnylock.modem.reason
 import dev.ririxi.bunnylock.modem.string
 import dev.ririxi.bunnylock.shizuku.RootOrShizuku
@@ -153,7 +152,6 @@ class MainViewModel(
 
     suspend fun refreshConnection() = modem.refreshConnection()
 
-    /** "Unlock all" from the notification. Waits for the helper if the app was just started. */
     fun unlockFromNotification() {
         if (modem.state.value.root == RootState.Granted && modem.helperRunning) unlockEverything() else pendingUnlock = true
     }
@@ -164,7 +162,6 @@ class MainViewModel(
         unlockEverything()
     }
 
-    // Unapplied selections survive a refresh, minus any bands the modem no longer offers.
     private fun refreshed(modemState: ModemState) {
         val supported = modemState.groups.associate { it.group to it.supported.toSet() }
         updateState {
@@ -176,7 +173,6 @@ class MainViewModel(
 
     private fun clearBandSelections() = updateState { copy(bandSelections = emptyMap()) }
 
-    /** Lists the locks that hold. One the phone has strayed from is left out. */
     private fun updateNotification(modemState: ModemState) {
         val lines =
             buildList {
@@ -236,7 +232,6 @@ class MainViewModel(
 
     fun setAtNode(node: String) = modem.setAtNode(node)
 
-    // The modem has already logged the outcome.
     private fun launchAction(
         refreshAfter: Boolean = true,
         block: suspend () -> String,
@@ -419,14 +414,10 @@ class MainViewModel(
         msg: Int,
         payload: String,
     ) = launchAction(refreshAfter = false) {
-        val response = modem.sendQmi(service, msg, payload)
-        val error = response.optText("error")
-        val englishError = error?.let(modem::inEnglish).orEmpty()
-        if (error !== null) response.put("error", englishError)
-        val entry = "> svc $service msg 0x%04X %s\n%s".format(msg, payload, response.toString(2))
+        val reply = modem.sendQmi(service, msg, payload)
+        val entry = "> svc $service msg 0x%04X %s\n%s".format(msg, payload, reply.output)
         updateState { copy(toolOutput = "$entry\n\n$toolOutput".take(MAX_TOOL_OUTPUT_CHARS)) }
-        modem.log("Sent message 0x%04X. The modem replied: %s.".format(msg, englishError))
-        app.getString(R.string.system_qmi_replied, msg, error?.let { app.string(it) }.orEmpty())
+        app.getString(R.string.system_qmi_replied, msg, reply.error?.let { app.string(it) }.orEmpty())
     }
 
     fun clearOutput() = updateState { copy(toolOutput = "") }

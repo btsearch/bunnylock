@@ -54,6 +54,7 @@ import androidx.compose.ui.graphics.vector.DefaultFillType
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -73,6 +74,8 @@ import androidx.compose.ui.unit.sp
 import androidx.graphics.shapes.RoundedPolygon
 import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.data.Rat
+import dev.ririxi.bunnylock.modem.Text as ModemText
+import dev.ririxi.bunnylock.modem.string
 import dev.ririxi.bunnylock.ui.theme.LocalLockGreen
 
 private val WordmarkFont =
@@ -100,6 +103,9 @@ fun Wordmark(
         style = style.copy(fontFamily = WordmarkFont, fontWeight = FontWeight.ExtraBold, letterSpacing = (-0.5).sp),
     )
 }
+
+@Composable
+fun textOf(text: ModemText?): String = text?.let { LocalContext.current.string(it) }.orEmpty()
 
 @Composable
 fun SectionHeader(

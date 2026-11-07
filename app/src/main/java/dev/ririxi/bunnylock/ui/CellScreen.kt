@@ -32,7 +32,6 @@ import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.core.Bands
 import dev.ririxi.bunnylock.data.Cell
 import dev.ririxi.bunnylock.data.Rat
-import dev.ririxi.bunnylock.modem.Backend
 import dev.ririxi.bunnylock.modem.Group
 import dev.ririxi.bunnylock.modem.LockRat
 import dev.ririxi.bunnylock.modem.formatPlmn
@@ -195,7 +194,7 @@ private fun PlmnForm(
         )
     }
     Text(
-        stringResource(if (state.modem.backend == Backend.QUALCOMM) R.string.cell_plmn_hint_qualcomm else R.string.cell_plmn_hint_android),
+        textOf(state.modem.features.plmnHint),
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
@@ -220,17 +219,6 @@ private fun PlmnForm(
 }
 
 @Composable
-private fun cellLockHint(state: UiState): String =
-    stringResource(
-        when {
-            state.modem.backend == Backend.QUALCOMM -> R.string.cell_hint_qualcomm
-            state.modem.mtkAtCellLock -> R.string.cell_hint_mtk_at
-            state.modem.backend == Backend.MEDIATEK -> R.string.cell_hint_mtk_hal
-            else -> R.string.cell_hint_hal
-        },
-    )
-
-@Composable
 private fun lteChannelHint(earfcn: Int): String {
     val band = Bands.lteBandOf(earfcn)
     val megahertz = Bands.lteFreqMhz(earfcn)
@@ -240,10 +228,6 @@ private fun lteChannelHint(earfcn: Int): String {
 
 private fun pciInput(text: String): String = text.filter { it.isDigit() || it == ',' || it == ' ' }
 
-/**
- * Applies a typed NR-ARFCN: the chosen band is kept while it still contains the channel, otherwise the first
- * band that does is picked. The subcarrier spacing follows that band's default unless the user picked one by hand.
- */
 private fun CellForm.withNrArfcn(text: String): CellForm {
     val digits = text.filter(Char::isDigit)
     val candidates = digits.toIntOrNull()?.let { Bands.nrBandsOf(it) } ?: emptyList()
@@ -273,7 +257,7 @@ private fun CellLockForm(
         if (locksLte) LteLockFields(state, vm)
         if (locksNr) NrLockFields(state, vm)
 
-        Text(cellLockHint(state), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(textOf(state.modem.features.cellHint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
         val buttonHeight = ButtonDefaults.MediumContainerHeight
         Button(
@@ -313,7 +297,7 @@ private fun LteLockFields(
             label = { Text(stringResource(R.string.cell_pcis)) },
             singleLine = true,
             modifier = Modifier.weight(1f),
-            enabled = state.modem.supportsPciLock,
+            enabled = state.modem.features.pciLock,
         )
     }
 }
@@ -341,7 +325,7 @@ private fun NrLockFields(
             label = { Text(stringResource(R.string.cell_pcis)) },
             singleLine = true,
             modifier = Modifier.weight(1f),
-            enabled = state.modem.supportsPciLock,
+            enabled = state.modem.features.pciLock,
         )
     }
     if (form.nrCandidates.size > 1) {
@@ -355,7 +339,7 @@ private fun NrLockFields(
             detail = { Group.NR.frequencyName(it) },
         )
     }
-    if (state.modem.backend == Backend.QUALCOMM) {
+    if (state.modem.features.nrSubcarrierSpacing) {
         Text(stringResource(R.string.cell_scs), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
         ConnectedChoice(
             options = listOf(15, 30, 60, 120),

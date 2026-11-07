@@ -100,7 +100,7 @@ fun HomeScreen(
 
         item {
             val device = state.modem.device
-            val chipset = device?.let { stringResource(it.vendorLabel) }.orEmpty()
+            val chipset = device?.let { stringResource(it.chipset.label) }.orEmpty()
             val deviceName = "${device?.manufacturer.orEmpty()} ${device?.model.orEmpty()}".trim()
             val platform =
                 listOfNotNull(

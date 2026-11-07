@@ -22,4 +22,6 @@
     <string name="oem_probe_failed">%1$s (ошибка): %2$s</string>
     <string name="oem_probe_replied">%1$s (ответ): %2$s</string>
     <string name="oem_probe_silent">%1$s: нет ответа.</string>
+    <string name="cell_hint_mtk_at">Используется команда AT+EMMCHLCK, которая поддерживает только одну блокировку за раз. PCI необязателен, а для применения блокировки радиомодуль перезапускается.</string>
+    <string name="cell_hint_mtk_hal">Этот модем не принимает AT+EMMCHLCK, поэтому частота (ARFCN) блокируется через Radio HAL. Так нельзя привязаться к PCI, а некоторые модемы такую блокировку игнорируют.</string>
 </resources>

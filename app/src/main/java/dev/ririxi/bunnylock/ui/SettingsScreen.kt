@@ -35,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.data.AppLanguage
-import dev.ririxi.bunnylock.modem.Backend
 import dev.ririxi.bunnylock.ui.theme.dynamicColorAvailable
 
 @Composable
@@ -48,9 +47,11 @@ fun SettingsScreen(
         item {
             SectionHeader(stringResource(R.string.settings_backend))
             Segmented {
-                Backend.entries.forEach { backend ->
+                state.modem.offeredBackends.forEach { backend ->
                     val selected = state.modem.backend == backend
-                    val needsRoot = !state.modem.allows(backend)
+                    val unavailable = !state.modem.allows(backend)
+                    // With root, an unavailable backend lacks something on the phone itself, so root wouldn't help.
+                    val needsRoot = unavailable && (state.modem.limited || state.modem.device === null)
                     item { shapes ->
                         val hint =
                             when {
@@ -61,7 +62,7 @@ fun SettingsScreen(
                         SegmentedListItem(
                             selected = selected,
                             onClick = { vm.setBackend(backend) },
-                            enabled = !needsRoot,
+                            enabled = !unavailable,
                             shapes = shapes,
                             colors = segmentColors(),
                             supportingContent = if (hint !== null) ({ Text(hint) }) else null,
@@ -69,7 +70,7 @@ fun SettingsScreen(
                         ) { Text(stringResource(backend.label)) }
                     }
                 }
-                if (state.modem.backend == Backend.QUALCOMM) {
+                if (state.modem.features.persistSwitch) {
                     item {
                         SwitchItem(
                             it,
@@ -95,7 +96,7 @@ fun SettingsScreen(
                         onCheckedChange = vm::setExclusiveBandLock,
                     )
                 }
-                if (state.modem.halNeedsChannels && state.modem.backend == Backend.ANDROID) {
+                if (state.modem.features.forgetNeedsChannels) {
                     item {
                         ActionItem(
                             it,

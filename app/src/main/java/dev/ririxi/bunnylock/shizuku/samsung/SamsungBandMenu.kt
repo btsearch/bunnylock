@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import dev.ririxi.bunnylock.backend.samsung.Samsung
 import dev.ririxi.bunnylock.data.RootException
 import dev.ririxi.bunnylock.modem.R as ModemR
 import dev.ririxi.bunnylock.modem.Text
@@ -11,12 +12,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal const val PERMISSION_DENIAL = "Permission Denial"
-
 object SamsungBandMenu {
-    private val SERVICE_MODE = ComponentName.createRelative("com.sec.android.RilServiceModeApp", ".ServiceModeApp")
-    private const val DIALER_CODE_EXTRA = "keyString"
-    private const val BAND_SELECTION_DIALER_CODE = "2263"
+    private val SERVICE_MODE = ComponentName.createRelative(Samsung.SERVICE_MODE_PACKAGE, Samsung.SERVICE_MODE_ACTIVITY)
 
     private const val TELECOM_ACTION = "com.samsung.server.telecom.USER_SELECT_WIFI_SERVICE_CALL"
     private const val TELECOM_INTENT_EXTRA = "extra_call_intent"
@@ -28,7 +25,7 @@ object SamsungBandMenu {
 
     suspend fun open(context: Context) {
         withContext(Dispatchers.IO) {
-            val extras = Bundle().apply { putString(DIALER_CODE_EXTRA, BAND_SELECTION_DIALER_CODE) }
+            val extras = Bundle().apply { putString(Samsung.DIALER_CODE_EXTRA, Samsung.BAND_SELECTION_DIALER_CODE) }
             val intent = Intent().setComponent(SERVICE_MODE).putExtras(extras)
             val routes =
                 listOf(
@@ -53,7 +50,7 @@ object SamsungBandMenu {
     }
 
     private fun failureText(failures: List<String>): Text {
-        val denied = failures.any { PERMISSION_DENIAL in it }
+        val denied = failures.any { Samsung.PERMISSION_DENIAL in it }
         val reason = if (denied) ModemR.string.sys_samsung_menu_denied else ModemR.string.sys_samsung_menu_missing
         return Text(ModemR.string.aosp_with_details, Text(reason), failures.joinToString(" / "))
     }

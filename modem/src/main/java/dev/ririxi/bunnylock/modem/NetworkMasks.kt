@@ -1,6 +1,5 @@
 package dev.ririxi.bunnylock.modem
 
-/** The network mode, or Auto when the phone doesn't report one. */
 internal val ModemState.netModeMask: Long
     get() = allowedMask ?: NetMode.AUTO.mask
 

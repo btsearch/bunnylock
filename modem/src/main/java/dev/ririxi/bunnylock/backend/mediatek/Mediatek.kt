@@ -1,10 +1,13 @@
-package dev.ririxi.bunnylock.root
+package dev.ririxi.bunnylock.backend.mediatek
 
 import androidx.annotation.StringRes
 import dev.ririxi.bunnylock.core.Bands
 import dev.ririxi.bunnylock.modem.Masks
 import dev.ririxi.bunnylock.modem.R
 import dev.ririxi.bunnylock.modem.Text
+import dev.ririxi.bunnylock.root.At
+import dev.ririxi.bunnylock.root.fail
+import dev.ririxi.bunnylock.root.rilNode
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -13,11 +16,20 @@ import org.json.JSONObject
  *  - AT+EPBSE  : GSM / UMTS / LTE band masks (decimal 32-bit words)
  *  - AT+EPBSEH : NR band mask (hex words), plus GSM/UMTS/LTE echoed in hex
  *  - AT+EMMCHLCK=<on>,<act>,<gsm1900>,<arfcn>[,<pci>[,<mode>]] : channel / cell lock
- *    act: 0 GSM, 2 UMTS, 7 LTE, 11 NR
- *    mode: 0 idle only, 3 idle + connected
  *  - AT+ERAT=<rat>,<prefer> : network mode
  */
 object Mediatek {
+    // The access technologies AT+EMMCHLCK takes and reports.
+    const val ACT_GSM = 0
+    const val ACT_UMTS = 2
+    const val ACT_LTE = 7
+    const val ACT_NR = 11
+
+    // What +EMMCHLCK reports for a lock without a PCI.
+    const val PCI_UNSET = 65535
+
+    private const val CELL_LOCK_IDLE_AND_CONNECTED = 3
+
     val CANDIDATES =
         listOf(
             "/dev/radio/pttycmd1",
@@ -49,8 +61,6 @@ object Mediatek {
 
     /** Bit of each GSM band, by its MHz name, in the GSM word. */
     private val GSM_BITS = mapOf(900 to 1, 1800 to 3, 1900 to 4, 850 to 7)
-
-    private val GENERATIONS = Masks.G2 or Masks.G3 or Masks.G4 or Masks.G5
 
     // The modes with C2K are only read, never set.
     private val ERAT_MASKS =
@@ -88,9 +98,9 @@ object Mediatek {
      * A modem tty when it answers (root), otherwise the RIL passthrough for [sim] (works through Shizuku too).
      * The passthrough was tested when it was found, so it isn't asked again here.
      */
-    fun findNode(sim: Int = 1): String? =
+    fun findNode(sim: Int): String? =
         CANDIDATES.firstOrNull { At.exists(it) && probe(it) }
-            ?: "${OemHook.PREFIX}$sim".takeIf { At.exists(it) }
+            ?: rilNode(sim).takeIf { At.exists(it) }
 
     private class Epbse(
         val words: LongArray,
@@ -214,14 +224,13 @@ object Mediatek {
             else -> ERAT_PREFER_NONE
         }
 
-    /** A modem that already allows the same generations is left alone. One whose mode can't be read is set anyway. */
     fun setRat(
         node: String,
         mask: Long,
     ): JSONObject {
-        val wanted = mask and GENERATIONS
+        val wanted = mask and Masks.GENERATIONS
         val current = runCatching { ratMask(node) }.getOrNull()
-        if (current === null || current and GENERATIONS != wanted) {
+        if (current === null || current and Masks.GENERATIONS != wanted) {
             val rat = ERAT_MASKS.entries.firstOrNull { it.value == wanted }?.key ?: fail(R.string.mtk_erat_no_mode)
             At.ok(node, "AT+ERAT=$rat,${preferenceFor(wanted)}")
         }
@@ -319,17 +328,15 @@ object Mediatek {
 
     private fun hex32(word: Long): String = "%08x".format(word and 0xFFFFFFFFL)
 
-    /** Without a [pci] this locks the channel only, and [mode] isn't sent. */
     fun cellLock(
         node: String,
         act: Int,
         arfcn: Long,
         pci: Int?,
-        mode: Int,
     ): JSONObject {
         // <on> = 1, <gsm1900> = 0
         val channelLock = "AT+EMMCHLCK=1,$act,0,$arfcn"
-        val command = if (pci === null) channelLock else "$channelLock,$pci,$mode"
+        val command = if (pci === null) channelLock else "$channelLock,$pci,$CELL_LOCK_IDLE_AND_CONNECTED"
         At.ok(node, command)
         val lock = cellLockState(node)
         if (lock.optBoolean("active")) return lock

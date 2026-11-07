@@ -22,4 +22,6 @@
     <string name="oem_probe_failed">%1$s 失败：%2$s</string>
     <string name="oem_probe_replied">%1$s 返回：%2$s</string>
     <string name="oem_probe_silent">%1$s 无响应。</string>
+    <string name="cell_hint_mtk_at">使用 AT+EMMCHLCK，同一时间只能保留一个锁定。PCI 可不填，射频会重启以应用锁定。</string>
+    <string name="cell_hint_mtk_hal">此基带不支持 AT+EMMCHLCK，改为通过射频 HAL 锁定频点（ARFCN）。这种方式无法锁 PCI，部分基带会直接忽略。</string>
 </resources>

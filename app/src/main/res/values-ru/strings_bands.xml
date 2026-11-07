@@ -5,12 +5,6 @@
     <string name="bands_nsa_off">NSA выключен</string>
     <string name="bands_samsung_menu">Открыть Samsung Band Menu</string>
     <string name="bands_samsung_menu_hint">Встроенное в телефон меню Samsung для блокировки частотных диапазонов.</string>
-    <string name="bands_hint_qualcomm_persist">Изменения сразу применяются через QMI. Блокировки сохраняются после перезагрузки (это можно изменить в разделе «Инструменты»).</string>
-    <string name="bands_hint_qualcomm_volatile">Изменения сразу применяются через QMI. Блокировки снимаются при перезагрузке.</string>
-    <string name="bands_hint_mediatek">Изменения отправляются командами AT+EPBSE и AT+EPBSEH через %1$s.</string>
-    <string name="bands_hint_mediatek_auto">Изменения отправляются командами AT+EPBSE и AT+EPBSEH через автоматически найденный порт AT.</string>
-    <string name="bands_hint_pixel">Изменения сохраняются в NV-память модема, и радиомодуль сам перезапускается, чтобы их применить.</string>
-    <string name="bands_hint_android">Используются каналы выбора системы (system selection channels) из Radio HAL. Будет ли модем их соблюдать, зависит от производителя телефона.</string>
     <string name="bands_summary">Выбрано %1$d из %2$d</string>
     <string name="bands_summary_pending">Выбрано %1$d из %2$d, ещё не применено</string>
     <string name="bands_summary_locked">Выбрано %1$d из %2$d, заблокировано</string>

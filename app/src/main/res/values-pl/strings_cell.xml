@@ -17,12 +17,6 @@
     <string name="cell_lock_stray">Android przyjął blokadę, ale telefon siedzi na %1$s.</string>
     <string name="cell_lock_pinned">Modem trzyma się wybranej komórki.</string>
     <string name="cell_lock_free">Modem sam wybiera komórki.</string>
-    <string name="cell_plmn_hint_qualcomm">Najpierw próbuje przez QMI. Jeśli modem odmówi, używa ręcznego wyboru sieci z Androida.</string>
-    <string name="cell_plmn_hint_android">Używa ręcznego wyboru sieci z Androida, który zostaje po restarcie.</string>
-    <string name="cell_hint_qualcomm">Blokuje LTE i NR na PCI (PCell w SA albo SCG w NSA). Zostaw PCI dla NR puste, żeby zablokować samą częstotliwość. Kilka PCI oddziel przecinkami.</string>
-    <string name="cell_hint_mtk_at">Używa AT+EMMCHLCK, które trzyma tylko jedną blokadę naraz. PCI jest opcjonalne, a radio restartuje się, żeby zastosować blokadę.</string>
-    <string name="cell_hint_mtk_hal">Ten modem nie obsługuje AT+EMMCHLCK, więc częstotliwość (ARFCN) jest blokowana przez radio HAL. W ten sposób nie da się zablokować PCI, a niektóre modemy w ogóle to ignorują.</string>
-    <string name="cell_hint_hal">Blokuje częstotliwość (ARFCN) przez radio HAL. Ten sposób nie blokuje PCI, a niektóre modemy (np. Qualcomm na fabrycznym oprogramowaniu) stosują tylko pasmo i ignorują kanał.</string>
     <string name="cell_lte_channel">B%1$d, %2$.1f MHz</string>
     <string name="cell_lte_anchor">Kotwica LTE</string>
     <string name="cell_nr_scg">Dodatkowa NR (SCG)</string>

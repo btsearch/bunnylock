@@ -45,7 +45,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import dev.ririxi.bunnylock.R
-import dev.ririxi.bunnylock.modem.Backend
 import dev.ririxi.bunnylock.modem.DeviceInfo
 import dev.ririxi.bunnylock.modem.ImsBlock
 import dev.ririxi.bunnylock.modem.ImsFeature
@@ -55,7 +54,7 @@ import dev.ririxi.bunnylock.modem.string
 
 private const val LOG_MIME_TYPE = "text/x-log"
 
-private val AT_COMMAND_PRESETS = listOf("ATI", "AT+EPBSE?", "AT+EPBSEH?", "AT+EMMCHLCK?", "AT+GOOGGETNV=\"NR.CONFIG.MODE\"")
+private val AT_COMMAND_PRESETS = listOf("ATI", "AT+EPBSE?", "AT+EPBSEH?", "AT+EMMCHLCK?", "AT+SPLBAND=0", "AT+GOOGGETNV=\"NR.CONFIG.MODE\"")
 
 @Composable
 fun ToolsScreen(
@@ -109,7 +108,7 @@ fun ToolsScreen(
                         onClick = vm::radioCycle,
                     )
                 }
-                if (state.modem.backend == Backend.QUALCOMM) {
+                if (state.modem.features.reattach) {
                     item {
                         ActionItem(
                             it,
@@ -178,7 +177,7 @@ fun ToolsScreen(
             }
         }
 
-        if (state.modem.backend == Backend.QUALCOMM) {
+        if (state.modem.features.qmiConsole) {
             item {
                 SectionHeader(stringResource(R.string.tools_qmi_console))
                 Panel {
@@ -247,14 +246,13 @@ fun ToolsScreen(
                 item { InfoItem(it, stringResource(R.string.tools_access), state.modem.access?.label.orEmpty()) }
                 if (device !== null) {
                     item {
-                        val status = device.mtkOemHookStatus?.let { text -> LocalContext.current.string(text) }
-                        InfoItem(it, stringResource(R.string.tools_passthrough), status.orEmpty())
+                        InfoItem(it, stringResource(R.string.tools_passthrough), textOf(device.rilPassthroughStatus))
                     }
-                    if (device.mtkOemHookChecked.isNotEmpty()) {
+                    if (device.rilPassthroughChecked.isNotEmpty()) {
                         item { shapes ->
                             val checkedServicesText: @Composable () -> Unit = {
                                 val context = LocalContext.current
-                                Text(device.mtkOemHookChecked.joinToString("\n") { context.string(it) }, style = MaterialTheme.typography.bodySmall)
+                                Text(device.rilPassthroughChecked.joinToString("\n") { context.string(it) }, style = MaterialTheme.typography.bodySmall)
                             }
                             SegmentedListItem(
                                 onClick = { checkedServicesOpen = !checkedServicesOpen },
@@ -271,7 +269,7 @@ fun ToolsScreen(
                                 },
                             ) {
                                 Text(
-                                    stringResource(R.string.tools_services_checked, device.mtkOemHookChecked.size),
+                                    stringResource(R.string.tools_services_checked, device.rilPassthroughChecked.size),
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             }
@@ -279,8 +277,8 @@ fun ToolsScreen(
                     }
                 }
                 item {
-                    val vendor = device?.vendorLabel?.let { label -> stringResource(label) }
-                    InfoItem(it, stringResource(R.string.common_modem), vendor.orEmpty())
+                    val chipset = device?.let { info -> stringResource(info.chipset.label) }.orEmpty()
+                    InfoItem(it, stringResource(R.string.common_modem), chipset)
                 }
                 item { InfoItem(it, "SoC", device?.socModel.orEmpty()) }
                 item { InfoItem(it, stringResource(R.string.common_platform), device?.platform.orEmpty()) }
@@ -366,7 +364,7 @@ private fun imsHint(
 
 @Composable
 private fun atNodesHint(device: DeviceInfo?): String {
-    val rilPorts = if (device?.mtkOemHook == true) listOf(stringResource(R.string.tools_at_ports_ril)) else emptyList()
+    val rilPorts = if (device?.rilPassthrough == true) listOf(stringResource(R.string.tools_at_ports_ril)) else emptyList()
     val nodes = device?.atNodes.orEmpty() + rilPorts
     return if (nodes.isEmpty()) {
         stringResource(R.string.tools_at_ports_none)
