@@ -39,7 +39,6 @@
     <string name="helper_root">Root yardımcısı</string>
     <string name="helper_shizuku">Shizuku yardımcısı</string>
 
-    <string name="verbatim" translatable="false">%1$s</string>
 
     <string name="something_went_wrong">Bir şeyler ters gitti.</string>
 </resources>

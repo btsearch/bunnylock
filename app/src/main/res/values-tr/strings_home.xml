@@ -9,7 +9,7 @@
     <string name="home_state_ignored">Yok sayıldı</string>
     <string name="home_state_locked">Kilitli</string>
     <string name="home_state_free">Serbest</string>
-    <string name="home_relock">Yeniden kilitle ve bir hücreyi tekrar seç</string>
+    <string name="home_relock">Yeniden kilitle ve hücre seçimini yenile</string>
     <string name="home_stray_band">Telefon, kilitli bantların dışında %1$s üzerinde.</string>
     <string name="home_stray_channel">Telefon, kilitli frekansın dışında %1$s üzerinde.</string>
     <string name="home_pinned_nothing">Herhangi bir sabitleme yok.</string>

@@ -40,7 +40,7 @@
 
     <string name="tools_log">Günlük kaydı</string>
     <string name="tools_save_log">Kaydet</string>
-    <string name="tools_save_log_description">Günlük kaydını kaydet</string>
+    <string name="tools_save_log_description">Günlüğü kaydet</string>
 
     <string name="tools_calling">Arama</string>
     <string name="tools_calling_sim">SIM %1$d üzerinden arama</string>

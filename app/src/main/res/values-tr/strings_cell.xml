@@ -17,7 +17,7 @@
     <string name="cell_lock_stray">Android kilidi kabul etti ancak telefon %1$s üzerinde.</string>
     <string name="cell_lock_pinned">Modem belirli bir hücreye sabitlendi.</string>
     <string name="cell_lock_free">Modem hücreleri kendi seçiyor.</string>
-    <string name="cell_lte_channel">B%1$d, %2$.1f MHz</string>
+    <string name="cell_lte_channel">B%1$d (%2$.1f MHz)</string>
     <string name="cell_lte_anchor">LTE çapa hücresi</string>
     <string name="cell_nr_scg">NR ikincil hücresi (SCG)</string>
     <string name="cell_pcis">PCI değerleri</string>

@@ -46,12 +46,12 @@
     <string name="qc_op_lte_cell_unlock">LTE hücre kilidinin kaldırılması</string>
     <string name="qc_op_nr_cell_lock">NR hücre kilidi</string>
     <string name="qc_op_nr_cell_unlock">NR hücre kilidinin kaldırılması</string>
-    <string name="qc_op_offline">çevrimdışı olma isteği</string>
-    <string name="qc_op_reboot">yeniden başlatma isteği</string>
+    <string name="qc_op_offline">çevrimdışı moda geçiş</string>
+    <string name="qc_op_reboot">yeniden başlatma</string>
     <string name="qc_op_data_detach">veri bağlantısının kesilmesi</string>
     <string name="qc_op_data_attach">veri bağlantısının kurulması</string>
 
-    <string name="qc_sim_switch_failed">Modem SIM %1$d\'ye geçemedi: %2$s.</string>
+    <string name="qc_sim_switch_failed">Modem, SIM %1$d kartına geçemedi: %2$s.</string>
     <string name="qc_lte_lock_too_many_pcis">Modem %1$s isteğini reddetti: Daha az sayıda PCI kabul ediyor. Eski modemler en fazla %2$d PCI kabul eder.</string>
     <string name="qc_note_nr_bands_combined">Bu modem %1$s bantlarını tek başına ayarlayamıyor. Bu nedenle bantlar hem SA hem de NSA için uygulandı.</string>
     <string name="qc_invalid_scs">%1$d kHz geçerli bir alt taşıyıcı aralığı değil.</string>
@@ -61,14 +61,14 @@
     <string name="qc_unknown_nr_lock_type">Bilinmeyen NR kilit türü: %1$s.</string>
 
     <string name="qrtr_failed">%1$s (%2$s).</string>
-    <string name="qrtr_lookup">Modemin QMI hizmeti bulunamadı.</string>
-    <string name="qrtr_socket">QRTR soketi açılamadı.</string>
-    <string name="qrtr_connect">Modemin QMI hizmetine bağlanılamadı.</string>
-    <string name="qrtr_length">QMI isteğinin uzunluğu geçersiz.</string>
-    <string name="qrtr_send">QMI isteği gönderilemedi.</string>
-    <string name="qrtr_timeout">Modem, QMI isteğine zamanında yanıt vermedi.</string>
-    <string name="qrtr_wait">QMI yanıtı beklenemedi.</string>
-    <string name="qrtr_recv">QMI yanıtı okunamadı.</string>
+    <string name="qrtr_lookup">Modemin QMI hizmeti bulunamadı</string>
+    <string name="qrtr_socket">QRTR soketi açılamadı</string>
+    <string name="qrtr_connect">Modemin QMI hizmetine bağlanılamadı</string>
+    <string name="qrtr_length">QMI isteğinin uzunluğu geçersiz</string>
+    <string name="qrtr_send">QMI isteği gönderilemedi</string>
+    <string name="qrtr_timeout">Modem, QMI isteğine zamanında yanıt vermedi</string>
+    <string name="qrtr_wait">QMI yanıtı beklenemedi</string>
+    <string name="qrtr_recv">QMI yanıtı okunamadı</string>
     <string name="cell_hint_qualcomm">LTE ve NR\'yi bir PCI\'ye (SA PCell veya NSA SCG) kilitler. Yalnızca frekansı kilitlemek için NR PCI alanını boş bırakın. Birden fazla PCI girmek için aralarına virgül koyun.</string>
     <string name="cell_plmn_hint_qualcomm">Önce QMI üzerinden ayarlanır. Modem işlemi reddederse bunun yerine Android şebeke seçimi kullanılır.</string>
 </resources>

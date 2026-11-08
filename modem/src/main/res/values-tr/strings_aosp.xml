@@ -3,12 +3,12 @@
     <string name="aosp_with_details">%1$s (%2$s)</string>
     <string name="aosp_unknown_error">bilinmeyen hata</string>
 
-    <string name="aosp_no_method">Bu Android sürümü ITelephony arayüzünü sunmuyor.%1$s.</string>
+    <string name="aosp_no_method">Bu Android sürümü ITelephony.%1$s yöntemini sunmuyor.</string>
 
     <string name="aosp_held_back">Android, %1$s özelliğini şimdilik etkinleştirmiyor: %2$s.</string>
     <string name="aosp_held_back_power">güç tasarrufu (Pil Tasarrufu veya Uyarlanabilir Bağlantı) etkin</string>
     <string name="aosp_held_back_carrier">operatör ayarlarında %1$s özelliğine yer verilmiyor</string>
-    <string name="aosp_held_back_2g">"2G\'ye izin ver" ayarı kapalı</string>
+    <string name="aosp_held_back_2g">\"2G\'ye izin ver\" ayarı kapalı</string>
 
     <string name="aosp_plmn_not_registered">%1$s %2$s şebekesine kayıt olunamadı. Şebeke kapsama alanı dışında olabilir veya bu SIM kartın bağlanmasına izin vermiyor olabilir.</string>
 
@@ -26,7 +26,7 @@
     <string name="aosp_no_subscription">Android\'de bu SIM için etkin bir abonelik bulunmuyor. Bu nedenle kilit gönderilemiyor. SIM kartın takılı ve etkin olduğunu, ayrıca bunnylock uygulamasına Telefon izni verildiğini kontrol edin.</string>
     <string name="aosp_channels_rejected">Android\'in radyo hizmeti kanal kilidini reddetti.</string>
     <string name="aosp_channels_rejected_fewer">Android\'in radyo hizmeti kanal kilidini reddetti. Bu telefonda %1$d veya daha az bant seçmek işe yarayabilir.</string>
-    <string name="aosp_channels_rejected_split">Android\'in radyo hizmeti, bantlar %1$d\'lü gruplara ayrılsa bile kanal kilidini reddetti. Bu telefonda %1$d veya daha az bant seçmek işe yarayabilir.</string>
+    <string name="aosp_channels_rejected_split">Android\'in radyo hizmeti, bantlar %1$d bantlık gruplara bölündüğünde de kanal kilidini reddetti. Bu telefonda %1$d veya daha az bant seçmek işe yarayabilir.</string>
     <string name="aosp_channels_not_started">Android\'in radyo hizmeti kanal kilidini başlatamadı.</string>
 
     <string name="aosp_reboot_refused">Radyo HAL\'i modem yeniden başlatma isteğini reddetti.</string>
