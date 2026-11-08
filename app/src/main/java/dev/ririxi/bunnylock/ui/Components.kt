@@ -199,6 +199,7 @@ fun ActionItem(
     icon: ImageVector,
     enabled: Boolean,
     onClick: () -> Unit,
+    detail: String? = null,
 ) {
     SegmentedListItem(
         onClick = onClick,
@@ -206,7 +207,12 @@ fun ActionItem(
         shapes = shapes,
         colors = segmentColors(),
         leadingContent = { Icon(icon, contentDescription = null) },
-        supportingContent = { Text(subtitle) },
+        supportingContent = {
+            Column {
+                Text(subtitle)
+                if (detail !== null) Text(detail, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.padding(top = 4.dp))
+            }
+        },
     ) { Text(title) }
 }
 

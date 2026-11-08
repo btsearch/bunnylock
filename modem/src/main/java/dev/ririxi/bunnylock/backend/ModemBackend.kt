@@ -141,6 +141,8 @@ internal abstract class ModemBackend(
 
     open fun diagnostics(): List<String> = emptyList()
 
+    open fun forgetKeptOffBands() {}
+
     protected suspend fun resendBandLocks() {
         session.current.groups.filter { it.locked }.forEach {
             setBands(it.group, it.current.orEmpty().sorted(), liftsLock = false, done = Text(R.string.modem_bands_locked, it.group.label))

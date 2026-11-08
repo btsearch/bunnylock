@@ -74,6 +74,7 @@ data class BandGroupState(
     val current: Set<Int>?,
     /** A band the phone is camped on although the lock excludes it, so the modem isn't following the lock. */
     val stray: Int? = null,
+    val keptOff: List<Int> = emptyList(),
 ) {
     val locked get() = !current.isNullOrEmpty() && !current.containsAll(supported)
 

@@ -106,6 +106,24 @@ fun SettingsScreen(
                         )
                     }
                 }
+                val keptOffLines =
+                    state.modem.groups.mapNotNull { groupState ->
+                        val group = groupState.group
+                        groupState.keptOff.takeIf { it.isNotEmpty() }?.joinToString(", ", "${group.label}: ", transform = group::bandLabel)
+                    }
+                if (keptOffLines.isNotEmpty()) {
+                    item {
+                        ActionItem(
+                            it,
+                            stringResource(R.string.settings_forget_kept_off_bands),
+                            stringResource(R.string.settings_forget_kept_off_bands_hint),
+                            Icons.Rounded.Refresh,
+                            enabled = !state.busy,
+                            onClick = vm::forgetKeptOffBands,
+                            detail = keptOffLines.joinToString("\n"),
+                        )
+                    }
+                }
             }
         }
 

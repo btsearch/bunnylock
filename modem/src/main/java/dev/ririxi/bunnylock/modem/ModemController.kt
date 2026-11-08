@@ -115,8 +115,8 @@ class ModemController(
             }
             val node =
                 when {
-                    shellOnly && device.rilPassthrough -> rilNode(sim = 1)
-                    current.atNode.isNotEmpty() -> current.atNode
+                    shellOnly && device.rilPassthrough -> rilNode(current.sim)
+                    current.atNode.isNotEmpty() -> nodeForSim(current.atNode, current.sim)
                     else -> device.defaultAtNode
                 }
             session.update { copy(atNode = node) }
@@ -178,9 +178,14 @@ class ModemController(
         val savedSim = prefs.getInt("sim", 1)
         session.update {
             val selected = listOf(savedSim, sim).firstOrNull { wanted -> sims.any { it.slot == wanted - 1 } } ?: (sims.first().slot + 1)
-            copy(sims = sims, sim = selected)
+            copy(sims = sims, sim = selected, atNode = if (selected == sim) atNode else nodeForSim(atNode, selected))
         }
     }
+
+    private fun nodeForSim(
+        node: String,
+        sim: Int,
+    ) = if (node.startsWith(OemHook.PREFIX)) rilNode(sim) else node
 
     private fun subIdInSlot(
         subscriptions: SubscriptionManager,
@@ -214,8 +219,7 @@ class ModemController(
 
     fun setSim(sim: Int) {
         prefs.edit().putInt("sim", sim).apply()
-        val atNode = if (current.atNode.startsWith(OemHook.PREFIX)) rilNode(sim) else current.atNode
-        session.update { copy(sim = sim, atNode = atNode) }
+        session.update { copy(sim = sim, atNode = nodeForSim(atNode, sim)) }
         refresh()
     }
 
@@ -363,6 +367,11 @@ class ModemController(
     fun stopWaiting() = hal.stopWaiting()
 
     fun forgetNeedsChannels() = hal.forgetNeedsChannels()
+
+    fun forgetKeptOffBands() {
+        backend.forgetKeptOffBands()
+        refresh()
+    }
 
     /** With [exclusive], every network without a band lock of its own is turned off, and unlocking turns networks back on. */
     suspend fun lockBands(

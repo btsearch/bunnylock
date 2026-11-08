@@ -10,6 +10,8 @@
     <string name="mtk_no_band_lock">Порт AT %1$s не поддерживает блокировку диапазонов</string>
     <string name="mtk_current_bands_unreadable">Не удалось прочитать текущие диапазоны из %1$s</string>
     <string name="mtk_no_epbseh">Этот модем не поддерживает AT+EPBSEH, поэтому у него может не быть 5G.</string>
+    <string name="mtk_bands_left_off">Модем не включил диапазоны %1$s: %2$s.</string>
+    <string name="mtk_bands_off_when_unlocked">Даже после разблокировки модем не включает в этой сети диапазоны %1$s: %2$s. Поэтому они скрыты на экране «Диапазоны».</string>
 
     <string name="oem_working_through">Работа через %1$s.</string>
     <string name="oem_no_passthrough">На этом телефоне не отвечает ни один проброс OEM-запросов.</string>

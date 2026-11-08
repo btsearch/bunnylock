@@ -220,6 +220,8 @@ class MainViewModel(
 
     fun forgetNeedsChannels() = modem.forgetNeedsChannels()
 
+    fun forgetKeptOffBands() = modem.forgetKeptOffBands()
+
     fun stopWaiting() = modem.stopWaiting()
 
     fun setExclusiveBandLock(enabled: Boolean) {

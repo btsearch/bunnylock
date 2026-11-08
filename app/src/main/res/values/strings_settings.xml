@@ -10,6 +10,8 @@
     <string name="settings_exclusive_lock_hint">Locking bands turns off every network without a band lock of its own. Unlocking turns them back on.</string>
     <string name="settings_forget_needs_channels">Go back to bands-only locks</string>
     <string name="settings_forget_needs_channels_hint">Band locks on this phone include the visible frequencies, since a bands-only lock didn\'t work here before. Tap to try the bands alone first on the next lock.</string>
+    <string name="settings_forget_kept_off_bands">Show bands the modem keeps off</string>
+    <string name="settings_forget_kept_off_bands_hint">Hidden on this network. Tap to show them again.</string>
     <string name="settings_dynamic_color">Dynamic color</string>
     <string name="settings_dynamic_color_hint">Use your wallpaper colors. Off uses the default blue theme.</string>
     <string name="settings_language">Language</string>

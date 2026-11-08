@@ -15,6 +15,7 @@ import dev.ririxi.bunnylock.core.Ran
 import dev.ririxi.bunnylock.core.intList
 import dev.ririxi.bunnylock.data.RootException
 import dev.ririxi.bunnylock.modem.BackendFeatures
+import dev.ririxi.bunnylock.modem.BandGroupState
 import dev.ririxi.bunnylock.modem.Chipset
 import dev.ririxi.bunnylock.modem.DeviceInfo
 import dev.ririxi.bunnylock.modem.Group
@@ -37,6 +38,7 @@ internal class MediatekBackend(
     hal: HalLocks,
 ) : ModemBackend(session, hal) {
     private val current get() = session.current
+    private val keptOffBands = KeptOffBands(session)
 
     // The selected port is kept unless it can't serve. The Pixel port isn't a MediaTek one, and ADB-level access can't open a tty.
     private suspend fun node(): String {
@@ -77,15 +79,18 @@ internal class MediatekBackend(
         aospState: JSONObject?,
     ): BackendReadout {
         val mtkState = call("mtk.state")
+        bandReplies = mtkState.optJSONObject("bandReplies")
         val supported = mtkState.optJSONObject("supported") ?: JSONObject()
         val reported = mtkState.optJSONObject("current") ?: JSONObject()
-        val groups = mutableListOf(bandGroupState(Group.LTE, supported.intList("lte"), reported.intList("lte")))
+        val scope = keptOffBands.scope(sim)
+        if (scope !== null) BAND_GROUPS.forEach { learnKeptOff(it, scope, supported, reported) }
+        val groups = mutableListOf(groupState(Group.LTE, scope, supported, reported))
         val supportedNr = supported.intList("nr")
         if (supportedNr !== null && (supportedNr.isNotEmpty() || has5g(aospState))) {
-            groups += bandGroupState(Group.NR, supportedNr, reported.intList("nr"))
+            groups += groupState(Group.NR, scope, supported, reported)
         }
-        groups += bandGroupState(Group.WCDMA, supported.intList("wcdma"), reported.intList("wcdma"))
-        groups += bandGroupState(Group.GSM, supported.intList("gsm"), reported.intList("gsm"))
+        groups += groupState(Group.WCDMA, scope, supported, reported)
+        groups += groupState(Group.GSM, scope, supported, reported)
         // While Android holds part of the mode back, its mask stays, so the note can explain the difference.
         val allowedMask = mtkState.takeIf { it.has("ratMask") && aospState?.has("modeHeldBack") != true }?.optLong("ratMask")
         val carrierAggregation = mtkState.takeIf { it.has("ca") }?.optBoolean("ca")
@@ -136,16 +141,67 @@ internal class MediatekBackend(
         liftsLock: Boolean,
         done: Text,
     ): Text? {
-        val key =
-            when (group) {
+        val scope = keptOffBands.scope(current.sim)
+        val after = call("mtk.setBands") { put(group.stateKey, JSONArray(bandsToSend(bands, liftsLock))) }
+        return recordBandWrite(after, group, scope, lockedTo = bands.takeIf { !liftsLock })?.let(done::followedBy)
+    }
+
+    // Bands the modem keeps off on this network are left out, so they don't read as a lock.
+    private fun groupState(
+        group: Group,
+        scope: String?,
+        supported: JSONObject,
+        reported: JSONObject,
+    ): BandGroupState {
+        val reportedBands = reported.intList(group.stateKey)
+        val listed = supported.intList(group.stateKey) ?: return bandGroupState(group, null, reportedBands)
+        val keptOff = keptOffBands.bands(scope, group) - reportedBands.orEmpty().toSet()
+        val offered = (listed - keptOff).ifEmpty { listed }
+        return bandGroupState(group, offered, reportedBands).copy(keptOff = listed - offered.toSet())
+    }
+
+    private fun learnKeptOff(
+        group: Group,
+        scope: String,
+        supported: JSONObject,
+        reported: JSONObject,
+    ) {
+        val reportedBands = reported.intList(group.stateKey)?.takeIf { it.isNotEmpty() } ?: return
+        val listed = supported.intList(group.stateKey) ?: return
+        val newlyKeptOff = keptOffBands.learn(scope, group, listed - reportedBands.toSet())
+        if (newlyKeptOff.isNotEmpty()) session.log(session.inEnglish(keptOffNote(group, newlyKeptOff)))
+    }
+
+    private fun recordBandWrite(
+        after: JSONObject,
+        group: Group,
+        scope: String?,
+        lockedTo: List<Int>?,
+    ): Text? {
+        if (lockedTo === null) keptOffBands.startLearning(scope, group) else keptOffBands.stopLearning(current.sim, group)
+        val held = after.optJSONObject("current")?.intList(group.stateKey)?.takeIf { it.isNotEmpty() }?.toSet() ?: return null
+        if (lockedTo !== null) {
+            val leftOff = lockedTo - held
+            return if (leftOff.isEmpty()) null else Text(R.string.mtk_bands_left_off, group.label, leftOff.map(group::bandLabel))
+        }
+        val listed = after.optJSONObject("supported")?.intList(group.stateKey) ?: return null
+        val newlyKeptOff = keptOffBands.record(scope, group, listed - held)
+        return if (newlyKeptOff.isEmpty()) null else keptOffNote(group, newlyKeptOff)
+    }
+
+    private fun keptOffNote(
+        group: Group,
+        bands: List<Int>,
+    ) = Text(R.string.mtk_bands_off_when_unlocked, group.label, bands.map(group::bandLabel))
+
+    private val Group.stateKey
+        get() =
+            when (this) {
                 Group.LTE -> "lte"
                 Group.WCDMA -> "wcdma"
                 Group.GSM -> "gsm"
-                else -> "nr"
+                Group.NR, Group.NR_SA, Group.NR_NSA -> "nr"
             }
-        call("mtk.setBands") { put(key, JSONArray(bandsToSend(bands, liftsLock))) }
-        return null
-    }
 
     override suspend fun setNetworkMode(
         mask: Long,
@@ -225,19 +281,45 @@ internal class MediatekBackend(
     }
 
     override suspend fun unlockAll(): Text? {
-        val empty = JSONArray()
         val hasNr = current.groups.any { it.group == Group.NR }
-        call("mtk.setBands") {
-            put("gsm", empty)
-            put("wcdma", empty)
-            put("lte", empty)
-            if (hasNr) put("nr", empty)
-        }
-        if (current.cellLocksThroughHal) return hal.liftCellLocks()
-        val heldCellLock = current.anyCellLock
-        runSuspendCatching { call("mtk.cellUnlock") }
-        if (heldCellLock) session.restartSimRadio()
-        return null
+        val groups = BAND_GROUPS.filter { it != Group.NR || hasNr }
+        val scope = keptOffBands.scope(current.sim)
+        val after = call("mtk.setBands") { groups.forEach { put(it.stateKey, JSONArray()) } }
+        val keptOffNotes = groups.mapNotNull { recordBandWrite(after, it, scope, lockedTo = null) }
+        val cellNote =
+            if (current.cellLocksThroughHal) {
+                hal.liftCellLocks()
+            } else {
+                val heldCellLock = current.anyCellLock
+                runSuspendCatching { call("mtk.cellUnlock") }
+                if (heldCellLock) session.restartSimRadio()
+                null
+            }
+        if (keptOffNotes.isEmpty()) return cellNote
+        return keptOffNotes.fold(cellNote ?: Text(R.string.modem_all_unlocked), Text::followedBy)
+    }
+
+    override fun forgetKeptOffBands() {
+        val scope = keptOffBands.scope(current.sim) ?: return
+        keptOffBands.forget(scope)
+        session.log("bunnylock forgot which bands the modem keeps off for SIM ${current.sim} on network ${keptOffBands.network(current.sim)}, so they show again.")
+    }
+
+    private var bandReplies: JSONObject? = null
+
+    override fun diagnostics(): List<String> {
+        val replies = bandReplies?.let { json -> json.keys().asSequence().joinToString("; ") { "$it -> ${json.optString(it)}" } }
+        val sim = current.sim
+        val scope = keptOffBands.scope(sim)
+        val keptOff =
+            BAND_GROUPS.mapNotNull { group ->
+                keptOffBands.bands(scope, group).takeIf { it.isNotEmpty() }?.sorted()?.joinToString(", ", "${group.label} ", transform = group::bandLabel)
+            }
+        val network = keptOffBands.network(sim)?.let { "network $it" } ?: "no network"
+        return listOf(
+            "MediaTek band replies: ${replies ?: "not read"}",
+            "MediaTek bands kept off when unlocked on SIM $sim, $network: ${keptOff.joinToString("; ").ifEmpty { "none seen" }}",
+        )
     }
 
     override suspend fun resendLocks() {
@@ -252,6 +334,8 @@ internal class MediatekBackend(
     private fun cellLockIgnoredKey() = "mtkCellLockIgnored.${current.device?.manufacturer}.${current.device?.model}"
 
     companion object : BackendProfile {
+        private val BAND_GROUPS = listOf(Group.LTE, Group.NR, Group.WCDMA, Group.GSM)
+
         override val chipset = Chipset.MEDIATEK
 
         override fun suits(device: DeviceInfo): Boolean {

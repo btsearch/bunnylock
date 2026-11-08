@@ -10,6 +10,8 @@
     <string name="settings_exclusive_lock_hint">Блокування діапазонів вимикає всі мережі, які не мають власного блокування діапазонів. Розблокування вмикає їх знову.</string>
     <string name="settings_forget_needs_channels">Повернутися до блокування лише діапазонів</string>
     <string name="settings_forget_needs_channels_hint">На цьому телефоні до блокування діапазонів додаються видимі частоти, бо блокування лише діапазонів тут раніше не спрацювало. Торкніться, щоб під час наступного блокування bunnylock спершу спробував обійтися без частот.</string>
+    <string name="settings_forget_kept_off_bands">Показати діапазони, які модем не вмикає</string>
+    <string name="settings_forget_kept_off_bands_hint">Приховані в цій мережі. Торкніться, щоб знову їх показати.</string>
     <string name="settings_dynamic_color">Динамічні кольори</string>
     <string name="settings_dynamic_color_hint">Використовувати кольори шпалер. Коли вимкнено, використовується стандартна синя тема.</string>
     <string name="settings_language">Мова</string>

@@ -127,10 +127,7 @@ object Mediatek {
         }
     }
 
-    private fun queryEpbseh(
-        node: String,
-        command: String,
-    ): List<LongArray>? = runCatching { parseEpbseh(At.send(node, command)) }.getOrNull()
+    private fun queryEpbseh(reply: () -> String): List<LongArray>? = runCatching { parseEpbseh(reply()) }.getOrNull()
 
     private fun nrWordsOf(epbseh: List<LongArray>?): LongArray? = epbseh?.getOrNull(EPBSEH_NR_FIELD)?.takeIf { it.isNotEmpty() }
 
@@ -164,12 +161,16 @@ object Mediatek {
             .put("lte", JSONArray(lteOf(words)))
 
     fun state(node: String): JSONObject {
-        val out = JSONObject().put("node", node)
-        val supportedHex = queryEpbseh(node, "AT+EPBSEH=?")
-        val currentHex = queryEpbseh(node, "AT+EPBSEH?")
+        val replies = JSONObject()
+        val out = JSONObject().put("node", node).put("bandReplies", replies)
+
+        fun ask(command: String) = At.send(node, command).also { replies.put(command, it.lines().filter(String::isNotBlank).joinToString(" ")) }
+
+        val supportedHex = queryEpbseh { ask("AT+EPBSEH=?") }
+        val currentHex = queryEpbseh { ask("AT+EPBSEH?") }
         // Some modems answer +EPBSEH but not +EPBSE, and it carries the same bands.
-        val supported = parseEpbse(At.send(node, "AT+EPBSE=?")) ?: supportedHex?.let(::epbseOf)
-        val current = parseEpbse(At.send(node, "AT+EPBSE?")) ?: currentHex?.let(::epbseOf)
+        val supported = parseEpbse(ask("AT+EPBSE=?")) ?: supportedHex?.let(::epbseOf)
+        val current = parseEpbse(ask("AT+EPBSE?")) ?: currentHex?.let(::epbseOf)
         if (supported !== null) {
             out.put("supported", bandsJson(supported.words))
             out.put("lteExtended", supported.hasExtendedLte)
@@ -273,8 +274,8 @@ object Mediatek {
         lte: List<Int>?,
         nr: List<Int>?,
     ): JSONObject {
-        val supportedHex = queryEpbseh(node, "AT+EPBSEH=?")
-        val currentHex = queryEpbseh(node, "AT+EPBSEH?")
+        val supportedHex = queryEpbseh { At.send(node, "AT+EPBSEH=?") }
+        val currentHex = queryEpbseh { At.send(node, "AT+EPBSEH?") }
         val supported = readEpbse(node, "AT+EPBSE=?", R.string.mtk_no_band_lock, supportedHex)
         val current = readEpbse(node, "AT+EPBSE?", R.string.mtk_current_bands_unreadable, currentHex)
         val words = current.words.copyOf()

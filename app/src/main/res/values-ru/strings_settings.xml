@@ -10,6 +10,8 @@
     <string name="settings_exclusive_lock_hint">Блокировка диапазонов отключает все сети, у которых нет собственной блокировки диапазонов. При разблокировке они включаются снова.</string>
     <string name="settings_forget_needs_channels">Вернуться к блокировке только диапазонов</string>
     <string name="settings_forget_needs_channels_hint">На этом телефоне в блокировку диапазонов добавляются видимые частоты, потому что блокировка только диапазонов здесь раньше не сработала. Нажмите, чтобы при следующей блокировке bunnylock сначала попробовал обойтись без частот.</string>
+    <string name="settings_forget_kept_off_bands">Показать диапазоны, которые модем не включает</string>
+    <string name="settings_forget_kept_off_bands_hint">Скрыты в этой сети. Нажмите, чтобы снова их показать.</string>
     <string name="settings_dynamic_color">Динамические цвета</string>
     <string name="settings_dynamic_color_hint">Использовать цвета обоев. Если выключено, используется стандартная синяя тема.</string>
     <string name="settings_language">Язык</string>
