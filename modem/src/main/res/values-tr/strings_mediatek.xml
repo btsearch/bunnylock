@@ -10,6 +10,8 @@
     <string name="mtk_no_band_lock">%1$s AT portu bant kilitlemeyi desteklemiyor.</string>
     <string name="mtk_current_bands_unreadable">%1$s üzerinden mevcut bantlar okunamadı.</string>
     <string name="mtk_no_epbseh">Bu modem AT+EPBSEH komutunu desteklemiyor. Bu nedenle 5G desteği bulunmayabilir.</string>
+    <string name="mtk_bands_left_off">Modem, %1$s %2$s bandını etkinleştirmedi.</string>
+    <string name="mtk_bands_off_when_unlocked">Bu şebekede %1$s %2$s, kilit kaldırıldıktan sonra bile kapalı kaldı ve Bantlar ekranında gizlenecek.</string>
 
     <string name="oem_working_through">%1$s üzerinden işlem yapılıyor.</string>
     <string name="oem_no_passthrough">Bu telefonda hiçbir OEM isteği iletimine yanıt alınamadı.</string>

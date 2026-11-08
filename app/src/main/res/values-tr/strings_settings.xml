@@ -10,6 +10,8 @@
     <string name="settings_exclusive_lock_hint">Bantları kilitlediğinizde kendi bant kilidi olmayan tüm şebekeler kapatılır. Kilitleri kaldırdığınızda yeniden etkinleştirilirler.</string>
     <string name="settings_forget_needs_channels">Yalnızca bant kilitlerine geri dön</string>
     <string name="settings_forget_needs_channels_hint">Bu telefonda bant kilitleri, daha önce yalnızca bant kilidi çalışmadığı için görünür frekansları da içeriyor. Bir sonraki kilitlemede önce yalnızca bantları denemek için dokunun.</string>
+    <string name="settings_forget_kept_off_bands">Modemin kapalı tuttuğu bantları göster</string>
+    <string name="settings_forget_kept_off_bands_hint">Bu şebekede gizlendi. Yeniden göstermek için dokunun.</string>
     <string name="settings_dynamic_color">Dinamik renk</string>
     <string name="settings_dynamic_color_hint">Duvar kağıdınızın renklerini kullanır. Kapalıyken varsayılan mavi tema kullanılır.</string>
     <string name="settings_language">Dil</string>
