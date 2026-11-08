@@ -1,0 +1,24 @@
+<resources>
+    <string name="shell_tab_home">Ana sayfa</string>
+    <string name="shell_tab_bands">Bantlar</string>
+    <string name="shell_tab_cell">Hücre kilidi</string>
+    <string name="shell_tab_tools">Araçlar</string>
+    <string name="shell_tab_settings">Ayarlar</string>
+    <string name="shell_refresh">Yenile</string>
+    <string name="shell_stop_waiting">Beklemeyi durdur</string>
+    <string name="shell_denied_title">Root veya Shizuku gerekli</string>
+    <string name="shell_try_again">Tekrar dene</string>
+    <string name="shell_subtitle_default">Bant ve hücre kilitleme</string>
+    <string name="shell_subtitle_shizuku">%1$s (Shizuku)</string>
+    <string name="shell_sim_chip_description">SIM %1$d, %2$s. SIM\'i değiştir</string>
+    <string name="shell_sim_menu_item">SIM %1$d: %2$s</string>
+    <string name="shell_sim_selected">Seçili</string>
+    <string name="shell_update_title">Güncelleme mevcut</string>
+    <string name="shell_update_message">%1$s sürümü yayımlandı.</string>
+    <string name="shell_update_download">İndir</string>
+    <string name="shell_update_skip">Bu sürümü atla</string>
+    <string name="shell_update_later">Daha sonra</string>
+    <string name="shell_lock_badge_ignored">Kilit yok sayıldı</string>
+    <string name="shell_lock_badge_locked">Kilitli</string>
+    <string name="shell_lock_badge_unlocked">Kilidi açık</string>
+</resources>

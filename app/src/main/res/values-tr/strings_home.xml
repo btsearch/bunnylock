@@ -1,0 +1,40 @@
+<resources>
+    <string name="home_connection">Bağlantı</string>
+    <string name="home_no_serving_cell">Hizmet veren hücre yok</string>
+    <plurals name="home_carriers_header">
+        <item quantity="one">Taşıyıcı</item>
+        <item quantity="other">Taşıyıcılar</item>
+    </plurals>
+    <string name="home_chipset">Yonga seti</string>
+    <string name="home_state_ignored">Yok sayıldı</string>
+    <string name="home_state_locked">Kilitli</string>
+    <string name="home_state_free">Serbest</string>
+    <string name="home_relock">Yeniden kilitle ve hücre seçimini yenile</string>
+    <string name="home_stray_band">Telefon, kilitli bantların dışında %1$s üzerinde.</string>
+    <string name="home_stray_channel">Telefon, kilitli frekansın dışında %1$s üzerinde.</string>
+    <string name="home_pinned_nothing">Herhangi bir sabitleme yok.</string>
+    <string name="home_pinned_bands">Bantlar sabitlendi.</string>
+    <string name="home_pinned_cell">Hücre sabitlendi.</string>
+    <string name="home_pinned_network">Şebeke sabitlendi.</string>
+    <string name="home_pinned_bands_cell">Bantlar ve hücre sabitlendi.</string>
+    <string name="home_pinned_bands_network">Bantlar ve şebeke sabitlendi.</string>
+    <string name="home_pinned_cell_network">Hücre ve şebeke sabitlendi.</string>
+    <string name="home_pinned_all">Bantlar, hücre ve şebeke sabitlendi.</string>
+    <string name="home_row_lte_cell">LTE hücresi</string>
+    <string name="home_row_nr_cell">NR hücresi</string>
+    <string name="home_row_legacy_cell">2G/3G hücresi</string>
+    <plurals name="home_carrier_count">
+        <item quantity="one">%d taşıyıcı</item>
+        <item quantity="other">%d taşıyıcı</item>
+    </plurals>
+    <string name="home_tech_summary">%1$s, %2$s</string>
+    <string name="home_unknown_network">Bilinmeyen şebeke</string>
+    <string name="home_total_bandwidth">toplam bant genişliği</string>
+    <string name="home_tag_primary">Birincil</string>
+    <string name="home_tag_secondary">İkincil</string>
+    <string name="home_tag_serving">Hizmet veren</string>
+    <string name="home_feature_on">%1$s açık</string>
+    <string name="home_feature_off">%1$s kapalı</string>
+    <string name="home_unlock_all_title">Tüm kilitler kaldırılsın mı?</string>
+    <string name="home_unlock_all_message">Tüm bant, hücre ve şebeke kilitleri kaldırılır ve telefon yeniden şebekeyi kendi seçer.</string>
+</resources>

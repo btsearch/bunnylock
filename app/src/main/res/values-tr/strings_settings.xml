@@ -1,0 +1,44 @@
+<resources>
+    <string name="settings_backend">Arka uç</string>
+    <string name="settings_backend_needs_root">Root gerekli</string>
+    <string name="settings_backend_detected">Bu cihaz için algılandı</string>
+    <string name="settings_persist">Bant kilitlerini yeniden başlatma sonrasında koru</string>
+    <string name="settings_persist_hint">Bu seçenek kapalıyken yeniden başlatma sırasında kilitler kaldırılır.</string>
+    <string name="settings_appearance">Görünüm</string>
+    <string name="settings_bands">Bant kilitleri</string>
+    <string name="settings_exclusive_lock">Kilidi olmayan şebekeleri kapat</string>
+    <string name="settings_exclusive_lock_hint">Bantları kilitlediğinizde kendi bant kilidi olmayan tüm şebekeler kapatılır. Kilitleri kaldırdığınızda yeniden etkinleştirilirler.</string>
+    <string name="settings_forget_needs_channels">Yalnızca bant kilitlerine geri dön</string>
+    <string name="settings_forget_needs_channels_hint">Bu telefonda bant kilitleri, daha önce yalnızca bant kilidi çalışmadığı için görünür frekansları da içeriyor. Bir sonraki kilitlemede önce yalnızca bantları denemek için dokunun.</string>
+    <string name="settings_forget_kept_off_bands">Modemin kapalı tuttuğu bantları göster</string>
+    <string name="settings_forget_kept_off_bands_hint">Bu şebekede gizlendi. Yeniden göstermek için dokunun.</string>
+    <string name="settings_dynamic_color">Dinamik renk</string>
+    <string name="settings_dynamic_color_hint">Duvar kağıdınızın renklerini kullanır. Kapalıyken varsayılan mavi tema kullanılır.</string>
+    <string name="settings_language">Dil</string>
+    <string name="settings_language_system">Sistem varsayılanı</string>
+    <string name="settings_language_system_hint">Telefonunuzun dilini kullanır. Şu anda bu dil %1$s.</string>
+    <string name="settings_language_helper_english">Root yardımcısından gelen bazı mesajlar hâlâ İngilizce görünebilir.</string>
+    <!-- The name of this language, written in this language. For example Polski, not Polish. -->
+    <string name="settings_language_name">Türkçe</string>
+    <string name="settings_language_suggested">Önerilen</string>
+    <string name="settings_language_all">Tüm diller</string>
+    <string name="settings_updates">Güncellemeler</string>
+    <string name="settings_check_updates">Güncellemeleri denetle</string>
+    <string name="settings_check_updates_hint">Uygulama başladığında GitHub üzerinde yeni bir sürüm olup olmadığını kontrol eder.</string>
+    <string name="settings_about">Hakkında</string>
+    <string name="settings_author">@ririxi tarafından (BTSearch.pl geliştiricisi)</string>
+    <string name="settings_version">Sürüm %1$s</string>
+    <string name="settings_bunny_fact">Tavşan bilgisi: %1$s</string>
+    <string-array name="bunny_facts">
+        <item>Tavşanların dişleri sürekli uzar. Bu yüzden dişlerini aşındırmak için sürekli bir şeyler kemirmeleri gerekir.</item>
+        <item>Mutlu bir tavşan havada dönerek zıplar. Bu harekete \"binky\" denir.</item>
+        <item>Tavşanlar, burunlarının hemen önündeki küçük kör nokta dışında çevrelerinin neredeyse tamamını görebilir.</item>
+        <item>Tavşanlar kusamaz. Bu yüzden zararlı bir şey yemeleri onlar için özellikle tehlikelidir.</item>
+        <item>Keyfi yerinde bir tavşan dişlerini hafifçe birbirine sürterek \"mırlar\".</item>
+        <item>Yavru tavşanlara İngilizcede \"kit\" denir.</item>
+        <item>Tavşanlar en çok şafak vakti ve alacakaranlıkta aktiftir.</item>
+        <item>O büyük kulakları aynı zamanda radyatör görevi görerek tavşanın serinlemesine yardımcı olur.</item>
+        <item>İngilizcede bir tavşan grubuna bazen \"fluffle\" denir.</item>
+        <item>Arka ayaklarını yere vuran bir tavşan, yakındakileri bir şeylerin ters gittiğine dair uyarıyordur.</item>
+    </string-array>
+</resources>

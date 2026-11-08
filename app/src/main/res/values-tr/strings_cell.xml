@@ -1,0 +1,28 @@
+<resources>
+    <string name="cell_network_header">Şebeke (PLMN)</string>
+    <string name="cell_current_lock">Mevcut hücre kilidi</string>
+    <string name="cell_clear_lock">Hücre kilidini kaldır</string>
+    <string name="cell_lock_to">Şuna kilitle</string>
+    <string name="cell_visible">Görünür hücreler (alanları doldurmak için birine dokunun)</string>
+    <string name="cell_none_found">Hücre bulunamadı</string>
+    <string name="cell_none_found_hint">Hücre taraması için konum erişimi gerekir.</string>
+    <string name="cell_plmn_automatic">Otomatik</string>
+    <string name="cell_plmn_locked_to">%1$s şebekesine kilitli</string>
+    <string name="cell_not_registered">Bir şebekeye kayıtlı değil.</string>
+    <string name="cell_connected">%1$s şebekesine bağlı.</string>
+    <string name="cell_connected_named">%1$s (%2$s) şebekesine bağlı.</string>
+    <string name="cell_lock_ignored">Yok sayıldı</string>
+    <string name="cell_lock_locked">Kilitli</string>
+    <string name="cell_lock_none">Kilitli değil</string>
+    <string name="cell_lock_stray">Android kilidi kabul etti ancak telefon %1$s üzerinde.</string>
+    <string name="cell_lock_pinned">Modem belirli bir hücreye sabitlendi.</string>
+    <string name="cell_lock_free">Modem hücreleri kendi seçiyor.</string>
+    <string name="cell_lte_channel">B%1$d (%2$.1f MHz)</string>
+    <string name="cell_lte_anchor">LTE çapa hücresi</string>
+    <string name="cell_nr_scg">NR ikincil hücresi (SCG)</string>
+    <string name="cell_pcis">PCI değerleri</string>
+    <string name="cell_band">Bant</string>
+    <string name="cell_scs">Alt taşıyıcı aralığı (kHz)</string>
+    <string name="cell_clear_lock_title">Hücre kilidi kaldırılsın mı?</string>
+    <string name="cell_clear_lock_message">Modem artık istediği hücreyi seçebilir. Daha sonra aynı hücreyi yeniden kilitlemek için kanal ve PCI bilgilerine ihtiyacınız olacak.</string>
+</resources>

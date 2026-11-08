@@ -1,0 +1,32 @@
+<resources>
+    <string name="bands_network_mode">Şebeke modu</string>
+    <string name="bands_5g_mode">5G modu</string>
+    <string name="bands_nsa_on">NSA açık</string>
+    <string name="bands_nsa_off">NSA kapalı</string>
+    <string name="bands_samsung_menu">Samsung bant menüsünü aç</string>
+    <string name="bands_samsung_menu_hint">Samsung\'un yerleşik bant kilitleme menüsü.</string>
+    <string name="bands_summary">%2$d banttan %1$d tanesi seçili</string>
+    <string name="bands_summary_pending">%2$d banttan %1$d tanesi seçili, henüz uygulanmadı</string>
+    <string name="bands_summary_locked">%2$d banttan %1$d tanesi seçili ve kilitli</string>
+    <string name="bands_summary_locked_pending">%2$d banttan %1$d tanesi seçili ve kilitli, henüz uygulanmadı</string>
+    <string name="bands_summary_stray">%2$d banttan %1$d tanesi seçili ve kilitli, ancak telefon %3$s üzerinde</string>
+    <string name="bands_summary_stray_pending">%2$d banttan %1$d tanesi seçili ve kilitli, ancak telefon %3$s üzerinde; henüz uygulanmadı</string>
+    <string name="bands_summary_off">Kapalı</string>
+    <string name="bands_summary_off_pending">%2$d banttan %1$d tanesi seçili, kapalı; henüz uygulanmadı</string>
+    <string name="bands_pick_favorites">Favori bantları seç</string>
+    <string name="bands_pick_favorites_hint">Görünür tutmak istediğiniz bantlara dokunun.</string>
+    <string name="bands_show_favorites">Yalnızca favorileri göster</string>
+    <plurals name="bands_show_all">
+        <item quantity="one">%d bandı göster</item>
+        <item quantity="other">%d bandın tümünü göster</item>
+    </plurals>
+    <string name="bands_done">Tamam</string>
+    <string name="bands_all">Tümü</string>
+    <string name="bands_none">Hiçbiri</string>
+    <plurals name="bands_pending">
+        <item quantity="one">%d bant değiştirildi</item>
+        <item quantity="other">%d bant değiştirildi</item>
+    </plurals>
+    <string name="bands_discard">Vazgeç</string>
+    <string name="bands_lock_changes">Bant değişikliklerini uygula</string>
+</resources>
