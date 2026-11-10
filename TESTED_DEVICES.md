@@ -35,7 +35,7 @@ Without root, bunnylock runs through Shizuku. Some MediaTek phones allow AT comm
 | Redmi Note 10                 |   14    | Root    | MediaTek AT       |  ✅  |  ✅   | ✅  | ✅  | Custom ROM                                                                                                |
 | Redmi Note 12 4G              |   15    | Root    | Qualcomm QMI      |  ✅  |  ✅   | ✅  | ✅  |                                                                                                           |
 | Samsung Galaxy A33            |   15    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
-| Samsung Galaxy A36            |   17    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
+| Samsung Galaxy A36            | 16, 17  | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
 | Samsung Galaxy A37            |   16    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
 | Samsung Galaxy A50            |   11    | Shizuku | Android radio HAL |  ❌  |  ❌   | ✅  | ❌  |                                                                                                           |
 | Samsung Galaxy A52            |   14    | Shizuku | Android radio HAL |  ✅  |  ✅   | ✅  | ❌  |                                                                                                           |
