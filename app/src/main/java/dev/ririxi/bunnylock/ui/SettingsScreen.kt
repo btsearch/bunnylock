@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
@@ -127,10 +128,28 @@ fun SettingsScreen(
             }
         }
 
-        if (dynamicColorAvailable) {
-            item {
-                SectionHeader(stringResource(R.string.settings_appearance))
-                Segmented {
+        item {
+            SectionHeader(stringResource(R.string.settings_appearance))
+            Text(
+                stringResource(R.string.settings_theme),
+                modifier = Modifier.padding(start = 20.dp, top = 8.dp, bottom = 4.dp),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Segmented {
+                ThemeMode.entries.forEach { mode ->
+                    item { shapes ->
+                        val selected = state.themeMode == mode
+                        SegmentedListItem(
+                            selected = selected,
+                            onClick = { vm.setThemeMode(mode) },
+                            shapes = shapes,
+                            colors = segmentColors(),
+                            trailingContent = if (selected) ({ Icon(Icons.Rounded.Check, contentDescription = null) }) else null,
+                        ) { Text(stringResource(mode.label)) }
+                    }
+                }
+                if (dynamicColorAvailable) {
                     item {
                         SwitchItem(
                             it,

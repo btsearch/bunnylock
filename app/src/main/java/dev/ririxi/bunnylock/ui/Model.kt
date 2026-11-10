@@ -1,5 +1,6 @@
 package dev.ririxi.bunnylock.ui
 
+import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.core.Bands
 import dev.ririxi.bunnylock.data.Release
 import dev.ririxi.bunnylock.modem.BandGroupState
@@ -31,6 +32,17 @@ data class CellForm(
     val nrCandidates: List<Int> get() = nrArfcn.toIntOrNull()?.let { Bands.nrBandsOf(it) } ?: emptyList()
 }
 
+enum class ThemeMode(val label: Int) {
+    SYSTEM(R.string.settings_theme_system),
+    LIGHT(R.string.settings_theme_light),
+    DARK(R.string.settings_theme_dark),
+    OLED(R.string.settings_theme_oled);
+
+    companion object {
+        fun fromPreference(value: String?): ThemeMode = entries.find { it.name == value } ?: SYSTEM
+    }
+}
+
 data class UiState(
     val modem: ModemState = ModemState(),
     val busy: Boolean = false,
@@ -39,6 +51,7 @@ data class UiState(
     val plmnMcc: String = "",
     val plmnMnc: String = "",
     val dynamicColor: Boolean = true,
+    val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val checkUpdates: Boolean = true,
     /** Band locks turn off every network without a lock of its own. */
     val exclusiveBandLock: Boolean = false,

@@ -12,7 +12,9 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -90,6 +92,7 @@ import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.data.Rat
 import dev.ririxi.bunnylock.modem.Text as ModemText
 import dev.ririxi.bunnylock.modem.string
+import dev.ririxi.bunnylock.ui.theme.LocalOledTheme
 import dev.ririxi.bunnylock.ui.theme.GoogleSansFlex
 import dev.ririxi.bunnylock.ui.theme.LocalLockGreen
 
@@ -149,7 +152,8 @@ fun Segmented(
     build: SegmentScope.() -> Unit,
 ) {
     val scope = SegmentScope().apply(build)
-    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)) {
+    val outline = if (LocalOledTheme.current) Modifier.border(1.dp, Color(0xFF505050), RoundedCornerShape(28.dp)) else Modifier
+    Column(modifier.fillMaxWidth().then(outline), verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)) {
         scope.items.forEachIndexed { index, content -> content(ListItemDefaults.segmentedShapes(index, scope.items.size)) }
     }
 }
@@ -162,7 +166,8 @@ fun Panel(
     padding: PaddingValues = PaddingValues(16.dp),
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Surface(modifier.fillMaxWidth(), shape = shape, color = PanelColor) {
+    val outline = if (LocalOledTheme.current) BorderStroke(1.dp, Color(0xFF505050)) else null
+    Surface(modifier.fillMaxWidth(), shape = shape, color = PanelColor, border = outline) {
         Column(Modifier.padding(padding), verticalArrangement = Arrangement.spacedBy(12.dp), content = content)
     }
 }

@@ -5,6 +5,11 @@
     <string name="settings_persist">重启后保留锁频段</string>
     <string name="settings_persist_hint">关闭后，重启会清除锁定。</string>
     <string name="settings_appearance">外观</string>
+    <string name="settings_theme">主题</string>
+    <string name="settings_theme_system">跟随系统</string>
+    <string name="settings_theme_light">浅色</string>
+    <string name="settings_theme_dark">深色</string>
+    <string name="settings_theme_oled">OLED 纯黑</string>
     <string name="settings_bands">频段锁定</string>
     <string name="settings_exclusive_lock">关闭未锁定的网络</string>
     <string name="settings_exclusive_lock_hint">锁定频段时，会关闭所有没有单独锁定频段的网络。解锁后会重新开启。</string>

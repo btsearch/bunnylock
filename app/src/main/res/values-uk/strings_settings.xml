@@ -5,6 +5,11 @@
     <string name="settings_persist">Зберігати блокування діапазонів після перезавантаження</string>
     <string name="settings_persist_hint">Коли вимкнено, блокування скидаються під час перезавантаження.</string>
     <string name="settings_appearance">Вигляд</string>
+    <string name="settings_theme">Тема</string>
+    <string name="settings_theme_system">Як у системі</string>
+    <string name="settings_theme_light">Світла</string>
+    <string name="settings_theme_dark">Темна</string>
+    <string name="settings_theme_oled">Чорна OLED</string>
     <string name="settings_bands">Блокування діапазонів</string>
     <string name="settings_exclusive_lock">Вимикати мережі без блокування</string>
     <string name="settings_exclusive_lock_hint">Блокування діапазонів вимикає всі мережі, які не мають власного блокування діапазонів. Розблокування вмикає їх знову.</string>

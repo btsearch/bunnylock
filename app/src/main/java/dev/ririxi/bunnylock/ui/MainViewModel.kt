@@ -61,6 +61,7 @@ class MainViewModel(
         MutableStateFlow(
             UiState(
                 dynamicColor = prefs.getBoolean("dynamicColor", true),
+                themeMode = ThemeMode.fromPreference(prefs.getString("themeMode", null)),
                 checkUpdates = prefs.getBoolean("checkUpdates", true),
                 exclusiveBandLock = prefs.getBoolean(EXCLUSIVE_BAND_LOCK_KEY, false),
                 favoriteBands = loadFavoriteBands(),
@@ -227,6 +228,11 @@ class MainViewModel(
     fun setExclusiveBandLock(enabled: Boolean) {
         prefs.edit().putBoolean(EXCLUSIVE_BAND_LOCK_KEY, enabled).apply()
         updateState { copy(exclusiveBandLock = enabled) }
+    }
+
+    fun setThemeMode(mode: ThemeMode) {
+        prefs.edit().putString("themeMode", mode.name).apply()
+        updateState { copy(themeMode = mode) }
     }
 
     fun setDynamicColor(enabled: Boolean) {

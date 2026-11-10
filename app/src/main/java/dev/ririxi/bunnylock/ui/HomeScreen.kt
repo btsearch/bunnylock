@@ -12,6 +12,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -72,6 +73,7 @@ import dev.ririxi.bunnylock.modem.ImsSetting
 import dev.ririxi.bunnylock.modem.ModemState
 import dev.ririxi.bunnylock.modem.formatPlmn
 import dev.ririxi.bunnylock.ui.theme.LocalLockGreen
+import dev.ririxi.bunnylock.ui.theme.LocalOledTheme
 import dev.ririxi.bunnylock.ui.theme.LocalSignalScale
 
 private val RSRP_STEPS = listOf(-80, -90, -100)
@@ -142,8 +144,11 @@ private fun Hero(
             ?: state.modem.strayChannel?.let { stringResource(R.string.home_stray_channel, it) }
     val lockHeld = locked && strayNote === null
     val green = LocalLockGreen.current
+    val oled = LocalOledTheme.current
     val containerColor by animateColorAsState(
-        if (lockHeld) {
+        if (oled) {
+            Color.Black
+        } else if (lockHeld) {
             green.copy(alpha = 0.2f).compositeOver(MaterialTheme.colorScheme.surfaceContainerHigh)
         } else {
             MaterialTheme.colorScheme.surfaceContainerHigh
@@ -168,7 +173,12 @@ private fun Hero(
             onDismiss = { confirmUnlock = false },
         )
     }
-    Surface(color = containerColor, shape = RoundedCornerShape(36.dp), modifier = Modifier.fillMaxWidth()) {
+    Surface(
+        color = containerColor,
+        shape = RoundedCornerShape(36.dp),
+        modifier = Modifier.fillMaxWidth(),
+        border = if (oled) BorderStroke(1.dp, if (lockHeld) green else Color(0xFF505050)) else null,
+    ) {
         Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {

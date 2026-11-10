@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             val state by vm.state.collectAsStateWithLifecycle()
-            BunnyTheme(dynamicColor = state.dynamicColor) {
+            BunnyTheme(dynamicColor = state.dynamicColor, themeMode = state.themeMode) {
                 BunnyApp(vm)
             }
         }

@@ -5,6 +5,11 @@
     <string name="settings_persist">Bant kilitlerini yeniden başlatma sonrasında koru</string>
     <string name="settings_persist_hint">Bu seçenek kapalıyken yeniden başlatma sırasında kilitler kaldırılır.</string>
     <string name="settings_appearance">Görünüm</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">Sistem varsayılanı</string>
+    <string name="settings_theme_light">Açık</string>
+    <string name="settings_theme_dark">Koyu</string>
+    <string name="settings_theme_oled">OLED siyah</string>
     <string name="settings_bands">Bant kilitleri</string>
     <string name="settings_exclusive_lock">Kilidi olmayan şebekeleri kapat</string>
     <string name="settings_exclusive_lock_hint">Bantları kilitlediğinizde kendi bant kilidi olmayan tüm şebekeler kapatılır. Kilitleri kaldırdığınızda yeniden etkinleştirilirler.</string>

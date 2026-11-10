@@ -3,6 +3,7 @@
 package dev.ririxi.bunnylock.ui.theme
 
 import android.os.Build
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
@@ -14,6 +15,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -22,7 +24,9 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
+import androidx.core.view.WindowCompat
 import dev.ririxi.bunnylock.R
+import dev.ririxi.bunnylock.ui.ThemeMode
 
 private val LightColors =
     lightColorScheme(
@@ -100,6 +104,7 @@ private val LockGreenOnLight = Color(0xFF1FA34A)
 private val LockGreenOnDark = Color(0xFF5BE584)
 
 val LocalLockGreen = staticCompositionLocalOf { LockGreenOnLight }
+val LocalOledTheme = staticCompositionLocalOf { false }
 
 private val SignalScaleOnLight = listOf(LockGreenOnLight, Color(0xFF6E8E00), Color(0xFFB86E00), Color(0xFFCC3B2C))
 private val SignalScaleOnDark = listOf(LockGreenOnDark, Color(0xFFC3E35A), Color(0xFFFFB95C), Color(0xFFFF8A7E))
@@ -145,18 +150,50 @@ private val BunnyTypography =
 @Composable
 fun BunnyTheme(
     dynamicColor: Boolean = true,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeMode: ThemeMode = ThemeMode.SYSTEM,
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    val scheme =
+    val systemDark = isSystemInDarkTheme()
+    val darkTheme = when (themeMode) {
+        ThemeMode.SYSTEM -> systemDark
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK, ThemeMode.OLED -> true
+    }
+    val activity = LocalActivity.current
+    SideEffect {
+        activity?.window?.let { window ->
+            WindowCompat.getInsetsController(window, window.decorView).apply {
+                isAppearanceLightStatusBars = !darkTheme
+                isAppearanceLightNavigationBars = !darkTheme
+            }
+        }
+    }
+    val baseScheme =
         when {
             dynamicColor && dynamicColorAvailable && darkTheme -> dynamicDarkColorScheme(context)
             dynamicColor && dynamicColorAvailable -> dynamicLightColorScheme(context)
             darkTheme -> DarkColors
             else -> LightColors
         }
+    val scheme = if (themeMode == ThemeMode.OLED) {
+        baseScheme.copy(
+            background = Color.Black,
+            surface = Color.Black,
+            surfaceDim = Color.Black,
+            surfaceBright = Color(0xFF171717),
+            surfaceContainerLowest = Color.Black,
+            surfaceContainerLow = Color.Black,
+            surfaceContainer = Color.Black,
+            surfaceContainerHigh = Color(0xFF101010),
+            surfaceContainerHighest = Color(0xFF242424),
+            surfaceTint = Color.Transparent,
+        )
+    } else {
+        baseScheme
+    }
     CompositionLocalProvider(
+        LocalOledTheme provides (themeMode == ThemeMode.OLED),
         LocalLockGreen provides if (darkTheme) LockGreenOnDark else LockGreenOnLight,
         LocalSignalScale provides if (darkTheme) SignalScaleOnDark else SignalScaleOnLight,
     ) {

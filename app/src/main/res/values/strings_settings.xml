@@ -5,6 +5,11 @@
     <string name="settings_persist">Keep band locks after reboot</string>
     <string name="settings_persist_hint">When this is off, locks are cleared on reboot.</string>
     <string name="settings_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">System default</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_oled">OLED black</string>
     <string name="settings_bands">Band locks</string>
     <string name="settings_exclusive_lock">Turn off networks without a lock</string>
     <string name="settings_exclusive_lock_hint">Locking bands turns off every network without a band lock of its own. Unlocking turns them back on.</string>

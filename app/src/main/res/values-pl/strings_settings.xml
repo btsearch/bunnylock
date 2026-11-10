@@ -5,6 +5,11 @@
     <string name="settings_persist">Zachowaj blokady pasm po restarcie</string>
     <string name="settings_persist_hint">Po wyłączeniu blokady znikają przy restarcie.</string>
     <string name="settings_appearance">Wygląd</string>
+    <string name="settings_theme">Motyw</string>
+    <string name="settings_theme_system">Systemowy</string>
+    <string name="settings_theme_light">Jasny</string>
+    <string name="settings_theme_dark">Ciemny</string>
+    <string name="settings_theme_oled">Czarny OLED</string>
     <string name="settings_bands">Blokada pasm</string>
     <string name="settings_exclusive_lock">Wyłączaj sieci bez blokady</string>
     <string name="settings_exclusive_lock_hint">Blokada pasm wyłącza każdą sieć bez własnej blokady. Odblokowanie włącza je ponownie.</string>

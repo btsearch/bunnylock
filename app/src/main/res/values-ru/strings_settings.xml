@@ -5,6 +5,11 @@
     <string name="settings_persist">Сохранять блокировки диапазонов после перезагрузки</string>
     <string name="settings_persist_hint">Если выключено, блокировки сбрасываются при перезагрузке.</string>
     <string name="settings_appearance">Оформление</string>
+    <string name="settings_theme">Тема</string>
+    <string name="settings_theme_system">Как в системе</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Тёмная</string>
+    <string name="settings_theme_oled">Чёрная OLED</string>
     <string name="settings_bands">Блокировка диапазонов</string>
     <string name="settings_exclusive_lock">Отключать сети без блокировки</string>
     <string name="settings_exclusive_lock_hint">Блокировка диапазонов отключает все сети, у которых нет собственной блокировки диапазонов. При разблокировке они включаются снова.</string>
