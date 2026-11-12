@@ -3,13 +3,17 @@ package dev.ririxi.bunnylock
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.ririxi.bunnylock.data.AppLanguage
@@ -31,9 +35,15 @@ class MainActivity : ComponentActivity() {
         super.attachBaseContext(AppLanguage.wrap(newBase))
     }
 
+    // Android re-applies the first style on some configuration changes, so it has to read the saved choice itself.
+    private val barStyle =
+        SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) { resources ->
+            vm.state.value.themeMode.isDark(resources.configuration.isNightModeActive)
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge(barStyle, barStyle)
         if (savedInstanceState === null) {
             val wanted =
                 mutableListOf(
@@ -47,7 +57,12 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             val state by vm.state.collectAsStateWithLifecycle()
-            BunnyTheme(dynamicColor = state.dynamicColor) {
+            val darkTheme = state.themeMode.isDark(isSystemInDarkTheme())
+            DisposableEffect(darkTheme) {
+                enableEdgeToEdge(barStyle, barStyle)
+                onDispose {}
+            }
+            BunnyTheme(dynamicColor = state.dynamicColor, darkTheme = darkTheme, pureBlack = state.pureBlack) {
                 BunnyApp(vm)
             }
         }

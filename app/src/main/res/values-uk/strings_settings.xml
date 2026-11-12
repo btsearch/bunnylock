@@ -13,7 +13,13 @@
     <string name="settings_forget_kept_off_bands">Показати діапазони, які модем не вмикає</string>
     <string name="settings_forget_kept_off_bands_hint">Приховані в цій мережі. Торкніться, щоб знову їх показати.</string>
     <string name="settings_dynamic_color">Динамічні кольори</string>
-    <string name="settings_dynamic_color_hint">Використовувати кольори шпалер. Коли вимкнено, використовується стандартна синя тема.</string>
+    <string name="settings_dynamic_color_hint">Використовувати кольори шпалер. Коли вимкнено, використовуються стандартні сині кольори.</string>
+    <string name="settings_theme">Тема</string>
+    <string name="settings_theme_system">Система</string>
+    <string name="settings_theme_light">Світла</string>
+    <string name="settings_theme_dark">Темна</string>
+    <string name="settings_pure_black">Чорний фон для OLED</string>
+    <string name="settings_pure_black_hint">Використовувати повністю чорний фон у темній темі.</string>
     <string name="settings_language">Мова</string>
     <string name="settings_language_system">Системна</string>
     <string name="settings_language_system_hint">Як у налаштуваннях телефона. Зараз: %1$s.</string>

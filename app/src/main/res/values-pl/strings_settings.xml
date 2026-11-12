@@ -13,7 +13,13 @@
     <string name="settings_forget_kept_off_bands">Pokaż pasma, których modem nie włącza</string>
     <string name="settings_forget_kept_off_bands_hint">Ukryte w tej sieci. Stuknij, żeby znów je pokazać.</string>
     <string name="settings_dynamic_color">Dynamiczne kolory</string>
-    <string name="settings_dynamic_color_hint">Kolory z tapety. Po wyłączeniu aplikacja używa domyślnego niebieskiego motywu.</string>
+    <string name="settings_dynamic_color_hint">Kolory z tapety. Po wyłączeniu aplikacja używa domyślnych niebieskich kolorów.</string>
+    <string name="settings_theme">Motyw</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Jasny</string>
+    <string name="settings_theme_dark">Ciemny</string>
+    <string name="settings_pure_black">Czerń OLED</string>
+    <string name="settings_pure_black_hint">Czarne tło w ciemnym motywie.</string>
     <string name="settings_language">Język</string>
     <string name="settings_language_system">Język systemu</string>
     <string name="settings_language_system_hint">Tak jak w ustawieniach telefonu. Teraz: %1$s.</string>

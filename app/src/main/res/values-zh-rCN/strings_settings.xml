@@ -13,7 +13,13 @@
     <string name="settings_forget_kept_off_bands">显示基带不启用的频段</string>
     <string name="settings_forget_kept_off_bands_hint">已在此网络上隐藏。点击可重新显示。</string>
     <string name="settings_dynamic_color">动态取色</string>
-    <string name="settings_dynamic_color_hint">跟随壁纸配色。关闭则使用默认蓝色主题。</string>
+    <string name="settings_dynamic_color_hint">跟随壁纸配色。关闭则使用默认蓝色配色。</string>
+    <string name="settings_theme">主题</string>
+    <string name="settings_theme_system">跟随系统</string>
+    <string name="settings_theme_light">浅色</string>
+    <string name="settings_theme_dark">深色</string>
+    <string name="settings_pure_black">OLED 纯黑</string>
+    <string name="settings_pure_black_hint">深色主题下使用纯黑背景。</string>
     <string name="settings_language">语言</string>
     <string name="settings_language_system">跟随系统</string>
     <string name="settings_language_system_hint">使用手机的系统语言，当前为 %1$s。</string>

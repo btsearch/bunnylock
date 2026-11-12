@@ -127,10 +127,31 @@ fun SettingsScreen(
             }
         }
 
-        if (dynamicColorAvailable) {
-            item {
-                SectionHeader(stringResource(R.string.settings_appearance))
-                Segmented {
+        item {
+            SectionHeader(stringResource(R.string.settings_appearance))
+            Segmented {
+                item { shapes ->
+                    Panel(shape = shapes.shape) {
+                        Text(stringResource(R.string.settings_theme), style = MaterialTheme.typography.bodyLarge)
+                        ConnectedChoice(
+                            options = ThemeMode.entries,
+                            selected = state.themeMode,
+                            label = { stringResource(it.label) },
+                            onSelect = vm::setThemeMode,
+                        )
+                    }
+                }
+                item {
+                    SwitchItem(
+                        it,
+                        stringResource(R.string.settings_pure_black),
+                        stringResource(R.string.settings_pure_black_hint),
+                        checked = state.pureBlack,
+                        onCheckedChange = vm::setPureBlack,
+                        enabled = state.themeMode != ThemeMode.LIGHT,
+                    )
+                }
+                if (dynamicColorAvailable) {
                     item {
                         SwitchItem(
                             it,

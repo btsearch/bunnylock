@@ -60,6 +60,8 @@ class MainViewModel(
         MutableStateFlow(
             UiState(
                 dynamicColor = prefs.getBoolean("dynamicColor", true),
+                themeMode = loadThemeMode(),
+                pureBlack = prefs.getBoolean("pureBlack", false),
                 checkUpdates = prefs.getBoolean("checkUpdates", true),
                 exclusiveBandLock = prefs.getBoolean(EXCLUSIVE_BAND_LOCK_KEY, false),
                 favoriteBands = loadFavoriteBands(),
@@ -231,6 +233,21 @@ class MainViewModel(
     fun setDynamicColor(enabled: Boolean) {
         prefs.edit().putBoolean("dynamicColor", enabled).apply()
         updateState { copy(dynamicColor = enabled) }
+    }
+
+    fun setThemeMode(themeMode: ThemeMode) {
+        prefs.edit().putString("themeMode", themeMode.name).apply()
+        updateState { copy(themeMode = themeMode) }
+    }
+
+    private fun loadThemeMode(): ThemeMode {
+        val stored = prefs.getString("themeMode", null)
+        return ThemeMode.entries.firstOrNull { it.name == stored } ?: ThemeMode.SYSTEM
+    }
+
+    fun setPureBlack(enabled: Boolean) {
+        prefs.edit().putBoolean("pureBlack", enabled).apply()
+        updateState { copy(pureBlack = enabled) }
     }
 
     fun setAtNode(node: String) = modem.setAtNode(node)

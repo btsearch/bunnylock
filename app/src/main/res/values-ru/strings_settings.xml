@@ -13,7 +13,13 @@
     <string name="settings_forget_kept_off_bands">Показать диапазоны, которые модем не включает</string>
     <string name="settings_forget_kept_off_bands_hint">Скрыты в этой сети. Нажмите, чтобы снова их показать.</string>
     <string name="settings_dynamic_color">Динамические цвета</string>
-    <string name="settings_dynamic_color_hint">Использовать цвета обоев. Если выключено, используется стандартная синяя тема.</string>
+    <string name="settings_dynamic_color_hint">Использовать цвета обоев. Если выключено, используются стандартные синие цвета.</string>
+    <string name="settings_theme">Тема</string>
+    <string name="settings_theme_system">Система</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Тёмная</string>
+    <string name="settings_pure_black">Чёрный фон для OLED</string>
+    <string name="settings_pure_black_hint">Использовать полностью чёрный фон в тёмной теме.</string>
     <string name="settings_language">Язык</string>
     <string name="settings_language_system">Системный</string>
     <string name="settings_language_system_hint">Как в настройках телефона. Сейчас: %1$s.</string>

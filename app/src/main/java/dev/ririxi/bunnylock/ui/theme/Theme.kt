@@ -4,6 +4,7 @@ package dev.ririxi.bunnylock.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MotionScheme
@@ -146,16 +147,18 @@ private val BunnyTypography =
 fun BunnyTheme(
     dynamicColor: Boolean = true,
     darkTheme: Boolean = isSystemInDarkTheme(),
+    pureBlack: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    val scheme =
+    val baseScheme =
         when {
             dynamicColor && dynamicColorAvailable && darkTheme -> dynamicDarkColorScheme(context)
             dynamicColor && dynamicColorAvailable -> dynamicLightColorScheme(context)
             darkTheme -> DarkColors
             else -> LightColors
         }
+    val scheme = if (darkTheme && pureBlack) baseScheme.withPureBlack() else baseScheme
     CompositionLocalProvider(
         LocalLockGreen provides if (darkTheme) LockGreenOnDark else LockGreenOnLight,
         LocalSignalScale provides if (darkTheme) SignalScaleOnDark else SignalScaleOnLight,
@@ -168,3 +171,16 @@ fun BunnyTheme(
         )
     }
 }
+
+// The page turns black and every container takes the tone of the one below it, so cards still stand out from the page.
+private fun ColorScheme.withPureBlack(): ColorScheme =
+    copy(
+        background = Color.Black,
+        surface = Color.Black,
+        surfaceDim = Color.Black,
+        surfaceContainerHighest = surfaceContainerHigh,
+        surfaceContainerHigh = surfaceContainer,
+        surfaceContainer = surfaceContainerLow,
+        surfaceContainerLow = surfaceContainerLowest,
+        surfaceContainerLowest = Color.Black,
+    )

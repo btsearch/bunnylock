@@ -1,5 +1,7 @@
 package dev.ririxi.bunnylock.ui
 
+import androidx.annotation.StringRes
+import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.core.Bands
 import dev.ririxi.bunnylock.data.Release
 import dev.ririxi.bunnylock.modem.BandGroupState
@@ -15,6 +17,22 @@ val Group.favoritesKey: String
             Group.WCDMA -> "wcdma"
             Group.GSM -> "gsm"
         }
+
+enum class ThemeMode(
+    @StringRes val label: Int,
+) {
+    SYSTEM(R.string.settings_theme_system),
+    LIGHT(R.string.settings_theme_light),
+    DARK(R.string.settings_theme_dark),
+    ;
+
+    fun isDark(systemDark: Boolean): Boolean =
+        when (this) {
+            SYSTEM -> systemDark
+            LIGHT -> false
+            DARK -> true
+        }
+}
 
 data class CellForm(
     val rat: LockRat = LockRat.LTE,
@@ -39,6 +57,8 @@ data class UiState(
     val plmnMcc: String = "",
     val plmnMnc: String = "",
     val dynamicColor: Boolean = true,
+    val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val pureBlack: Boolean = false,
     val checkUpdates: Boolean = true,
     /** Band locks turn off every network without a lock of its own. */
     val exclusiveBandLock: Boolean = false,

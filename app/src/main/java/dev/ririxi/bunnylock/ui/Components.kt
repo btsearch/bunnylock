@@ -288,6 +288,8 @@ fun <T> ConnectedChoice(
                         options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
                         else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                     },
+                // Narrower than the default 16dp, so longer translations still fit three buttons at a larger font size.
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
             ) {
                 Text(label(option), maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
