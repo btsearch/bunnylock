@@ -29,7 +29,6 @@ import dev.ririxi.bunnylock.modem.Text
 import dev.ririxi.bunnylock.modem.asSentence
 import dev.ririxi.bunnylock.modem.reason
 import dev.ririxi.bunnylock.modem.string
-import dev.ririxi.bunnylock.modem.R as ModemR
 import dev.ririxi.bunnylock.shizuku.RootOrShizuku
 import dev.ririxi.bunnylock.shizuku.ShizukuClient
 import dev.ririxi.bunnylock.shizuku.samsung.SamsungBandMenu
@@ -309,42 +308,63 @@ class MainViewModel(
         if (all) visibleBands(groupState).toSet() else emptySet()
     }
 
-    fun applyGroup(
-        group: Group,
-        unlock: Boolean = false,
-    ) = launchAction(refreshAfter = false) { sendGroup(group, unlock) }
+    fun unlockGroup(group: Group) = launchAction(refreshAfter = false) { sendGroup(group, unlock = true) }
 
-    fun applyPendingGroups() =
+    fun applyPendingGroups(including: Group? = null) =
         launchAction(refreshAfter = false) {
             val current = latest
-            val pending = current.pendingGroups
-            val empty =
-                pending.firstOrNull { group ->
-                    !current.canTurnOff(group) && groupState(group)?.let(current::selectedBands).isNullOrEmpty()
-                }
-            if (empty !== null) {
-                val goal = Text(ModemR.string.modem_goal_lock_bands, empty.label)
-                return@launchAction app.string(Text(ModemR.string.modem_couldnt, goal, Text(ModemR.string.modem_pick_band)))
-            }
+            val pendingAtStart = current.modem.groups.filter(current::isPending).map { it.group }.toSet()
+            val sendable = current.modem.groups.filter { it.group == including || it.group in pendingAtStart }
+            // In exclusive mode each lock turns off the networks without one, so every card with bands picked stays on for the whole press.
+            val keepOn = sendable.filter { current.selectedBands(it).isNotEmpty() }.map { it.group }
+            val narrowing = sendable.filter(current::locksToFewerBands)
             val outcomes = mutableListOf<String>()
-            for (group in pending) {
-                try {
-                    sendGroup(group)?.let(outcomes::add)
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    outcomes += app.reason(e)
-                    break
+            val togetherOutcome = if (modem.locksBandsTogether && narrowing.size > 1) lockTogether(narrowing, keepOn) else null
+            togetherOutcome?.let(outcomes::add)
+            for (groupState in if (togetherOutcome === null) sendable else sendable - narrowing.toSet()) {
+                val group = groupState.group
+                // An earlier lock in this press may already have done what this card asks, such as turning its network off.
+                if (group in pendingAtStart && !stillPending(group)) {
+                    forgetSent(mapOf(group to latest.bandSelections[group]))
+                    continue
                 }
+                val outcome =
+                    try {
+                        sendGroup(group, keepOn = keepOn)
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        // The next card works out the network mode from the state, so it has to see what this failure left.
+                        modem.refreshNow()
+                        app.reason(e)
+                    }
+                outcome?.let(outcomes::add)
             }
-            outcomes.joinToString("\n").ifEmpty { null }
+            outcomes.distinct().joinToString("\n").ifEmpty { null }
         }
+
+    private suspend fun lockTogether(
+        groupStates: List<BandGroupState>,
+        keepOn: List<Group>,
+    ): String? =
+        try {
+            sendGroups(groupStates, keepOn)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            modem.log("Locking ${groupStates.joinToString(" and ") { it.group.label }} together didn't work, so each network is locked on its own.")
+            modem.refreshNow()
+            null
+        }
+
+    private fun stillPending(group: Group): Boolean = groupState(group)?.let(latest::isPending) == true
 
     fun discardPendingBands() = updateState { copy(bandSelections = emptyMap()) }
 
     private suspend fun sendGroup(
         group: Group,
         unlock: Boolean = false,
+        keepOn: List<Group> = emptyList(),
     ): String? {
         val groupState = groupState(group) ?: return null
         val current = latest
@@ -355,13 +375,29 @@ class MainViewModel(
             when {
                 unlock -> modem.unlockBands(group, exclusive)
                 selected.isEmpty() && current.canTurnOff(group) -> modem.turnOff(group)
-                else -> modem.lockBands(group, selected, exclusive)
+                else -> modem.lockBands(group, selected, exclusive, keepOn)
             }
         modem.refreshNow()
-        // Picks made while the lock ran are newer than what was sent, so they stay.
-        updateState { if (bandSelections[group] == sent) copy(bandSelections = bandSelections - group) else this }
+        forgetSent(mapOf(group to sent))
         return outcome
     }
+
+    private suspend fun sendGroups(
+        groupStates: List<BandGroupState>,
+        keepOn: List<Group>,
+    ): String {
+        val current = latest
+        val sent = groupStates.associate { it.group to current.bandSelections[it.group] }
+        val locks = groupStates.associate { it.group to current.selectedBands(it) }
+        val outcome = modem.lockBands(locks, current.exclusiveBandLock, keepOn)
+        modem.refreshNow()
+        forgetSent(sent)
+        return outcome
+    }
+
+    // Picks made while the lock ran are newer than what was sent, so they stay.
+    private fun forgetSent(sent: Map<Group, Set<Int>?>) =
+        updateState { copy(bandSelections = bandSelections.filterNot { (group, bands) -> sent[group] == bands }) }
 
     fun setNetMode(mode: NetMode) = launchAction { modem.setNetMode(mode) }
 

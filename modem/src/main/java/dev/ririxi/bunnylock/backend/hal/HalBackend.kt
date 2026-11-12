@@ -3,6 +3,7 @@ package dev.ririxi.bunnylock.backend.hal
 import dev.ririxi.bunnylock.backend.BackendProfile
 import dev.ririxi.bunnylock.backend.BackendReadout
 import dev.ririxi.bunnylock.backend.HalLocks
+import dev.ririxi.bunnylock.backend.LocksBandsTogether
 import dev.ririxi.bunnylock.backend.ModemBackend
 import dev.ririxi.bunnylock.backend.ModemSession
 import dev.ririxi.bunnylock.backend.bandGroupState
@@ -29,7 +30,8 @@ internal class HalBackend(
     session: ModemSession,
     hal: HalLocks,
     private val samsung: SamsungNrMode,
-) : ModemBackend(session, hal) {
+) : ModemBackend(session, hal),
+    LocksBandsTogether {
     override suspend fun read(
         sim: Int,
         aospState: JSONObject?,
@@ -58,6 +60,8 @@ internal class HalBackend(
         liftsLock: Boolean,
         done: Text,
     ): Text? = hal.setBands(group, bands, liftsLock)
+
+    override suspend fun lockBands(locks: Map<Group, List<Int>>): Text? = hal.lockBands(locks)
 
     override suspend fun setNrMode(mode: NrMode) {
         if (!samsung.available) return super.setNrMode(mode)

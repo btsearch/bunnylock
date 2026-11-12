@@ -17,7 +17,10 @@ internal val androidCommands: Commands =
             val feature = ImsFeature.entries.first { it.key == request.json.getString("feature") }
             Aosp.setIms(subId, feature, request.json.getBoolean("enabled"))
         },
-        "aosp.setChannels" to { Aosp.setChannels(it.subId, it.json.optJSONArray("specs") ?: JSONArray(), it.json.optBoolean("split", true)) },
+        "aosp.setChannels" to {
+            val specs = it.json.optJSONArray("specs") ?: JSONArray()
+            Aosp.setChannels(it.subId, specs, it.json.optBoolean("split", true), it.json.optInt("userSpecCount", specs.length()))
+        },
         "aosp.setPlmn" to { Aosp.setPlmn(it.subId, it.json.getString("plmn"), it.persist) },
         "aosp.setPlmnAuto" to { Aosp.setPlmnAutomatic(it.subId) },
         "aosp.rebootModem" to { Aosp.rebootModem(it.slot, it.subId) },

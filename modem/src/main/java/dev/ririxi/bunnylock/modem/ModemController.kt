@@ -9,9 +9,11 @@ import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import dev.ririxi.bunnylock.backend.CellLock
 import dev.ririxi.bunnylock.backend.HalLocks
+import dev.ririxi.bunnylock.backend.LocksBandsTogether
 import dev.ririxi.bunnylock.backend.ModemSession
 import dev.ririxi.bunnylock.backend.samsung.SamsungBandMenu
 import dev.ririxi.bunnylock.backend.withReadout
+import dev.ririxi.bunnylock.backend.withStrayBands
 import dev.ririxi.bunnylock.data.Carriers
 import dev.ririxi.bunnylock.data.Cells
 import dev.ririxi.bunnylock.data.Rat
@@ -299,7 +301,7 @@ class ModemController(
                 val carriers = session.connectionCarriers(sim, cells, signals)
                 val shown =
                     readout.copy(
-                        groups = if (readout.bandLocksThroughHal) hal.withStrayBands(readout.groups, readout.lteLock, readout.nrLock, cells, carriers) else readout.groups,
+                        groups = if (readout.bandLocksThroughHal) withStrayBands(readout.groups, readout.lteLock, readout.nrLock, cells, carriers) else readout.groups,
                         strayChannel = if (readout.cellLocksThroughHal) hal.strayChannel(cells, hal.channelSpecs(aospState, sim)) else null,
                         plmnLock = if (readout.plmnReported) readout.plmnLock else halPlmnLock(aospState),
                     )
@@ -353,7 +355,7 @@ class ModemController(
         val carriers = session.connectionCarriers(sim, cells, signals)
         if (current.refreshing || current.sim != sim) return
         session.update {
-            val liveGroups = if (bandLocksThroughHal && !settling) hal.withStrayBands(groups, lteLock, nrLock, cells, carriers) else groups
+            val liveGroups = if (bandLocksThroughHal && !settling) withStrayBands(groups, lteLock, nrLock, cells, carriers) else groups
             copy(cells = cells, carriers = carriers, signals = signals, groups = liveGroups)
         }
     }
@@ -373,12 +375,37 @@ class ModemController(
         refresh()
     }
 
-    /** With [exclusive], every network without a band lock of its own is turned off, and unlocking turns networks back on. */
+    /**
+     * With [exclusive], every network without a band lock of its own is turned off unless it's in [keepOn], and unlocking turns
+     * networks back on.
+     */
     suspend fun lockBands(
         group: Group,
         bands: Collection<Int>,
         exclusive: Boolean = false,
-    ): String = applyGroup(group, unlock = false, exclusive, bands)
+        keepOn: Collection<Group> = emptyList(),
+    ): String = applyGroup(group, unlock = false, exclusive, bands, keepOn)
+
+    val locksBandsTogether get() = backend is LocksBandsTogether
+
+    suspend fun lockBands(
+        locks: Map<Group, Collection<Int>>,
+        exclusive: Boolean = false,
+        keepOn: Collection<Group> = emptyList(),
+    ): String {
+        val together = checkNotNull(backend as? LocksBandsTogether) { "${current.backend} locks one network at a time. Check locksBandsTogether first." }
+        require(locks.isNotEmpty() && locks.all { (group, bands) -> current.groups.any { it.group == group && !bands.containsAll(it.supported) } }) {
+            "Every list has to leave some of its network's bands out. Use the one-network lockBands or unlockBands otherwise."
+        }
+        val labels = locks.keys.map { it.label }
+        val done = Text(R.string.modem_bands_locked, labels)
+        return change(Text(R.string.modem_goal_lock_bands, labels), done) {
+            val bands = locks.mapValues { (_, selected) -> selected.distinct().sorted() }
+            if (bands.values.any { it.isEmpty() }) fail(R.string.modem_pick_band)
+            if (!exclusive) return@change together.lockBands(bands)
+            sendAfterSwitching(current.maskKeepingLocks(locks.keys, alsoKept = keepOn)) { together.lockBands(bands) ?: done }
+        }
+    }
 
     suspend fun unlockBands(
         group: Group,
@@ -396,6 +423,7 @@ class ModemController(
         unlock: Boolean,
         exclusive: Boolean,
         selected: Collection<Int> = emptyList(),
+        keepOn: Collection<Group> = emptyList(),
     ) = change(
         Text(if (unlock) R.string.modem_goal_unlock_bands else R.string.modem_goal_lock_bands, group.label),
         bandsDone(group, unlock),
@@ -403,7 +431,7 @@ class ModemController(
         val groupState = current.groups.first { it.group == group }
         val bands = if (unlock) groupState.supported else selected.distinct().sorted()
         if (bands.isEmpty()) fail(R.string.modem_pick_band)
-        if (exclusive) applyExclusive(group, groupState, bands, unlock) else sendBands(group, groupState, bands, unlock)
+        if (exclusive) applyExclusive(group, groupState, bands, unlock, keepOn) else sendBands(group, groupState, bands, unlock)
     }
 
     /** Changes the network mode before the bands, since some radios ignore a lock sent before the change. */
@@ -412,27 +440,33 @@ class ModemController(
         groupState: BandGroupState,
         bands: List<Int>,
         unlock: Boolean,
+        keepOn: Collection<Group>,
     ): Text? {
         val othersLocked = current.groups.any { it.group != group && it.locked }
         val mask =
             when {
-                !unlock -> current.maskKeepingLocks(group)
+                !unlock -> current.maskKeepingLocks(listOf(group), alsoKept = keepOn)
                 othersLocked -> current.netModeMask or group.generation
                 else -> maskBeforeLock ?: (current.netModeMask or group.generation)
             }
         // A network that's only turned off has no lock to lift.
         val onlyTurnsOn = unlock && !groupState.locked && current.isOff(group)
+        val outcome = sendAfterSwitching(mask) { if (onlyTurnsOn) null else sendBands(group, groupState, bands, unlock) ?: bandsDone(group, unlock) }
+        if (unlock && !othersLocked) maskBeforeLock = null
+        return outcome
+    }
+
+    // A send that fails switches the network mode back.
+    private suspend fun sendAfterSwitching(
+        mask: Long,
+        send: suspend () -> Text?,
+    ): Text? {
         val before = current.netModeMask
         val switched = switchNetworks(mask)
         val sent =
-            if (onlyTurnsOn) {
-                null
-            } else {
-                runSuspendCatching { sendBands(group, groupState, bands, unlock) }
-                    .onFailure { runSuspendCatching { switchNetworks(before) } }
-                    .getOrThrow() ?: bandsDone(group, unlock)
-            }
-        if (unlock && !othersLocked) maskBeforeLock = null
+            runSuspendCatching { send() }
+                .onFailure { runSuspendCatching { switchNetworks(before) } }
+                .getOrThrow()
         return listOfNotNull(sent, switched).reduceOrNull(Text::followedBy)
     }
 
@@ -722,6 +756,7 @@ class ModemController(
             appendLine(
                 "QMI over QRTR: ${device?.qrtr}, HAL channel-lock API: ${if (device?.aospChannels == true) "present" else "absent"}, EN-DC control: ${device?.aospNrDc}",
             )
+            appendLine(hal.diagnostics())
             appendLine("Supported network types: ${current.supportedTypes?.let { "0x%X".format(it) } ?: "not reported"}")
             appendLine("Network mode masks: ${current.netModeMasks ?: "not reported"}")
             appendLine("AT ports: ${device?.atNodes?.joinToString(", ")}")

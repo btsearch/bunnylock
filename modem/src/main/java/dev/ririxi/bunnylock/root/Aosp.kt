@@ -475,6 +475,7 @@ object Aosp {
         subId: Int,
         specs: JSONArray,
         splitRefused: Boolean = true,
+        userSpecCount: Int = specs.length(),
     ): JSONObject {
         if (subId < 0) fail(R.string.aosp_no_subscription)
         val whole = List(specs.length()) { specs.getJSONObject(it) }.map(::toSpecifier)
@@ -503,7 +504,7 @@ object Aosp {
         val failure =
             when {
                 split.size > whole.size -> Text(R.string.aosp_channels_rejected_split, MAX_RIL_BANDS)
-                whole.any { it.bands.size > MAX_RIL_BANDS } -> Text(R.string.aosp_channels_rejected_fewer, MAX_RIL_BANDS)
+                whole.take(userSpecCount).any { it.bands.size > MAX_RIL_BANDS } -> Text(R.string.aosp_channels_rejected_fewer, MAX_RIL_BANDS)
                 else -> Text(R.string.aosp_channels_rejected)
             }
         fail(R.string.aosp_with_details, failure, "$requestDiagnostic; ${outcomes.joinToString("; ")}; after=${channelState(subId)}")

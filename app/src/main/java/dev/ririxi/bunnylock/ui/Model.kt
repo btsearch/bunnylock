@@ -75,7 +75,10 @@ data class UiState(
 
     fun isPending(groupState: BandGroupState): Boolean = selectedBands(groupState) != startingBands(groupState)
 
-    val pendingGroups: List<Group> get() = modem.groups.filter(::isPending).map { it.group }
+    fun locksToFewerBands(groupState: BandGroupState): Boolean {
+        val selected = selectedBands(groupState)
+        return selected.isNotEmpty() && !selected.containsAll(groupState.supported)
+    }
 
     val changedBandCount: Int
         get() =

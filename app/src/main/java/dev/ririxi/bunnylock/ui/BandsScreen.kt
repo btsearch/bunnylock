@@ -215,8 +215,8 @@ private fun BandList(
                 onToggle = { vm.toggleBand(bandGroup.group, it) },
                 onToggleFavorite = { vm.toggleFavorite(bandGroup.group, it) },
                 onSelectAll = { vm.selectAll(bandGroup.group, it) },
-                onLock = { vm.applyGroup(bandGroup.group) },
-                onUnlock = { vm.applyGroup(bandGroup.group, unlock = true) },
+                onLock = { vm.applyPendingGroups(including = bandGroup.group) },
+                onUnlock = { vm.unlockGroup(bandGroup.group) },
             )
         }
     }

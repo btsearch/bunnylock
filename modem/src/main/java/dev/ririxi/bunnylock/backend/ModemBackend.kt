@@ -87,6 +87,11 @@ internal interface BackendProfile {
     fun features(state: ModemState): BackendFeatures
 }
 
+// Every list narrows its network's bands.
+internal interface LocksBandsTogether {
+    suspend fun lockBands(locks: Map<Group, List<Int>>): Text?
+}
+
 internal abstract class ModemBackend(
     protected val session: ModemSession,
     protected val hal: HalLocks,
