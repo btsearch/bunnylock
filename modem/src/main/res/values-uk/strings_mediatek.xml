@@ -26,4 +26,5 @@
     <string name="oem_probe_silent">%1$s не відповів.</string>
     <string name="cell_hint_mtk_at">Використовує AT+EMMCHLCK, який підтримує лише одне блокування одночасно. PCI необов\'язковий, а для застосування блокування радіомодуль перезапускається.</string>
     <string name="cell_hint_mtk_hal">Цей модем не приймає AT+EMMCHLCK, тому частота (ARFCN) блокується через Radio HAL. Так не можна заблокувати на PCI, а деякі модеми це ігнорують.</string>
+    <string name="mtk_no_port_for_sim">Жоден порт AT не веде до SIM %1$d. %2$s веде до іншої SIM, а каналу передавання команд через RIL на цьому телефоні немає.</string>
 </resources>

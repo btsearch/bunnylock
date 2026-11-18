@@ -47,8 +47,12 @@ object At {
         node: String,
         command: String,
         timeoutMs: Int = DEFAULT_TIMEOUT_MS,
+    ): String = requireOk(command, send(node, command, timeoutMs))
+
+    fun requireOk(
+        command: String,
+        reply: String,
     ): String {
-        val reply = send(node, command, timeoutMs)
         val lines = reply.lines()
         if (lines.none { it == "OK" }) fail(R.string.at_not_accepted, command, lines.joinToString(" "))
         return reply

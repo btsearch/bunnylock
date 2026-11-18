@@ -214,6 +214,7 @@ data class BackendFeatures(
     val reattach: Boolean = false,
     val qmiConsole: Boolean = false,
     val forgetNeedsChannels: Boolean = false,
+    val forgetIgnoredCellLock: Boolean = false,
 )
 
 enum class Access(
@@ -270,6 +271,7 @@ data class ModemState(
     val strayChannel: String? = null,
     val bandLocksThroughHal: Boolean = false,
     val cellLocksThroughHal: Boolean = false,
+    val modemIgnoredCellLock: Boolean = false,
     /** e.g. "262 01". Null when selection is automatic. */
     val plmnLock: String? = null,
     val registeredPlmn: String? = null,
@@ -343,6 +345,11 @@ data class ModemState(
 class QmiReply(
     val output: String,
     val error: Text?,
+)
+
+class AtReply(
+    val node: String,
+    val output: String,
 )
 
 data class CellLockRequest(

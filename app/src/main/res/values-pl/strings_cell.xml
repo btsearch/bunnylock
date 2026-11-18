@@ -25,4 +25,5 @@
     <string name="cell_scs">Odstęp podnośnych (kHz)</string>
     <string name="cell_clear_lock_title">Zdjąć blokadę komórki?</string>
     <string name="cell_clear_lock_message">Modem znów będzie mógł wybrać dowolną komórkę. Żeby wrócić do tej, trzeba będzie podać jej kanał i PCI.</string>
+    <string name="cell_retry_at_lock">Spróbuj znowu AT+EMMCHLCK</string>
 </resources>

@@ -375,6 +375,11 @@ class ModemController(
         refresh()
     }
 
+    fun forgetIgnoredCellLock() {
+        backend.forgetIgnoredCellLock()
+        refresh()
+    }
+
     /**
      * With [exclusive], every network without a band lock of its own is turned off unless it's in [keepOn], and unlocking turns
      * networks back on.
@@ -712,15 +717,16 @@ class ModemController(
             null
         }
 
-    suspend fun sendAt(command: String): String =
+    suspend fun sendAt(command: String): AtReply =
         attempt(Text(R.string.modem_goal_send_at)) {
+            val node = backend.consoleNode(current.atNode)
             val response =
                 session.call("at", 15.seconds) {
-                    put("node", current.atNode)
+                    put("node", node)
                     put("command", command)
                     put("timeout", 6000)
                 }
-            response.optString("reply")
+            AtReply(node, response.optString("reply"))
         }
 
     suspend fun sendQmi(

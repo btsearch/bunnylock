@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -290,6 +291,11 @@ private fun CellLockForm(
         if (locksNr) NrLockFields(state, vm)
 
         Text(textOf(state.modem.features.cellHint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        if (state.modem.features.forgetIgnoredCellLock) {
+            TextButton(onClick = vm::forgetIgnoredCellLock, enabled = !state.busy, shapes = ButtonDefaults.shapes()) {
+                Text(stringResource(R.string.cell_retry_at_lock))
+            }
+        }
 
         val buttonHeight = ButtonDefaults.MediumContainerHeight
         Button(

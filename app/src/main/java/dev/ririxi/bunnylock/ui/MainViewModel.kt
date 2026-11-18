@@ -223,6 +223,8 @@ class MainViewModel(
 
     fun forgetKeptOffBands() = modem.forgetKeptOffBands()
 
+    fun forgetIgnoredCellLock() = modem.forgetIgnoredCellLock()
+
     fun stopWaiting() = modem.stopWaiting()
 
     fun setExclusiveBandLock(enabled: Boolean) {
@@ -513,8 +515,8 @@ class MainViewModel(
     fun sendAt(command: String) =
         launchAction(refreshAfter = false) {
             val reply = modem.sendAt(command)
-            updateState { copy(toolOutput = "> $command\n$reply\n\n$toolOutput".take(MAX_TOOL_OUTPUT_CHARS)) }
-            modem.log("The modem replied. See the output below.")
+            updateState { copy(toolOutput = "${reply.node}> $command\n${reply.output}\n\n$toolOutput".take(MAX_TOOL_OUTPUT_CHARS)) }
+            modem.log("The modem replied through ${reply.node}. See the output below.")
             app.getString(R.string.system_at_replied)
         }
 

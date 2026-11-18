@@ -25,4 +25,5 @@
     <string name="cell_scs">Alt taşıyıcı aralığı (kHz)</string>
     <string name="cell_clear_lock_title">Hücre kilidi kaldırılsın mı?</string>
     <string name="cell_clear_lock_message">Modem artık istediği hücreyi seçebilir. Daha sonra aynı hücreyi yeniden kilitlemek için kanal ve PCI bilgilerine ihtiyacınız olacak.</string>
+    <string name="cell_retry_at_lock">AT+EMMCHLCK komutunu yeniden dene</string>
 </resources>

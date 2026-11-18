@@ -10,6 +10,7 @@ import dev.ririxi.bunnylock.root.fail
 import dev.ririxi.bunnylock.root.rilNode
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Same AT commands as MediaTek's EngineerMode:
@@ -40,6 +41,21 @@ object Mediatek {
             "/dev/radio/ptty2cmd1",
             "/dev/radio/atci2",
         )
+
+    // The other ports reach the first SIM's stack. /dev/ttyC0 does too, even when only the second slot holds a card.
+    private val SECOND_SIM_PORTS = setOf("/dev/radio/ptty2cmd1", "/dev/radio/atci2")
+
+    fun simOf(node: String) =
+        when (node) {
+            in SECOND_SIM_PORTS -> 2
+            in CANDIDATES -> 1
+            else -> null
+        }
+
+    // Only the diagnostics show the AT+EMMCHLCK=? reply, and it doesn't change, so each port is asked once.
+    private val cellLockRanges = ConcurrentHashMap<String, String>()
+
+    private val portsWithoutLockMode = ConcurrentHashMap.newKeySet<String>()
 
     // +EPBSE words: GSM, UMTS, then eight LTE words (bands 1-32, 33-64 and so on).
     private const val GSM_WORD = 0
@@ -162,34 +178,52 @@ object Mediatek {
 
     fun state(node: String): JSONObject {
         val replies = JSONObject()
-        val out = JSONObject().put("node", node).put("bandReplies", replies)
+        val out = JSONObject().put("node", node).put("replies", replies)
 
-        fun ask(command: String) = At.send(node, command).also { replies.put(command, it.lines().filter(String::isNotBlank).joinToString(" ")) }
+        fun record(
+            command: String,
+            reply: String,
+        ) = reply.also { replies.put(command, it.lines().filter(String::isNotBlank).joinToString(" ")) }
+
+        fun ask(command: String) = record(command, At.send(node, command))
 
         val supportedHex = queryEpbseh { ask("AT+EPBSEH=?") }
         val currentHex = queryEpbseh { ask("AT+EPBSEH?") }
         // Some modems answer +EPBSEH but not +EPBSE, and it carries the same bands.
         val supported = parseEpbse(ask("AT+EPBSE=?")) ?: supportedHex?.let(::epbseOf)
         val current = parseEpbse(ask("AT+EPBSE?")) ?: currentHex?.let(::epbseOf)
-        if (supported !== null) {
-            out.put("supported", bandsJson(supported.words))
-            out.put("lteExtended", supported.hasExtendedLte)
-        }
-        if (current !== null) out.put("current", bandsJson(current.words))
-        nrWordsOf(supportedHex)?.let { nrWords ->
-            out.optJSONObject("supported")?.put("nr", JSONArray(Bands.fromWords(nrWords)))
-            out.put("nrWords", nrWords.size)
-        }
-        nrWordsOf(currentHex)?.let { out.optJSONObject("current")?.put("nr", JSONArray(Bands.fromWords(it))) }
-        runCatching { out.put("cellLock", cellLockState(node)) }
-        runCatching { ratMask(node)?.let { out.put("ratMask", it) } }
-        runCatching { carrierAggregation(node)?.let { out.put("ca", it) } }
+        out.putBands(supported, supportedHex, current, currentHex)
+        runCatching { out.put("cellLock", cellLockOf(ask("AT+EMMCHLCK?"))) }
+        runCatching { record("AT+EMMCHLCK=?", cellLockRanges.getOrPut(node) { At.send(node, "AT+EMMCHLCK=?") }) }
+        runCatching { ratMaskOf(ask("AT+ERAT?"))?.let { out.put("ratMask", it) } }
+        runCatching { carrierAggregationOf(ask("AT+ECASW?"))?.let { out.put("ca", it) } }
         return out
     }
 
-    private fun carrierAggregation(node: String): Boolean? {
+    private fun JSONObject.putBands(
+        supported: Epbse?,
+        supportedHex: List<LongArray>?,
+        current: Epbse?,
+        currentHex: List<LongArray>?,
+    ): JSONObject {
+        if (supported !== null) {
+            put("supported", bandsJson(supported.words))
+            put("lteExtended", supported.hasExtendedLte)
+        }
+        if (current !== null) put("current", bandsJson(current.words))
+        nrWordsOf(supportedHex)?.let { nrWords ->
+            optJSONObject("supported")?.put("nr", JSONArray(Bands.fromWords(nrWords)))
+            put("nrWords", nrWords.size)
+        }
+        nrWordsOf(currentHex)?.let { optJSONObject("current")?.put("nr", JSONArray(Bands.fromWords(it))) }
+        return this
+    }
+
+    private fun carrierAggregation(node: String) = carrierAggregationOf(At.send(node, "AT+ECASW?"))
+
+    private fun carrierAggregationOf(reply: String): Boolean? {
         // +ECASW: <on>, the switch MediaTek's engineering mode shows as "LTE CA".
-        val line = At.send(node, "AT+ECASW?").lines().firstOrNull { it.startsWith("+ECASW:") } ?: return null
+        val line = reply.lines().firstOrNull { it.startsWith("+ECASW:") } ?: return null
         return when (line.removePrefix("+ECASW:").split(',').first().trim()) {
             "1" -> true
             "0" -> false
@@ -209,9 +243,11 @@ object Mediatek {
         return out
     }
 
-    private fun ratMask(node: String): Long? {
+    private fun ratMask(node: String) = ratMaskOf(At.send(node, "AT+ERAT?"))
+
+    private fun ratMaskOf(reply: String): Long? {
         // +ERAT: <current rat>,<gprs status>,<rat>,<prefer>
-        val line = At.send(node, "AT+ERAT?").lines().firstOrNull { it.startsWith("+ERAT:") } ?: return null
+        val line = reply.lines().firstOrNull { it.startsWith("+ERAT:") } ?: return null
         val rat = line.removePrefix("+ERAT:").split(',').getOrNull(2)?.trim()?.toIntOrNull() ?: return null
         return ERAT_MASKS[rat]
     }
@@ -240,11 +276,15 @@ object Mediatek {
         return out
     }
 
-    private fun cellLockState(node: String): JSONObject {
-        val reply = At.send(node, "AT+EMMCHLCK?").lines()
+    private fun isErrorReply(reply: String) = reply.lines().any { it == "ERROR" || it.startsWith("+CME ERROR") }
+
+    private fun cellLockState(node: String) = cellLockOf(At.send(node, "AT+EMMCHLCK?"))
+
+    private fun cellLockOf(reply: String): JSONObject {
+        val lines = reply.lines()
         // A modem that answers with an error doesn't take the command at all, so no cell lock can be set through it.
-        val refused = reply.any { it == "ERROR" || it.startsWith("+CME ERROR") }
-        val line = reply.firstOrNull { it.startsWith("+EMMCHLCK:") } ?: return JSONObject().put("active", false).put("refused", refused)
+        val refused = isErrorReply(reply)
+        val line = lines.firstOrNull { it.startsWith("+EMMCHLCK:") } ?: return JSONObject().put("active", false).put("refused", refused)
         // +EMMCHLCK: <on>,<act>,<gsm1900>,<arfcn>,<pci>[,<mode>]
         val fields = line.removePrefix("+EMMCHLCK:").split(',').map { it.trim().toIntOrNull() ?: -1 }
         val lock = JSONObject().put("active", fields.getOrNull(0) == 1)
@@ -304,7 +344,9 @@ object Mediatek {
                 }
             At.ok(node, epbsehCommand(words, nrWords))
         }
-        return state(node)
+        val currentHexAfter = queryEpbseh { At.send(node, "AT+EPBSEH?") }
+        val currentAfter = parseEpbse(At.send(node, "AT+EPBSE?")) ?: currentHexAfter?.let(::epbseOf)
+        return JSONObject().putBands(supported, supportedHex, currentAfter, currentHexAfter)
     }
 
     private fun epbseCommand(
@@ -337,8 +379,21 @@ object Mediatek {
     ): JSONObject {
         // <on> = 1, <gsm1900> = 0
         val channelLock = "AT+EMMCHLCK=1,$act,0,$arfcn"
-        val command = if (pci === null) channelLock else "$channelLock,$pci,$CELL_LOCK_IDLE_AND_CONNECTED"
-        At.ok(node, command)
+        when {
+            pci === null -> At.ok(node, channelLock)
+            node in portsWithoutLockMode -> At.ok(node, "$channelLock,$pci")
+            else -> {
+                val withMode = "$channelLock,$pci,$CELL_LOCK_IDLE_AND_CONNECTED"
+                val withModeReply = At.send(node, withMode)
+                if (!isErrorReply(withModeReply)) {
+                    At.requireOk(withMode, withModeReply)
+                } else {
+                    // Some modems take no <mode>, and their AT+EMMCHLCK=? lists only five parameters.
+                    At.ok(node, "$channelLock,$pci")
+                    portsWithoutLockMode += node
+                }
+            }
+        }
         val lock = cellLockState(node)
         if (lock.optBoolean("active")) return lock
         Thread.sleep(CELL_LOCK_READBACK_RETRY_MS)

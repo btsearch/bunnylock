@@ -44,7 +44,20 @@ internal class MediatekBackend(
     private suspend fun node(): String {
         val selected = current.atNode
         if (selected.startsWith(OemHook.PREFIX)) return rilNode(current.sim)
-        if (selected.isNotEmpty() && selected != Pixel.NODE && !current.limited) return selected
+        return route(if (selected.isNotEmpty() && selected != Pixel.NODE && !current.limited) selected else findNode())
+    }
+
+    // A tty reaches only one SIM's stack, so the other SIM's commands take the RIL or that SIM's own tty, and the selected port stays.
+    private fun route(port: String): String {
+        val portSim = Mediatek.simOf(port)
+        if (portSim === null || portSim == current.sim) return port
+        if (current.device?.rilPassthrough == true) return rilNode(current.sim)
+        return current.device?.atNodes?.firstOrNull { Mediatek.simOf(it) == current.sim } ?: fail(R.string.mtk_no_port_for_sim, current.sim, port)
+    }
+
+    override fun consoleNode(selected: String) = route(selected)
+
+    private suspend fun findNode(): String {
         val found = session.call("mtk.findNode").optString("node")
         if (found.isEmpty()) fail(R.string.modem_no_mtk_port)
         session.setAtNode(found)
@@ -58,20 +71,36 @@ internal class MediatekBackend(
     ): JSONObject {
         val node = node()
         return try {
-            session.call(command) {
-                put("node", node)
-                build()
-            }
+            callThrough(node, command, build)
         } catch (e: RootException) {
             if (node.startsWith(OemHook.PREFIX) || current.device?.rilPassthrough != true) throw e
             val ril = rilNode(current.sim)
-            session.log("$node failed (${session.englishReason(e).asClause()}), so MediaTek commands go through the RIL from now on.")
-            session.setAtNode(ril)
-            session.call(command) {
-                put("node", ril)
-                build()
+            val reason = session.englishReason(e).asClause()
+            if (e.portFailed) {
+                session.log("$node failed ($reason), so MediaTek commands go through the RIL from now on.")
+                session.setAtNode(ril)
+                callThrough(ril, command, build)
+            } else {
+                // The tty still answers, so the RIL only takes over when it does what the tty couldn't.
+                val reply =
+                    runSuspendCatching { callThrough(ril, command, build) }.getOrElse {
+                        session.log("$node failed ($reason), and the RIL failed too (${session.englishReason(it).asClause()}), so MediaTek commands stay on $node.")
+                        throw e
+                    }
+                session.log("$node failed ($reason), but the RIL didn't, so MediaTek commands go through the RIL from now on.")
+                session.setAtNode(ril)
+                reply
             }
         }
+    }
+
+    private suspend fun callThrough(
+        node: String,
+        command: String,
+        build: JSONObject.() -> Unit,
+    ) = session.call(command) {
+        put("node", node)
+        build()
     }
 
     override suspend fun read(
@@ -79,7 +108,7 @@ internal class MediatekBackend(
         aospState: JSONObject?,
     ): BackendReadout {
         val mtkState = call("mtk.state")
-        bandReplies = mtkState.optJSONObject("bandReplies")
+        lastState = mtkState
         val supported = mtkState.optJSONObject("supported") ?: JSONObject()
         val reported = mtkState.optJSONObject("current") ?: JSONObject()
         val scope = keptOffBands.scope(sim)
@@ -103,6 +132,7 @@ internal class MediatekBackend(
                 lteLock = hal.channelLock(specs, Ran.EUTRAN),
                 nrLock = hal.channelLock(specs, Ran.NGRAN),
                 cellLocksThroughHal = true,
+                modemIgnoredCellLock = cellLockIgnored,
                 allowedMask = allowedMask,
                 carrierAggregation = carrierAggregation,
             )
@@ -299,16 +329,26 @@ internal class MediatekBackend(
         return keptOffNotes.fold(cellNote ?: Text(R.string.modem_all_unlocked), Text::followedBy)
     }
 
+    override fun forgetIgnoredCellLock() {
+        cellLockIgnored = false
+        session.log("bunnylock forgot that this modem didn't keep a cell lock set with AT+EMMCHLCK, so the next cell lock tries it again.")
+    }
+
     override fun forgetKeptOffBands() {
         val scope = keptOffBands.scope(current.sim) ?: return
         keptOffBands.forget(scope)
         session.log("bunnylock forgot which bands the modem keeps off for SIM ${current.sim} on network ${keptOffBands.network(current.sim)}, so they show again.")
     }
 
-    private var bandReplies: JSONObject? = null
+    private var lastState: JSONObject? = null
 
     override fun diagnostics(): List<String> {
-        val replies = bandReplies?.let { json -> json.keys().asSequence().joinToString("; ") { "$it -> ${json.optString(it)}" } }
+        val repliesLine =
+            lastState?.let { state ->
+                val replies = state.getJSONObject("replies")
+                val pairs = replies.keys().asSequence().joinToString("; ") { "$it -> ${replies.optString(it)}" }
+                "MediaTek replies (through ${state.optString("node")}): $pairs"
+            } ?: "MediaTek replies: not read"
         val sim = current.sim
         val scope = keptOffBands.scope(sim)
         val keptOff =
@@ -317,7 +357,7 @@ internal class MediatekBackend(
             }
         val network = keptOffBands.network(sim)?.let { "network $it" } ?: "no network"
         return listOf(
-            "MediaTek band replies: ${replies ?: "not read"}",
+            repliesLine,
             "MediaTek bands kept off when unlocked on SIM $sim, $network: ${keptOff.joinToString("; ").ifEmpty { "none seen" }}",
         )
     }
@@ -333,8 +373,11 @@ internal class MediatekBackend(
 
     private fun cellLockIgnoredKey() = "mtkCellLockIgnored.${current.device?.manufacturer}.${current.device?.model}"
 
+    private val RootException.portFailed get() = text?.let { it.id in PORT_FAILURES } == true
+
     companion object : BackendProfile {
         private val BAND_GROUPS = listOf(Group.LTE, Group.NR, Group.WCDMA, Group.GSM)
+        private val PORT_FAILURES = setOf(R.string.at_open_failed, R.string.at_read_failed, R.string.at_no_reply)
 
         override val chipset = Chipset.MEDIATEK
 
@@ -353,6 +396,8 @@ internal class MediatekBackend(
                 cellHint = Text(if (state.cellLocksThroughHal) R.string.cell_hint_mtk_hal else R.string.cell_hint_mtk_at),
                 plmnHint = Text(R.string.cell_plmn_hint_android),
                 pciLock = !state.cellLocksThroughHal,
+                // Going back to AT readout would hide a lock the radio HAL still holds.
+                forgetIgnoredCellLock = state.modemIgnoredCellLock && !state.anyCellLock,
             )
     }
 }

@@ -26,4 +26,5 @@
     <string name="oem_probe_silent">%1$s 无响应。</string>
     <string name="cell_hint_mtk_at">使用 AT+EMMCHLCK，同一时间只能保留一个锁定。PCI 可不填，射频会重启以应用锁定。</string>
     <string name="cell_hint_mtk_hal">此基带不支持 AT+EMMCHLCK，改为通过射频 HAL 锁定频点（ARFCN）。这种方式无法锁 PCI，部分基带会直接忽略。</string>
+    <string name="mtk_no_port_for_sim">没有能连到 SIM %1$d 的 AT 端口。%2$s 连的是另一张 SIM 卡，而此手机上没有可用的 RIL 透传通道。</string>
 </resources>

@@ -25,6 +25,7 @@ internal data class BackendReadout(
     val strayChannel: String? = null,
     val bandLocksThroughHal: Boolean = false,
     val cellLocksThroughHal: Boolean = false,
+    val modemIgnoredCellLock: Boolean = false,
     val plmnLock: String? = null,
     val plmnReported: Boolean = false,
     val cells: List<Cell> = emptyList(),
@@ -43,6 +44,7 @@ internal fun ModemState.withReadout(readout: BackendReadout): ModemState =
         strayChannel = readout.strayChannel,
         bandLocksThroughHal = readout.bandLocksThroughHal,
         cellLocksThroughHal = readout.cellLocksThroughHal,
+        modemIgnoredCellLock = readout.modemIgnoredCellLock,
         plmnLock = readout.plmnLock,
         carrierAggregation = readout.carrierAggregation,
     )
@@ -147,6 +149,10 @@ internal abstract class ModemBackend(
     open fun diagnostics(): List<String> = emptyList()
 
     open fun forgetKeptOffBands() {}
+
+    open fun forgetIgnoredCellLock() {}
+
+    open fun consoleNode(selected: String) = selected
 
     protected suspend fun resendBandLocks() {
         session.current.groups.filter { it.locked }.forEach {

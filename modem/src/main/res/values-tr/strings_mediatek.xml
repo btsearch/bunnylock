@@ -26,4 +26,5 @@
     <string name="oem_probe_silent">%1$s yanıt vermedi.</string>
     <string name="cell_hint_mtk_at">Tek seferde yalnızca bir kilit uygulayan AT+EMMCHLCK komutunu kullanır. PCI belirtmek isteğe bağlıdır ve kilidin uygulanması için radyo birimi yeniden başlatılır.</string>
     <string name="cell_hint_mtk_hal">Bu modem AT+EMMCHLCK komutunu desteklemediğinden frekans (ARFCN) bunun yerine radyo HAL\'i üzerinden kilitlenir. Bu yöntem PCI kilitlemesi yapamaz ve bazı modemler bu kilidi yok sayar.</string>
+    <string name="mtk_no_port_for_sim">SIM %1$d için hiçbir AT bağlantı noktası yok. %2$s diğer SIM kartına bağlı ve bu telefonda RIL üzerinden doğrudan komut iletimi kullanılamıyor.</string>
 </resources>

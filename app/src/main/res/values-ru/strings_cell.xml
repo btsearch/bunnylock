@@ -25,4 +25,5 @@
     <string name="cell_scs">Разнос поднесущих (кГц)</string>
     <string name="cell_clear_lock_title">Снять блокировку соты?</string>
     <string name="cell_clear_lock_message">Модем снова сможет выбрать любую соту. Чтобы вернуться к этой, понадобятся её канал и PCI.</string>
+    <string name="cell_retry_at_lock">Снова попробовать AT+EMMCHLCK</string>
 </resources>
