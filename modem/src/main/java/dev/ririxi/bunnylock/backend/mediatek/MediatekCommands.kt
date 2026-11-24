@@ -1,7 +1,10 @@
 package dev.ririxi.bunnylock.backend.mediatek
 
+import dev.ririxi.bunnylock.modem.R
+import dev.ririxi.bunnylock.root.AtciSocket
 import dev.ririxi.bunnylock.root.Commands
 import dev.ririxi.bunnylock.root.Request
+import dev.ririxi.bunnylock.root.fail
 import org.json.JSONObject
 
 internal val mediatekCommands: Commands =
@@ -15,4 +18,7 @@ internal val mediatekCommands: Commands =
         "mtk.setCa" to { Mediatek.setCarrierAggregation(it.node, it.json.getBoolean("enabled")) },
     )
 
-private val Request.node: String get() = json.getString("node")
+private val Request.node: String
+    get() = json.getString("node").also {
+        if (it == AtciSocket.NODE && sim != 1) fail(R.string.atci_slot_unavailable)
+    }

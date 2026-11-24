@@ -24,7 +24,8 @@ fun detectDevice(): JSONObject {
     val qrtr = Qualcomm.available()
 
     val knownAtNodes = Mediatek.CANDIDATES + listOf(Pixel.NODE, "/dev/smd7", "/dev/smd11", "/dev/at_mdm0") + RIL_OWNED_NODES
-    val atNodes = knownAtNodes.distinct().filter { File(it).exists() }
+    val atNodes = knownAtNodes.distinct().filter { File(it).exists() } +
+        listOfNotNull(AtciSocket.NODE.takeIf { AtciSocket.available() && Mediatek.probe(it) })
     val pixelRouter = Pixel.available()
     val rilPassthrough = runCatching { OemHook.available() }.getOrDefault(false)
     val defaultAtNode =

@@ -6,6 +6,7 @@ import dev.ririxi.bunnylock.modem.Masks
 import dev.ririxi.bunnylock.modem.R
 import dev.ririxi.bunnylock.modem.Text
 import dev.ririxi.bunnylock.root.At
+import dev.ririxi.bunnylock.root.AtciSocket
 import dev.ririxi.bunnylock.root.fail
 import dev.ririxi.bunnylock.root.rilNode
 import org.json.JSONArray
@@ -48,6 +49,7 @@ object Mediatek {
     fun simOf(node: String) =
         when (node) {
             in SECOND_SIM_PORTS -> 2
+            AtciSocket.NODE -> 1
             in CANDIDATES -> 1
             else -> null
         }
@@ -116,6 +118,7 @@ object Mediatek {
      */
     fun findNode(sim: Int): String? =
         CANDIDATES.firstOrNull { At.exists(it) && probe(it) }
+            ?: AtciSocket.NODE.takeIf { sim == 1 && At.exists(it) && probe(it) }
             ?: rilNode(sim).takeIf { At.exists(it) }
 
     private class Epbse(

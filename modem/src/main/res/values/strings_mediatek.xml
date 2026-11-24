@@ -3,6 +3,7 @@
     <string name="at_not_accepted">The modem didn\'t accept %1$s. It replied: %2$s</string>
     <string name="at_read_failed">Couldn\'t read from %1$s (%2$s).</string>
     <string name="at_no_reply">The command %1$s got no reply from %2$s.</string>
+    <string name="atci_slot_unavailable">The MediaTek AT socket requires root and logical SIM slot 1.</string>
 
     <string name="mtk_erat_no_mode">AT+ERAT has no mode for that combination.</string>
     <string name="mtk_ca_kept">The modem kept the previous setting.</string>

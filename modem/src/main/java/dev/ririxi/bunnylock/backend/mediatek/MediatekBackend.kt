@@ -26,6 +26,7 @@ import dev.ririxi.bunnylock.modem.asClause
 import dev.ririxi.bunnylock.modem.followedBy
 import dev.ririxi.bunnylock.modem.reasonOf
 import dev.ririxi.bunnylock.modem.runSuspendCatching
+import dev.ririxi.bunnylock.root.AtciSocket
 import dev.ririxi.bunnylock.root.OemHook
 import dev.ririxi.bunnylock.root.fail
 import dev.ririxi.bunnylock.root.rilNode
@@ -382,7 +383,7 @@ internal class MediatekBackend(
         override val chipset = Chipset.MEDIATEK
 
         override fun suits(device: DeviceInfo): Boolean {
-            val hasAtPort = device.atNodes.any { it.startsWith("/dev/radio") || it == "/dev/ttyC0" }
+            val hasAtPort = device.atNodes.any { it.startsWith("/dev/radio") || it == "/dev/ttyC0" || it == AtciSocket.NODE }
             return device.chipset == Chipset.MEDIATEK && (device.rilPassthrough || hasAtPort)
         }
 
