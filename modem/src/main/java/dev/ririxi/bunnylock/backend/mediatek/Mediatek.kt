@@ -6,6 +6,7 @@ import dev.ririxi.bunnylock.modem.Masks
 import dev.ririxi.bunnylock.modem.R
 import dev.ririxi.bunnylock.modem.Text
 import dev.ririxi.bunnylock.root.At
+import dev.ririxi.bunnylock.root.AtciSocket
 import dev.ririxi.bunnylock.root.fail
 import dev.ririxi.bunnylock.root.rilNode
 import org.json.JSONArray
@@ -48,7 +49,7 @@ object Mediatek {
     fun simOf(node: String) =
         when (node) {
             in SECOND_SIM_PORTS -> 2
-            in CANDIDATES -> 1
+            AtciSocket.NODE, in CANDIDATES -> 1
             else -> null
         }
 
@@ -108,14 +109,16 @@ object Mediatek {
     private const val ERAT_PREFER_LTE = 4
     private const val ERAT_PREFER_NR = 128
 
-    fun probe(node: String): Boolean = runCatching { At.send(node, "AT", 1500).lines().any { it == "OK" } }.getOrDefault(false)
+    fun probe(node: String): Boolean =
+        At.exists(node) && runCatching { At.send(node, "AT", 1500).lines().any { it == "OK" } }.getOrDefault(false)
 
     /**
-     * A modem tty when it answers (root), otherwise the RIL passthrough for [sim] (works through Shizuku too).
+     * A modem tty or the ATCI socket when it answers (root), otherwise the RIL passthrough for [sim] (works through Shizuku too).
      * The passthrough was tested when it was found, so it isn't asked again here.
      */
     fun findNode(sim: Int): String? =
-        CANDIDATES.firstOrNull { At.exists(it) && probe(it) }
+        CANDIDATES.firstOrNull(::probe)
+            ?: AtciSocket.NODE.takeIf { sim == 1 && probe(it) }
             ?: rilNode(sim).takeIf { At.exists(it) }
 
     private class Epbse(

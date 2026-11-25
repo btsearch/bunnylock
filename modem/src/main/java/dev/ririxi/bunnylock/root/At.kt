@@ -13,13 +13,19 @@ fun rilNode(sim: Int) = "${OemHook.PREFIX}$sim"
 object At {
     const val DEFAULT_TIMEOUT_MS = 4000
 
-    fun exists(node: String) = if (node.startsWith(OemHook.PREFIX)) OemHook.available() else File(node).exists()
+    fun exists(node: String) =
+        when {
+            node == AtciSocket.NODE -> AtciSocket.available()
+            node.startsWith(OemHook.PREFIX) -> OemHook.available()
+            else -> File(node).exists()
+        }
 
     fun send(
         node: String,
         command: String,
         timeoutMs: Int = DEFAULT_TIMEOUT_MS,
     ): String {
+        if (node == AtciSocket.NODE) return cleanReply(AtciSocket.send(command, timeoutMs), command, node)
         val throughRil = node.startsWith(OemHook.PREFIX)
         if (throughRil || node.startsWith(OemHook.RAW_PREFIX)) {
             // A reply through the RIL takes longer than one from a tty, so short timeouts are raised.
@@ -112,7 +118,7 @@ object At {
         return reply.toString()
     }
 
-    private fun hasFinalResult(reply: CharSequence): Boolean =
+    internal fun hasFinalResult(reply: CharSequence): Boolean =
         reply.split('\r', '\n').any {
             val line = it.trim()
             line == "OK" || line == "ERROR" || line.startsWith("+CME ERROR") || line.startsWith("+CMS ERROR")
