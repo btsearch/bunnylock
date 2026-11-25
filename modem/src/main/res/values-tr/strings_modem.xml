@@ -107,8 +107,12 @@
 
     <string name="modem_enter_earfcn">Önce LTE EARFCN değerini girin.</string>
     <string name="modem_enter_nr_arfcn">Önce NR-ARFCN değerini girin.</string>
+    <string name="modem_enter_gsm_arfcn">Önce GSM ARFCN değerini girin.</string>
+    <string name="modem_enter_uarfcn">Önce UARFCN değerini girin.</string>
+    <string name="modem_cell_id_range">%1$s 0 ile %2$d arasında olmalı.</string>
+    <string name="modem_no_legacy_cell_lock">2G ve 3G hücrelerini yalnızca MediaTek arka ucu ve yalnızca AT komutlarıyla kilitleyebilir.</string>
+    <string name="modem_note_legacy_lock_mode">Telefon hâlâ LTE ve 5G ağlarını tercih ediyor. Bu hücrede kalmak için ağ modunu Yalnızca 2G veya Yalnızca 3G yapın.</string>
     <string name="modem_qc_lte_needs_pci">Qualcomm LTE kilidi için en az bir PCI gerekir. Birden fazla sektöre izin vermek için birden fazla PCI girebilirsiniz.</string>
-    <string name="modem_lte_anchor_locked">LTE çapa hücresi kilitlendi. MediaTek aynı anda yalnızca tek bir kilit uygulayabildiğinden NR de çapa hücresini izler.</string>
     <string name="modem_note_mtk_one_pci">MediaTek yalnızca tek bir PCI\'ye kilitlenebildiğinden sadece PCI %1$d kullanıldı.</string>
     <string name="modem_unknown_earfcn">EARFCN %1$d, bilinen hiçbir LTE bandında bulunmuyor.</string>
     <string name="modem_unknown_nr_arfcn">ARFCN %1$d, bilinen hiçbir NR bandında bulunmuyor.</string>

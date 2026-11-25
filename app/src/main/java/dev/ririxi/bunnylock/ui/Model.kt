@@ -45,8 +45,28 @@ data class CellForm(
     val nrBand: Int? = null,
     /** The user chose [nrScs] by hand, so typing a channel no longer replaces it with the band's usual spacing. */
     val nrScsPicked: Boolean = false,
+    /** The GSM ARFCN or the UARFCN. */
+    val legacyChannel: String = "",
+    /** The BSIC or the PSC. */
+    val legacyCellId: String = "",
+    val gsmBand: Int? = null,
 ) {
     val nrCandidates: List<Int> get() = nrArfcn.toIntOrNull()?.let { Bands.nrBandsOf(it) } ?: emptyList()
+
+    val gsmCandidates: List<Int> get() = legacyChannel.toIntOrNull()?.let { Bands.gsmBandsAt(it) } ?: emptyList()
+
+    val pickedGsmBand get() = gsmBand?.takeIf { it in gsmCandidates } ?: gsmCandidates.firstOrNull()
+
+    fun withLegacyChannel(
+        text: String,
+        prefersPcs1900: Boolean,
+    ): CellForm {
+        val digits = text.filter(Char::isDigit)
+        val candidates = digits.toIntOrNull()?.let { Bands.gsmBandsAt(it) } ?: emptyList()
+        val preferred = if (prefersPcs1900) 1900 else 1800
+        val band = gsmBand?.takeIf { it in candidates } ?: preferred.takeIf { it in candidates } ?: candidates.firstOrNull()
+        return copy(legacyChannel = digits, gsmBand = band)
+    }
 }
 
 data class UiState(
@@ -69,7 +89,20 @@ data class UiState(
 ) {
     fun favoritesOf(group: Group): Set<Int> = favoriteBands[group.favoritesKey].orEmpty()
 
-    val lockRat get() = if (modem.supports5g) form.rat else LockRat.LTE
+    val lockRats
+        get() =
+            LockRat.entries.filter {
+                when (it) {
+                    LockRat.LTE -> true
+                    LockRat.NR -> modem.supports5g
+                    LockRat.GSM, LockRat.WCDMA -> modem.features.legacyCellLock
+                }
+            }
+
+    val lockRat get() = form.rat.takeIf { it in lockRats } ?: LockRat.LTE
+
+    // GSM 1800 and 1900 share ARFCNs 512 to 810, and 1900 is the one used in North America (MCC 3xx).
+    val prefersPcs1900 get() = modem.homePlmn?.startsWith("3") == true
 
     fun isOff(group: Group) = exclusiveBandLock && modem.isOff(group)
 

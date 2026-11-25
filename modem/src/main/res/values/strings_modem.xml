@@ -107,8 +107,12 @@
 
     <string name="modem_enter_earfcn">Enter the LTE EARFCN first.</string>
     <string name="modem_enter_nr_arfcn">Enter the NR-ARFCN first.</string>
+    <string name="modem_enter_gsm_arfcn">Enter the GSM ARFCN first.</string>
+    <string name="modem_enter_uarfcn">Enter the UARFCN first.</string>
+    <string name="modem_cell_id_range">The %1$s must be between 0 and %2$d.</string>
+    <string name="modem_no_legacy_cell_lock">Only the MediaTek backend can lock 2G and 3G cells, and only through AT commands.</string>
+    <string name="modem_note_legacy_lock_mode">The phone still prefers LTE and 5G. Set the network mode to 2G only or 3G only to stay on this cell.</string>
     <string name="modem_qc_lte_needs_pci">The Qualcomm LTE lock needs at least one PCI. List several to allow a group of sectors.</string>
-    <string name="modem_lte_anchor_locked">LTE anchor locked. MediaTek can only hold one lock at a time, so NR follows the anchor.</string>
     <string name="modem_note_mtk_one_pci">MediaTek locks to one PCI, so only PCI %1$d was used.</string>
     <string name="modem_unknown_earfcn">EARFCN %1$d isn\'t in any known LTE band.</string>
     <string name="modem_unknown_nr_arfcn">ARFCN %1$d isn\'t in any known NR band.</string>

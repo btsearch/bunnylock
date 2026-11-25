@@ -4,6 +4,7 @@ import dev.ririxi.bunnylock.backend.BackendProfile
 import dev.ririxi.bunnylock.backend.BackendReadout
 import dev.ririxi.bunnylock.backend.CellLock
 import dev.ririxi.bunnylock.backend.HalLocks
+import dev.ririxi.bunnylock.backend.LegacyCellLock
 import dev.ririxi.bunnylock.backend.ModemBackend
 import dev.ririxi.bunnylock.backend.ModemSession
 import dev.ririxi.bunnylock.backend.NetModeResult
@@ -19,6 +20,7 @@ import dev.ririxi.bunnylock.modem.BandGroupState
 import dev.ririxi.bunnylock.modem.Chipset
 import dev.ririxi.bunnylock.modem.DeviceInfo
 import dev.ririxi.bunnylock.modem.Group
+import dev.ririxi.bunnylock.modem.Masks
 import dev.ririxi.bunnylock.modem.ModemState
 import dev.ririxi.bunnylock.modem.R
 import dev.ririxi.bunnylock.modem.Text
@@ -288,20 +290,33 @@ internal class MediatekBackend(
             return hal.lockCells(lock)
         }
         session.restartSimRadio()
-        val anchorOnly = lock.lte && lock.nr
-        val outcome = Text(if (anchorOnly) R.string.modem_lte_anchor_locked else R.string.modem_cell_locked)
         val pciNote = if (pcis.size > 1) Text(R.string.modem_note_mtk_one_pci, pcis[0]) else null
-        return if (anchorOnly || pciNote !== null) listOfNotNull(outcome, pciNote).reduce(Text::followedBy) else null
+        return pciNote?.let { Text(R.string.modem_cell_locked).followedBy(it) }
     }
 
     private suspend fun cellLock(
         act: Int,
         arfcn: Long,
         pci: Int?,
+        gsm1900: Boolean = false,
     ) = call("mtk.cellLock") {
         put("act", act)
         put("arfcn", arfcn)
         pci?.let { put("pci", it) }
+        put("gsm1900", gsm1900)
+    }
+
+    override suspend fun lockLegacyCell(lock: LegacyCellLock): Text? {
+        if (current.cellLocksThroughHal) fail(R.string.modem_no_legacy_cell_lock)
+        val act = if (lock.gsm) Mediatek.ACT_GSM else Mediatek.ACT_UMTS
+        val result = cellLock(act, lock.channel, lock.cellId, lock.pcs1900)
+        if (!result.optBoolean("active")) {
+            runSuspendCatching { call("mtk.cellUnlock") }
+            fail(R.string.mtk_legacy_lock_ignored)
+        }
+        session.restartSimRadio()
+        val newerRatsAllowed = current.allowedMask?.let { it and (Masks.G4 or Masks.G5) != 0L } != false
+        return if (newerRatsAllowed) Text(R.string.modem_cell_locked).followedBy(Text(R.string.modem_note_legacy_lock_mode)) else null
     }
 
     override suspend fun unlockCells(): Text? {
@@ -397,6 +412,7 @@ internal class MediatekBackend(
                 cellHint = Text(if (state.cellLocksThroughHal) R.string.cell_hint_mtk_hal else R.string.cell_hint_mtk_at),
                 plmnHint = Text(R.string.cell_plmn_hint_android),
                 pciLock = !state.cellLocksThroughHal,
+                legacyCellLock = !state.cellLocksThroughHal,
                 // Going back to AT readout would hide a lock the radio HAL still holds.
                 forgetIgnoredCellLock = state.modemIgnoredCellLock && !state.anyCellLock,
             )

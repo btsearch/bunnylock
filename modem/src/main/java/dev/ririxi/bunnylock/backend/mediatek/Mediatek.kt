@@ -379,9 +379,10 @@ object Mediatek {
         act: Int,
         arfcn: Long,
         pci: Int?,
+        gsm1900: Boolean,
     ): JSONObject {
-        // <on> = 1, <gsm1900> = 0
-        val channelLock = "AT+EMMCHLCK=1,$act,0,$arfcn"
+        // <on> = 1
+        val channelLock = "AT+EMMCHLCK=1,$act,${if (gsm1900) 1 else 0},$arfcn"
         when {
             pci === null -> At.ok(node, channelLock)
             node in portsWithoutLockMode -> At.ok(node, "$channelLock,$pci")

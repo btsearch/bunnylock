@@ -18,8 +18,6 @@
     <string name="cell_lock_pinned">The modem is pinned to a specific cell.</string>
     <string name="cell_lock_free">The modem picks cells on its own.</string>
     <string name="cell_lte_channel">B%1$d at %2$.1f MHz</string>
-    <string name="cell_lte_anchor">LTE anchor</string>
-    <string name="cell_nr_scg">NR secondary (SCG)</string>
     <string name="cell_pcis">PCIs</string>
     <string name="cell_band">Band</string>
     <string name="cell_scs">Subcarrier spacing (kHz)</string>

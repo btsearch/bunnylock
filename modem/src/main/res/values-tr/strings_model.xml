@@ -19,7 +19,8 @@
 
     <string name="lock_rat_lte">LTE</string>
     <string name="lock_rat_nr">5G NR</string>
-    <string name="lock_rat_nsa">LTE ve NR</string>
+    <string name="lock_rat_gsm">2G GSM</string>
+    <string name="lock_rat_wcdma">3G WCDMA</string>
 
     <string name="vendor_qualcomm">Qualcomm Snapdragon</string>
     <string name="vendor_mediatek">MediaTek</string>

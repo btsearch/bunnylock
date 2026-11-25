@@ -18,8 +18,6 @@
     <string name="cell_lock_pinned">Модем закріплено за певною сотою.</string>
     <string name="cell_lock_free">Модем вибирає соти самостійно.</string>
     <string name="cell_lte_channel">B%1$d на %2$.1f МГц</string>
-    <string name="cell_lte_anchor">Опорна сота LTE</string>
-    <string name="cell_nr_scg">Вторинний NR (SCG)</string>
     <string name="cell_pcis">PCI</string>
     <string name="cell_band">Діапазон</string>
     <string name="cell_scs">Інтервал між піднесучими (кГц)</string>

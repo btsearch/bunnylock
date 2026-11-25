@@ -18,8 +18,6 @@
     <string name="cell_lock_pinned">Модем закреплён за определённой сотой.</string>
     <string name="cell_lock_free">Модем выбирает соты самостоятельно.</string>
     <string name="cell_lte_channel">B%1$d на %2$.1f МГц</string>
-    <string name="cell_lte_anchor">Якорная сота LTE</string>
-    <string name="cell_nr_scg">Вторичный NR (SCG)</string>
     <string name="cell_pcis">PCI</string>
     <string name="cell_band">Диапазон</string>
     <string name="cell_scs">Разнос поднесущих (кГц)</string>

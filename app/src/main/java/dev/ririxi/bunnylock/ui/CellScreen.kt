@@ -122,7 +122,7 @@ fun CellScreen(
         item {
             val lockableCells =
                 state.modem.cells
-                    .filter { it.rat == Rat.LTE || it.rat == Rat.NR }
+                    .filter { it.rat == Rat.LTE || it.rat == Rat.NR || state.modem.features.legacyCellLock && (it.rat == Rat.GSM || it.rat == Rat.WCDMA) }
                     .sortedWith(compareByDescending<Cell> { it.registered }.thenByDescending { it.rat.ordinal }.thenBy { it.arfcn }.thenBy { it.pci })
             SectionHeader(stringResource(R.string.cell_visible))
             if (lockableCells.isEmpty()) {
@@ -274,21 +274,24 @@ private fun CellLockForm(
     state: UiState,
     vm: MainViewModel,
 ) {
-    val form = state.form
-    val locksLte = state.lockRat != LockRat.NR
-    val locksNr = state.lockRat != LockRat.LTE
+    val locksLte = state.lockRat == LockRat.LTE
+    val locksNr = state.lockRat == LockRat.NR
     Panel {
-        if (state.modem.supports5g) {
-            ConnectedChoice(
-                options = LockRat.entries,
-                selected = form.rat,
-                label = { stringResource(it.label) },
-                onSelect = { selected -> vm.updateForm { copy(rat = selected) } },
-            )
+        if (state.lockRats.size > 1) {
+            val (newerRats, legacyRats) = state.lockRats.partition { !it.isLegacy }
+            listOf(newerRats, legacyRats).filter { it.isNotEmpty() }.forEach { rats ->
+                ConnectedChoice(
+                    options = rats,
+                    selected = state.lockRat,
+                    label = { stringResource(it.label) },
+                    onSelect = { selected -> vm.updateForm { copy(rat = selected) } },
+                )
+            }
         }
 
         if (locksLte) LteLockFields(state, vm)
         if (locksNr) NrLockFields(state, vm)
+        if (state.lockRat.isLegacy) LegacyLockFields(state, vm)
 
         Text(textOf(state.modem.features.cellHint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         if (state.modem.features.forgetIgnoredCellLock) {
@@ -318,7 +321,7 @@ private fun LteLockFields(
     vm: MainViewModel,
 ) {
     val form = state.form
-    Text(if (state.lockRat == LockRat.NSA) stringResource(R.string.cell_lte_anchor) else "LTE", style = MaterialTheme.typography.titleSmallEmphasized)
+    Text("LTE", style = MaterialTheme.typography.titleSmallEmphasized)
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         OutlinedTextField(
             form.lteEarfcn,
@@ -341,12 +344,59 @@ private fun LteLockFields(
 }
 
 @Composable
+private fun LegacyLockFields(
+    state: UiState,
+    vm: MainViewModel,
+) {
+    val form = state.form
+    val gsm = state.lockRat == LockRat.GSM
+    Text(stringResource(state.lockRat.label), style = MaterialTheme.typography.titleSmallEmphasized)
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        OutlinedTextField(
+            form.legacyChannel,
+            { text -> vm.updateForm { withLegacyChannel(text, state.prefersPcs1900) } },
+            label = { Text(if (gsm) "ARFCN" else "UARFCN") },
+            singleLine = true,
+            keyboardOptions = NumberKeyboard,
+            modifier = Modifier.weight(1f),
+            supportingText = { form.legacyChannel.toIntOrNull()?.let { Text(legacyChannelHint(gsm, it)) } },
+        )
+        OutlinedTextField(
+            form.legacyCellId,
+            { text -> vm.updateForm { copy(legacyCellId = text.filter(Char::isDigit)) } },
+            label = { Text(if (gsm) "BSIC" else "PSC") },
+            singleLine = true,
+            keyboardOptions = NumberKeyboard,
+            modifier = Modifier.weight(1f),
+        )
+    }
+    if (gsm && form.gsmCandidates.size > 1) {
+        Text(stringResource(R.string.cell_band), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        ConnectedChoice(
+            options = form.gsmCandidates,
+            selected = form.pickedGsmBand,
+            label = { Group.GSM.bandLabel(it) },
+            onSelect = { band -> vm.updateForm { copy(gsmBand = band) } },
+        )
+    }
+}
+
+private fun legacyChannelHint(
+    gsm: Boolean,
+    channel: Int,
+): String {
+    val group = if (gsm) Group.GSM else Group.WCDMA
+    val bands = if (gsm) Bands.gsmBandsAt(channel) else Bands.wcdmaBandsAt(channel)
+    return bands.joinToString(" / ") { group.bandLabel(it) }
+}
+
+@Composable
 private fun NrLockFields(
     state: UiState,
     vm: MainViewModel,
 ) {
     val form = state.form
-    Text(if (state.lockRat == LockRat.NSA) stringResource(R.string.cell_nr_scg) else "5G NR", style = MaterialTheme.typography.titleSmallEmphasized)
+    Text("5G NR", style = MaterialTheme.typography.titleSmallEmphasized)
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         OutlinedTextField(
             form.nrArfcn,

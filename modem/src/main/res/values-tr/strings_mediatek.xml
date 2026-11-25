@@ -6,6 +6,7 @@
 
     <string name="mtk_erat_no_mode">AT+ERAT, bu kombinasyon için uygun bir mod içermiyor.</string>
     <string name="mtk_ca_kept">Modem önceki ayarı korudu.</string>
+    <string name="mtk_legacy_lock_ignored">Modem 2G/3G kilidini kabul etti ama korumadı.</string>
     <string name="mtk_epbse_unreadable">%1$s (%2$s yanıtı: %3$s).</string>
     <string name="mtk_no_band_lock">%1$s AT portu bant kilitlemeyi desteklemiyor</string>
     <string name="mtk_current_bands_unreadable">%1$s üzerinden mevcut bantlar okunamadı</string>

@@ -18,8 +18,6 @@
     <string name="cell_lock_pinned">Modem trzyma się wybranej komórki.</string>
     <string name="cell_lock_free">Modem sam wybiera komórki.</string>
     <string name="cell_lte_channel">B%1$d, %2$.1f MHz</string>
-    <string name="cell_lte_anchor">Kotwica LTE</string>
-    <string name="cell_nr_scg">Dodatkowa NR (SCG)</string>
     <string name="cell_pcis">PCI</string>
     <string name="cell_band">Pasmo</string>
     <string name="cell_scs">Odstęp podnośnych (kHz)</string>

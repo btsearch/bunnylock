@@ -442,7 +442,7 @@ class MainViewModel(
                     copy(
                         lteEarfcn = cell.arfcn.toString(),
                         ltePcis = cell.pci.toString(),
-                        rat = if (rat == LockRat.NSA) rat else LockRat.LTE,
+                        rat = LockRat.LTE,
                     )
                 }
 
@@ -454,12 +454,15 @@ class MainViewModel(
                         nrBand = band,
                         nrScs = band?.let { Bands.nrDefaultScs(it) } ?: nrScs,
                         nrScsPicked = nrScsPicked && band === null,
-                        rat = if (rat == LockRat.NSA) rat else LockRat.NR,
+                        rat = LockRat.NR,
                     )
                 }
 
-                else -> {
-                    this
+                Rat.GSM, Rat.WCDMA -> {
+                    copy(
+                        legacyCellId = cell.pci.takeIf { it >= 0 }?.toString().orEmpty(),
+                        rat = if (cell.rat == Rat.GSM) LockRat.GSM else LockRat.WCDMA,
+                    ).withLegacyChannel(cell.arfcn.toString(), ui.prefersPcs1900)
                 }
             }
         }
@@ -478,6 +481,9 @@ class MainViewModel(
                     nrPcis = parseInts(form.nrPcis),
                     nrBand = form.nrBand ?: form.nrCandidates.firstOrNull(),
                     nrScs = form.nrScs,
+                    legacyChannel = form.legacyChannel.toLongOrNull(),
+                    legacyCellId = form.legacyCellId.toIntOrNull(),
+                    pcs1900 = form.pickedGsmBand == 1900,
                 )
             modem.lockCells(request)
         }

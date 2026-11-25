@@ -63,6 +63,13 @@ internal data class CellLock(
     val pcisGiven get() = ltePcis.isNotEmpty() || nrPcis.isNotEmpty()
 }
 
+internal data class LegacyCellLock(
+    val gsm: Boolean,
+    val channel: Long,
+    val cellId: Int?,
+    val pcs1900: Boolean,
+)
+
 internal class NetModeResult(
     val throughAndroid: Boolean,
     val airplaneMode: Boolean = false,
@@ -133,6 +140,8 @@ internal abstract class ModemBackend(
     open suspend fun lockCells(lock: CellLock): Text? = hal.lockCells(lock)
 
     open suspend fun unlockCells(): Text? = hal.unlockCells()
+
+    open suspend fun lockLegacyCell(lock: LegacyCellLock): Text? = fail(R.string.modem_no_legacy_cell_lock)
 
     open suspend fun lockPlmn(
         mcc: String,

@@ -107,8 +107,12 @@
 
     <string name="modem_enter_earfcn">Najpierw wpisz EARFCN LTE.</string>
     <string name="modem_enter_nr_arfcn">Najpierw wpisz NR-ARFCN.</string>
+    <string name="modem_enter_gsm_arfcn">Najpierw wpisz ARFCN GSM.</string>
+    <string name="modem_enter_uarfcn">Najpierw wpisz UARFCN.</string>
+    <string name="modem_cell_id_range">%1$s musi mieścić się w zakresie od 0 do %2$d.</string>
+    <string name="modem_no_legacy_cell_lock">Tylko backend MediaTek może blokować komórki 2G i 3G, i tylko przez komendy AT.</string>
+    <string name="modem_note_legacy_lock_mode">Telefon nadal woli LTE i 5G. Ustaw tryb sieci na Tylko 2G lub Tylko 3G, aby zostać na tej komórce.</string>
     <string name="modem_qc_lte_needs_pci">Blokada LTE na Qualcommie wymaga co najmniej jednego PCI. Podaj kilka, żeby dopuścić grupę sektorów.</string>
-    <string name="modem_lte_anchor_locked">Zablokowano kotwicę LTE. MediaTek trzyma tylko jedną blokadę naraz, więc NR idzie za kotwicą.</string>
     <string name="modem_note_mtk_one_pci">MediaTek blokuje tylko jedno PCI, więc użyto PCI %1$d.</string>
     <string name="modem_unknown_earfcn">EARFCN %1$d nie należy do żadnego znanego pasma LTE.</string>
     <string name="modem_unknown_nr_arfcn">ARFCN %1$d nie należy do żadnego znanego pasma NR.</string>

@@ -18,8 +18,6 @@
     <string name="cell_lock_pinned">基带已锁定在指定小区。</string>
     <string name="cell_lock_free">基带自动选择小区。</string>
     <string name="cell_lte_channel">B%1$d，%2$.1f MHz</string>
-    <string name="cell_lte_anchor">LTE 锚点</string>
-    <string name="cell_nr_scg">NR 辅小区（SCG）</string>
     <string name="cell_pcis">PCI</string>
     <string name="cell_band">频段</string>
     <string name="cell_scs">子载波间隔（kHz）</string>

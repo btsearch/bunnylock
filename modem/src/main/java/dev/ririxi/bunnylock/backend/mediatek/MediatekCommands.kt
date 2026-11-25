@@ -9,7 +9,7 @@ internal val mediatekCommands: Commands =
         "mtk.findNode" to { JSONObject().put("node", Mediatek.findNode(it.sim).orEmpty()) },
         "mtk.state" to { Mediatek.state(it.node) },
         "mtk.setBands" to { Mediatek.setBands(it.node, it.intsOrNull("gsm"), it.intsOrNull("wcdma"), it.intsOrNull("lte"), it.intsOrNull("nr")) },
-        "mtk.cellLock" to { Mediatek.cellLock(it.node, it.json.getInt("act"), it.json.getLong("arfcn"), it.intOrNull("pci")) },
+        "mtk.cellLock" to { Mediatek.cellLock(it.node, it.json.getInt("act"), it.json.getLong("arfcn"), it.intOrNull("pci"), it.json.optBoolean("gsm1900")) },
         "mtk.cellUnlock" to { Mediatek.cellUnlock(it.node) },
         "mtk.setRat" to { Mediatek.setRat(it.node, it.json.getLong("mask")) },
         "mtk.setCa" to { Mediatek.setCarrierAggregation(it.node, it.json.getBoolean("enabled")) },

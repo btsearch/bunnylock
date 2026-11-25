@@ -9,6 +9,7 @@ import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import dev.ririxi.bunnylock.backend.CellLock
 import dev.ririxi.bunnylock.backend.HalLocks
+import dev.ririxi.bunnylock.backend.LegacyCellLock
 import dev.ririxi.bunnylock.backend.LocksBandsTogether
 import dev.ririxi.bunnylock.backend.ModemSession
 import dev.ririxi.bunnylock.backend.samsung.SamsungBandMenu
@@ -35,6 +36,8 @@ import kotlin.time.Duration.Companion.seconds
 
 private val NET_MODE_TIMEOUT = 60.seconds
 private const val NET_MODE_SWITCH_CHECKS = 10
+private const val MAX_BSIC = 63
+private const val MAX_PSC = 511
 private val NET_MODE_SWITCH_CHECK = 1.seconds
 
 private val LIVE_CELL_SCAN_WAIT = 1500.milliseconds
@@ -629,8 +632,9 @@ class ModemController(
 
     suspend fun lockCells(request: CellLockRequest) =
         change(Text(R.string.modem_goal_lock_cell), Text(R.string.modem_cell_locked)) {
-            val lockLte = request.rat != LockRat.NR
-            val lockNr = request.rat != LockRat.LTE
+            if (request.rat.isLegacy) return@change backend.lockLegacyCell(legacyCellLockOf(request))
+            val lockLte = request.rat == LockRat.LTE
+            val lockNr = request.rat == LockRat.NR
             val lock =
                 CellLock(
                     lte = lockLte,
@@ -644,6 +648,15 @@ class ModemController(
                 )
             backend.lockCells(lock)
         }
+
+    private fun legacyCellLockOf(request: CellLockRequest): LegacyCellLock {
+        val gsm = request.rat == LockRat.GSM
+        val channel = request.legacyChannel ?: fail(if (gsm) R.string.modem_enter_gsm_arfcn else R.string.modem_enter_uarfcn)
+        val maxCellId = if (gsm) MAX_BSIC else MAX_PSC
+        val cellId = request.legacyCellId
+        if (cellId !== null && cellId !in 0..maxCellId) fail(R.string.modem_cell_id_range, if (gsm) "BSIC" else "PSC", maxCellId)
+        return LegacyCellLock(gsm, channel, cellId, pcs1900 = gsm && request.pcs1900)
+    }
 
     suspend fun unlockCells() = change(Text(R.string.modem_goal_unlock_cell), Text(R.string.modem_cell_unlocked)) { backend.unlockCells() }
 

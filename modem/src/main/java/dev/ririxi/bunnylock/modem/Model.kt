@@ -125,7 +125,11 @@ enum class LockRat(
 ) {
     LTE(R.string.lock_rat_lte),
     NR(R.string.lock_rat_nr),
-    NSA(R.string.lock_rat_nsa),
+    GSM(R.string.lock_rat_gsm),
+    WCDMA(R.string.lock_rat_wcdma),
+    ;
+
+    val isLegacy get() = this == GSM || this == WCDMA
 }
 
 /** "26201" -> "262 01", "310260" -> "310 260". */
@@ -210,6 +214,7 @@ data class BackendFeatures(
     val nrMode: Boolean = false,
     val pciLock: Boolean = false,
     val nrSubcarrierSpacing: Boolean = false,
+    val legacyCellLock: Boolean = false,
     val persistSwitch: Boolean = false,
     val reattach: Boolean = false,
     val qmiConsole: Boolean = false,
@@ -265,7 +270,7 @@ data class ModemState(
     val signals: List<Signal> = emptyList(),
     val lteLock: String? = null,
     val nrLock: String? = null,
-    /** A 2G or 3G cell lock. bunnylock doesn't set these, but a MediaTek modem may hold one made elsewhere. */
+    /** A 2G or 3G cell lock. */
     val legacyCellLock: String? = null,
     /** e.g. "EARFCN 75": the channel the phone is camped on although a frequency lock excludes it. */
     val strayChannel: String? = null,
@@ -361,6 +366,11 @@ data class CellLockRequest(
     val nrBand: Int? = null,
     /** Subcarrier spacing in kHz. */
     val nrScs: Int = 30,
+    /** The GSM ARFCN or the UARFCN. */
+    val legacyChannel: Long? = null,
+    /** The BSIC or the PSC. */
+    val legacyCellId: Int? = null,
+    val pcs1900: Boolean = false,
 )
 
 class ModemException(

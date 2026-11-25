@@ -107,8 +107,12 @@
 
     <string name="modem_enter_earfcn">Сначала введите LTE EARFCN.</string>
     <string name="modem_enter_nr_arfcn">Сначала введите NR-ARFCN.</string>
+    <string name="modem_enter_gsm_arfcn">Сначала введите GSM ARFCN.</string>
+    <string name="modem_enter_uarfcn">Сначала введите UARFCN.</string>
+    <string name="modem_cell_id_range">%1$s должен быть от 0 до %2$d.</string>
+    <string name="modem_no_legacy_cell_lock">Блокировать соты 2G и 3G может только бэкенд MediaTek и только через AT-команды.</string>
+    <string name="modem_note_legacy_lock_mode">Телефон по-прежнему предпочитает LTE и 5G. Чтобы остаться на этой соте, выберите режим сети Только 2G или Только 3G.</string>
     <string name="modem_qc_lte_needs_pci">Для блокировки LTE в Qualcomm нужен хотя бы один PCI. Укажите несколько, чтобы разрешить группу секторов.</string>
-    <string name="modem_lte_anchor_locked">Якорная сота LTE заблокирована. MediaTek держит только одну блокировку за раз, поэтому NR следует за якорем.</string>
     <string name="modem_note_mtk_one_pci">MediaTek блокируется на одном PCI, поэтому использован только PCI %1$d.</string>
     <string name="modem_unknown_earfcn">EARFCN %1$d не входит ни в один известный диапазон LTE.</string>
     <string name="modem_unknown_nr_arfcn">ARFCN %1$d не входит ни в один известный диапазон NR.</string>

@@ -107,8 +107,12 @@
 
     <string name="modem_enter_earfcn">请先输入 LTE EARFCN。</string>
     <string name="modem_enter_nr_arfcn">请先输入 NR-ARFCN。</string>
+    <string name="modem_enter_gsm_arfcn">请先输入 GSM ARFCN。</string>
+    <string name="modem_enter_uarfcn">请先输入 UARFCN。</string>
+    <string name="modem_cell_id_range">%1$s 必须在 0 到 %2$d 之间。</string>
+    <string name="modem_no_legacy_cell_lock">只有 MediaTek 后端可以锁定 2G 和 3G 小区，而且只能通过 AT 命令。</string>
+    <string name="modem_note_legacy_lock_mode">手机仍会优先使用 LTE 和 5G。要停留在此小区，请将网络模式设为仅 2G 或仅 3G。</string>
     <string name="modem_qc_lte_needs_pci">高通的 LTE 锁小区至少需要一个 PCI。填写多个可允许一组扇区。</string>
-    <string name="modem_lte_anchor_locked">已锁定 LTE 锚点。联发科一次只能保持一个锁定，因此 NR 跟随锚点。</string>
     <string name="modem_note_mtk_one_pci">联发科只能锁定一个 PCI，因此只使用了 PCI %1$d。</string>
     <string name="modem_unknown_earfcn">EARFCN %1$d 不属于任何已知的 LTE 频段。</string>
     <string name="modem_unknown_nr_arfcn">ARFCN %1$d 不属于任何已知的 NR 频段。</string>
